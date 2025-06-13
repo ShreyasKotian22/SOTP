@@ -1,0 +1,2491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales Order Tracker Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  display: flex;
+  background-color: #ffffff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Container Layout */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: #127285;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar .logo img {
+  width: 245px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav ul li {
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.3s;
+}
+
+    .nav-item i,
+.logout i {
+  font-size: 18px;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+}
+
+
+.logout {
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.main-content h1 {
+  font-size: 24px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+/* Greeting section */
+.greeting {
+  margin-bottom: 25px;
+}
+
+.greeting h1 {
+  font-size: 26px;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+.greeting p {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Dashboard stat cards */
+.cards-dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: -39px; /* ⬅️ Moves cards closer to greeting */
+  margin-bottom: 20px;
+}
+
+.card-dashboard {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 220px;
+  height: 80px;
+}
+
+.card-icon {
+  background-color: #127285;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+/* Dashboard stat cards */
+.cards-dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: -39px;
+  margin-bottom: 20px;
+}
+
+.card-dashboard {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 220px;
+  height: 80px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dashboard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon */
+.card-icon {
+  background-color: #127285;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+/* Text */
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+
+/* Chart section */
+.chart-section {
+  background-color: white;
+  padding: 24px;
+  border-radius: 15px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.23);
+  width: 88%;
+  max-width: 100%;
+  margin: 0 0 20px 30px; /* Moved left */
+  box-sizing: border-box;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.chart-header h2 {
+  font-size: 20px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 700;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  color: #000;
+  
+  
+}
+
+.filters h6 {
+  margin: 0;          /* remove default margin */
+  padding: 0 2px 0 0; /* optional slight right padding */
+  font-size: 14px;
+  margin-top: 5px;    /* smaller font size if needed */
+}
+
+.filters button {
+  background-color: #127285;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filters select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #127285;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-placeholder {
+  margin-top: 20px;
+  height: 198px;
+  display: flex;
+  justify-content: flex-start; /* Align left */
+  align-items: center;
+  color: #888;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+  padding-left: 20px; /* Optional spacing */
+}
+
+#performanceChart {
+  margin-top: 10px;
+  max-height: 350px;
+}
+
+
+/* Icon styles */
+.nav-item i,
+.logout i {
+  font-size: 18px;
+  margin-right: 8px; /* spacing between icon and text */
+  vertical-align: middle;
+  width: 18px;        /* uniform width */
+  height: 22px;       /* uniform height */
+  display: inline-block;
+}
+
+/* ====== Add New Order Form Styling ====== */
+
+
+#form-container {
+  padding: 40px;
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f6f8;
+}
+
+#form-container .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 900px;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+#form-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 24px;
+}
+
+#form-container .tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+}
+
+#form-container .tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+#form-container .tab.active {
+  border-bottom: 3px solid #006D7D;
+  color: #006D7D;
+  font-weight: 600;
+}
+
+#form-container .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+#form-container .form-grid.full {
+  grid-template-columns: 1fr;
+}
+
+#form-container label {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+#form-container .input-field,
+#form-container textarea,
+#form-container select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+#form-container textarea.input-field {
+  min-height: 80px;
+  resize: vertical;
+}
+
+#form-container .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#form-container button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#form-container .btn-secondary {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+#form-container .btn-primary {
+  background-color: #007980;
+  color: white;
+}
+
+#form-container .btn-secondary:hover {
+  background-color: #f2f2f2;
+}
+
+#form-container .btn-primary:hover {
+  background-color: #005f66;
+}
+
+#form-container .client-item {
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: 1px solid transparent;
+}
+
+#form-container .client-item:hover,
+#form-container .client-item.selected {
+  background-color: #eaeaea;
+  border-color: #999;
+}
+
+#form-container .search-input {
+  margin-bottom: 14px;
+}
+
+#form-container .summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+#form-container .summary-table th,
+#form-container .summary-table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+  background: none;
+  color: #111;
+}
+
+#form-container .summary-table th {
+  font-weight: 600;
+}
+
+#form-container .confirmation-table {
+  width: 100%;
+  font-size: 14px;
+  margin-top: 1rem;
+  border-spacing: 0 12px;
+}
+
+#form-container .confirmation-table td {
+  padding: 6px 10px;
+  vertical-align: top;
+  color: #111;
+}
+
+#form-container .confirmation-table td:first-child {
+  font-weight: 600;
+  width: 200px;
+}
+
+#form-container .success-box {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #f2fdf5;
+  border: 1px solid #d5ebdd;
+  border-radius: 8px;
+  color: #1b4e2a;
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+#form-container .summary-table,
+#form-container .confirmation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+#form-container .summary-table th,
+#form-container .summary-table td,
+#form-container .confirmation-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  color: #111;
+}
+
+#form-container .confirmation-table td:first-child {
+  font-weight: 600;
+  width: 200px;
+}
+
+#form-container .success-box {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #f2fdf5;
+  border: 1px solid #d5ebdd;
+  border-radius: 8px;
+  color: #1b4e2a;
+  font-weight: 600;
+  font-size: 15px;
+}
+textarea.input-field {
+  min-height: 80px;
+  resize: vertical;
+}
+#client-list {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.client-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.client-item.selected {
+  background-color: #cde4e8;
+  font-weight: 500;
+}
+
+.client-item:hover {
+  background-color: #f3f3f3;
+}
+.card {
+  min-height: 400px;
+}
+
+#client-list {
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.client-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.client-item.selected {
+  background-color: #cde4e8;
+  font-weight: 500;
+}
+
+.client-item:hover {
+  background-color: #f3f3f3;
+}
+
+.summary-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.summary-table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.summary-table tr td:first-child {
+  font-weight: 500;
+  width: 30%;
+}
+
+.card {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.button-group {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+
+
+/* =======================
+   View Sales Order Styles
+======================= */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #111;
+  font-family: 'SF Pro Display', sans-serif;
+}
+
+.filter-btn {
+  background-color: #006D7D;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 4px;
+  cursor: pointer;
+}
+
+.filter-panel {
+  margin-top: 20px;
+}
+
+.filters label {
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+  width: 140px;
+  margin-top: 2px;
+}
+
+
+.filter-panel input {
+  padding: 6px 10px;
+  margin-left: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Table styling */
+.table-container {
+  margin-top: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #E0F1F5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #006D7D;
+  color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #E0F1F5;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #CDE6EA;
+}
+
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 14px;
+}
+
+.edit-icon {
+  color: #007bff;
+}
+
+.delete-icon {
+  color: #dc3545;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
+.buttons button {
+  background-color: #006D7D;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+.view-orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.view-orders-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  font-family: 'SF Pro Display', sans-serif;
+}
+
+.view-order-filters {
+  display: flex;
+  gap: 12px;
+}
+
+.view-order-filters select {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #006D7D;   /* teal background */
+  color: white;                /* white text */
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;            /* remove default arrow (optional) */
+}
+
+.view-order-filters select:focus {
+  outline: none;
+  border-color: #004f5a;       /* slightly darker border on focus */
+}
+
+
+.view-order-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-download,
+.btn-share {
+  background-color: #007980;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.arrow-icon {
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+}
+
+
+
+
+
+
+
+/*======================
+  ====Pending Orders========*/
+.custom-filter-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin: 10px 0 20px;
+}
+
+.custom-dropdown {
+  position: relative;
+}
+
+.dropdown-btn {
+  background-color: #127285;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 220px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  padding: 10px;
+}
+
+.dropdown-content input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.dropdown-list li {
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.back-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #127285;
+  padding-left: 0;
+}
+
+.dropdown-btn i {
+  margin-left: 5px;
+  transition: transform 0.2s;
+}
+
+.back-header {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111; /* black default */
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.back-header:hover {
+  color: #007980; /* teal on hover */
+  transform: translateX(-3px);
+}
+
+
+
+
+
+/*======================================
+========reports section==============*/
+
+
+/* === Report Layout Container === */
+.report-section {
+  display: flex;
+  justify-content: flex-start;
+  gap: 30px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* === Report Card Boxes === */
+.report-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 460px;
+  flex: 1 1 45%;
+  box-sizing: border-box;
+}
+
+/* === Card Headers === */
+.report-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+/* === Dropdown Styling === */
+.report-card select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* === Timeline === */
+.timeline {
+  position: relative;
+  padding-left: 18px;
+  border-left: 2px solid #ddd;
+}
+
+.timeline-entry {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.timeline-entry::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 50%;
+  position: absolute;
+  left: -7px;
+  top: 4px;
+}
+
+.timeline-entry.pending::before {
+  background-color: #f28e8e;
+}
+
+.timeline-entry.processing::before {
+  background-color: #f5d97d;
+}
+
+.timeline-entry.shipped::before {
+  background-color: #7edc94;
+}
+
+.timeline-entry h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.timeline-entry p {
+  font-size: 13px;
+  color: #666;
+  margin: 2px 0;
+}
+
+/* === Donut Chart Styling === */
+.status-chart-container {
+  text-align: center;
+}
+
+.status-chart-container canvas {
+  margin: 20px auto;
+  max-width: 260px;
+  height: auto;
+}
+
+/* === Legend below chart === */
+.status-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.status-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #444;
+  border: 1px solid #ccc;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+/* === Dots for Legend === */
+.status-legend .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-pending {
+  background-color: #f28e8e;
+}
+
+.dot-processing {
+  background-color: #f5d97d;
+}
+
+.dot-shipped {
+  background-color: #7edc94;
+}
+
+/* === Bottom Buttons === */
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.report-actions button {
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.report-actions .btn-download {
+  background-color: #007980;
+  color: white;
+}
+
+.report-actions .btn-share {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+      </div>
+      <nav>
+        <ul>
+          <li class="nav-item active">
+  <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
+    <i class="fas fa-th-large"></i> <span> Dashboard</span>
+  </a>
+</li>
+          <li class="nav-item">
+  <a href="/add-order" style="color: white; text-decoration: none;">
+    <i class="fas fa-plus-circle"></i> Add New Order
+  </a>
+</li>
+
+          <li class="nav-item">
+  <a href="{{ url_for('clients') }}" style="color: white; text-decoration: none;">
+    <i class="fas fa-user"></i> Clients</a>
+</li>
+
+<li class="nav-item">
+  <a href="{{ url_for('view_orders') }}" style="color: white; text-decoration: none;">
+    <i class="fas fa-file-alt"></i> View Sales Order</a>
+</li>
+
+          <li class="nav-item">
+  <a href="javascript:void(0);" onclick="showComingSoon(this)" style="color: white; text-decoration: none;">
+    <i class="fas fa-receipt"></i> <span> Sales Invoice</span>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="javascript:void(0);" onclick="showReportSection(this)" style="color: white; text-decoration: none;">
+    <i class="fas fa-chart-bar"></i> <span> Report</span>
+  </a>
+</li>
+
+        </ul>
+</nav>
+<li class="nav-item logout">
+  <a href="/" style="color: white; text-decoration: none;">
+    <i class="fas fa-sign-out-alt"></i> <span> Log Out</span>
+  </a>
+</li>
+</aside>
+
+
+    <!-- Main content -->
+    <main class="main-content" id="main-content">
+      <h1>Dashboard</h1>
+      <div class="cards" id="cards">
+        <div class="card">
+  <div class="icon"><i class="fas fa-th-large"></i></div>
+  <div class="label">Total Orders</div>
+  <div class="value">120</div>
+</div>
+
+<div class="card">
+  <div class="icon"><i class="fas fa-users"></i></div>
+  <div class="label">Total Clients</div>
+  <div class="value">10</div>
+</div>
+
+<div class="card">
+  <div class="icon"><i class="fas fa-chart-line"></i></div>
+  <div class="label">Total Profit</div>
+  <div class="value">80%</div>
+</div>
+
+<div class="card">
+  <div class="icon"><i class="fas fa-clock"></i></div>
+  <div class="label">Pending Orders</div>
+  <div class="value">3</div>
+</div>
+
+
+
+<script>
+
+    
+    function resetActive() {
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    }
+
+  // Simulate user name (replace with actual session-based logic if needed)
+  const userName = sessionStorage.getItem("userName") || "Team";
+
+  function showDashboard(element) {
+  resetActive();
+  element.classList.add("active");
+
+  document.getElementById("main-content").innerHTML = `
+    <div class="greeting">
+  <h1>{{ greeting }} {{ role }}</h1>
+  <p>Welcome to Sales Order Tracker Portal Dashboard!</p>
+</div>
+
+
+   <div class="cards-dashboard" style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <!-- Total Orders Card -->
+  <div class="card-dashboard" style="cursor: pointer;" onclick="location.href='{{ url_for('view_orders') }}'">
+    <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+    <div>
+      <div class="card-label">Total Orders</div>
+      <div class="card-value" id="order-count">{{ total_orders }}</div>
+    </div>
+  </div>
+
+      <div class="card-dashboard" onclick="window.location.href='{{ url_for('clients') }}'" style="cursor: pointer;">
+  <div class="card-icon"><i class="fas fa-users"></i></div>
+  <div>
+    <div class="card-label">Total Clients</div>
+    <div class="card-value" id="client-count">{{ total_clients }}</div>
+  </div>
+</div>
+
+
+      <div class="card-dashboard" onclick="showReportSection(document.querySelectorAll('.nav-item')[4])" style="cursor: pointer;">
+  <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+  <div>
+    <div class="card-label">Profit</div>
+    <div class="card-value" id="profit-percentage-value">{{ average_profit }}%</div>
+  </div>
+</div>
+
+      <div class="card-dashboard" onclick="showPendingOrders()" style="cursor: pointer;">
+        <div class="card-icon"><i class="fas fa-clock"></i></div>
+        <div>
+          <div class="card-label">Pending Orders</div>
+          <div class="card-value">3</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-header">
+        <h2>Performance Overview</h2>
+        <div class="filters">
+          <h6>From:</h6>
+          <label><input type="month" id="from-month" /></label>
+          <h6>To:</h6>
+          <label><input type="month" id="to-month" /></label>
+          <button onclick="filterGraph()">Filter</button>
+          <button onclick="downloadChart()">Download</button>
+        </div>
+      </div>
+      <canvas id="performanceChart" style="max-height: 300px; width: 100%;"></canvas>
+    </div>
+  `;
+  renderChart();
+}
+
+
+
+function showTotalClients(element) {
+  resetActive();
+  if (element) element.classList.add("active");
+
+  document.getElementById("main-content").innerHTML = `
+    <div class="header">
+     <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
+        &lt; Total Clients
+      </h1>
+    </div>
+
+    <div class="custom-filter-group">
+      <!-- Company Dropdown -->
+      <div class="custom-dropdown">
+       <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('client-company-dropdown')">
+  Company <i class="fas fa-chevron-down"></i>
+</button>
+        <div class="dropdown-content" id="client-company-dropdown" onclick="event.stopPropagation()">
+          <input type="text" placeholder="🔍 Search here..." oninput="filterClientDropdownItems(this, 'client-company-list')" />
+          <ul id="client-company-list" class="dropdown-list">
+            <li onclick="selectClientFilter('company', 'ABC Pvt Ltd')"><i class="fas fa-history"></i> ABC Pvt Ltd</li>
+            <li onclick="selectClientFilter('company', 'XYZ Enterprises')"><i class="fas fa-history"></i> XYZ Enterprises</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Client Name Dropdown -->
+      <div class="custom-dropdown">
+       <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('client-name-dropdown')">
+  Client Name <i class="fas fa-chevron-down"></i>
+</button>
+        <div class="dropdown-content" id="client-name-dropdown" onclick="event.stopPropagation()">
+          <input type="text" placeholder="🔍 Search here..." oninput="filterClientDropdownItems(this, 'client-name-list')" />
+          <ul id="client-name-list" class="dropdown-list">
+            <li onclick="selectClientFilter('client', 'Rohan')"><i class="fas fa-history"></i> Rohan</li>
+            <li onclick="selectClientFilter('client', 'Meera')"><i class="fas fa-history"></i> Meera</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="client-table">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Client Name</th>
+            <th>Email</th>
+            <th>GST ID</th>
+            <th>Billing Address</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ABC Pvt Ltd</td><td>Rohan</td><td>rohan@example.com</td><td>GST1234ABC</td><td>123 Billing St, Mumbai</td>
+            <td><i class="fas fa-pen edit-icon"></i> <i class="fas fa-trash delete-icon"></i></td>
+          </tr>
+          <tr>
+            <td>XYZ Enterprises</td><td>Meera</td><td>meera@example.com</td><td>GST7890XYZ</td><td>456 Invoice Rd, Delhi</td>
+            <td><i class="fas fa-pen edit-icon"></i> <i class="fas fa-trash delete-icon"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+
+
+function toggleDropdown(id) {
+  document.querySelectorAll('.dropdown-content').forEach(drop => {
+    if (drop.id !== id) drop.style.display = 'none';
+  });
+
+  const dropdown = document.getElementById(id);
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+// Hide dropdowns on click outside
+window.addEventListener("click", () => {
+  document.querySelectorAll('.dropdown-content').forEach(drop => drop.style.display = 'none');
+});
+
+function selectClientFilter(type, value) {
+  filterClientTableBy(type, value);
+
+  if (type === "company") {
+    document.getElementById("client-company-dropdown").style.display = "none";
+  } else if (type === "client") {
+    document.getElementById("client-name-dropdown").style.display = "none";
+  }
+}
+
+function filterClientTableBy(type, value) {
+  const rows = document.querySelectorAll("#client-table tbody tr");
+  rows.forEach(row => {
+    const company = row.children[0].textContent.toLowerCase();
+    const client = row.children[1].textContent.toLowerCase();
+
+    let match = true;
+    if (type === "company") match = company.includes(value.toLowerCase());
+    if (type === "client") match = client.includes(value.toLowerCase());
+
+    row.style.display = match ? "" : "none";
+  });
+}
+
+function filterClientDropdownItems(input, listId) {
+  const filter = input.value.toLowerCase();
+  const ul = document.getElementById(listId);
+  const items = ul.getElementsByTagName('li');
+
+  for (let i = 0; i < items.length; i++) {
+    const text = items[i].textContent || items[i].innerText;
+    items[i].style.display = text.toLowerCase().includes(filter) ? "" : "none";
+  }
+
+  // Determine type
+  const type = listId.includes('company') ? 'company' : 'client';
+  filterClientTableBy(type, filter);
+}
+
+window.addEventListener("click", function (e) {
+  const isDropdownBtn = e.target.closest(".dropdown-btn");
+  const isDropdownContent = e.target.closest(".dropdown-content");
+
+  if (!isDropdownBtn && !isDropdownContent) {
+    document.querySelectorAll('.dropdown-content').forEach(drop => {
+      drop.style.display = 'none';
+    });
+  }
+});
+
+
+
+/*--------------------------------------------------------
+  -----------------pending-------------------------------*/
+  
+  function showPendingOrders() {
+  resetActive(); // highlight menu if applicable
+
+  document.getElementById("main-content").innerHTML = `
+    <div class="header">
+      <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
+        &lt; Pending Orders
+      </h1>
+    </div>
+
+    <div class="custom-filter-group">
+      <!-- Order ID Dropdown -->
+      <div class="custom-dropdown">
+       <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('order-id-dropdown')">
+      Order ID <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-content" id="order-id-dropdown" onclick="event.stopPropagation()">
+          <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'order-id-list')" />
+          <ul id="order-id-list" class="dropdown-list">
+            <li onclick="selectOrderFilter('1001')"><i class="fas fa-history"></i> 1001</li>
+            <li onclick="selectOrderFilter('1002')"><i class="fas fa-history"></i> 1002</li>
+            <li onclick="selectOrderFilter('0901')"><i class="fas fa-arrow-up"></i> 0901</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Company Dropdown -->
+      <div class="custom-dropdown">
+        <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('company-dropdown')">
+  Company <i class="fas fa-chevron-down"></i>
+</button>
+        <div class="dropdown-content" id="company-dropdown" onclick="event.stopPropagation()">
+          <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'company-list')" />
+          <ul id="company-list" class="dropdown-list">
+            <li onclick="selectCompanyFilter('Tech Solutions')"><i class="fas fa-history"></i> Tech Solutions</li>
+            <li onclick="selectCompanyFilter('GreenTech')"><i class="fas fa-arrow-up"></i> GreenTech</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="pending-orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Client name</th>
+            <th>Company</th>
+            <th>Project</th>
+            <th>Assigned To</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1001</td><td>Aryan</td><td>Tech Solutions</td><td>Warehouse Setup</td><td>Rohan</td>
+            <td>
+              <i class="fas fa-pen edit-icon"></i>
+              <i class="fas fa-trash delete-icon"></i>
+            </td>
+          </tr>
+          <tr>
+            <td>1002</td><td>Kriti</td><td>GreenTech</td><td>Interior Design</td><td>Meera</td>
+            <td>
+              <i class="fas fa-pen edit-icon"></i>
+              <i class="fas fa-trash delete-icon"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function toggleDropdown(id) {
+  document.querySelectorAll('.dropdown-content').forEach(drop => {
+    if (drop.id !== id) drop.style.display = 'none';
+  });
+
+  const dropdown = document.getElementById(id);
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+function selectOrderFilter(value) {
+  filterPendingTableBy('orderId', value);
+  document.getElementById('order-id-dropdown').style.display = 'none';
+}
+
+function selectCompanyFilter(value) {
+  filterPendingTableBy('company', value);
+  document.getElementById('company-dropdown').style.display = 'none';
+}
+
+function filterPendingTableBy(type, value) {
+  const rows = document.querySelectorAll("#pending-orders-table tbody tr");
+  rows.forEach(row => {
+    const orderId = row.children[0].textContent.toLowerCase();
+    const company = row.children[2].textContent.toLowerCase();
+
+    let match = true;
+    if (type === "orderId") match = orderId.includes(value.toLowerCase());
+    if (type === "company") match = company.includes(value.toLowerCase());
+
+    row.style.display = match ? "" : "none";
+  });
+}
+
+// The missing function you need to add:
+function filterDropdownItems(input, listId) {
+  const filter = input.value.toLowerCase();
+  const ul = document.getElementById(listId);
+  const items = ul.getElementsByTagName('li');
+
+  // Filter dropdown list items
+  for (let i = 0; i < items.length; i++) {
+    const text = items[i].textContent || items[i].innerText;
+    if (text.toLowerCase().includes(filter)) {
+      items[i].style.display = "";
+    } else {
+      items[i].style.display = "none";
+    }
+  }
+    window.addEventListener("click", function (e) {
+  const isDropdownBtn = e.target.closest(".dropdown-btn");
+  const isDropdownContent = e.target.closest(".dropdown-content");
+
+  if (!isDropdownBtn && !isDropdownContent) {
+    document.querySelectorAll('.dropdown-content').forEach(drop => {
+      drop.style.display = 'none';
+    });
+  }
+});
+
+  // Also filter the table based on which dropdown is being filtered
+  // Decide filter type by listId:
+  // If listId includes 'order-id' -> filter by orderId
+  // else if includes 'company' -> filter by company
+
+  let filterType = null;
+  if (listId.includes('order-id')) filterType = 'orderId';
+  else if (listId.includes('company')) filterType = 'company';
+
+  if (filterType) {
+    const rows = document.querySelectorAll("#pending-orders-table tbody tr");
+    rows.forEach(row => {
+      const orderId = row.children[0].textContent.toLowerCase();
+      const company = row.children[2].textContent.toLowerCase();
+
+      let match = true;
+      if (filterType === "orderId") match = orderId.includes(filter);
+      if (filterType === "company") match = company.includes(filter);
+
+      row.style.display = match ? "" : "none";
+    });
+  }
+}
+
+
+/*--------------------------------
+  ---------next part -------------*/
+
+  // Immediately show dashboard on page load
+  window.onload = () => {
+    showDashboard(document.querySelector('.nav-item.active'));
+  };
+
+
+  function resetActive() {
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  }
+
+
+ function showAddOrderForm(element) {
+  resetActive();
+  element.classList.add("active");
+  document.getElementById("main-content").innerHTML = `<div id="form-container"></div>`;
+  renderClientTabs("new");
+}
+
+const clients = {
+  "Hell Energy": {
+    clientName: "Hell Energy",
+    companyName: "Hell Energy",
+    email: "hellenergy@mail.com",
+    phone: "9898989898",
+    gst: "1234567890",
+    address: "Mumbai",
+    division: "A&E and PMC",
+    projectName: "Prefeasibility",
+    subContractorName: "Nill",
+    site: "Mumbai"
+  }
+};
+
+let selectedClient = null;
+let formData = {};
+
+function renderClientTabs(activeTab = "new") {
+  document.getElementById("form-container").innerHTML = `
+    <div class="card" style="padding: 20px 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 900px; margin: auto;">
+      <h2 style="margin-bottom: 20px;">Add Client</h2>
+      <div class="tabs" style="display: flex; border-bottom: 1px solid #ddd;">
+        <div class="tab ${activeTab === "new" ? "active" : ""}" onclick="renderClientTabs('new')" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: 600; border-bottom: ${activeTab === "new" ? '3px solid #007980' : 'none'};">New Client</div>
+        <div class="tab ${activeTab === "existing" ? "active" : ""}" onclick="renderClientTabs('existing')" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: 600; border-bottom: ${activeTab === "existing" ? '3px solid #007980' : 'none'};">Existing Client</div>
+      </div>
+      <div id="client-tab-content" style="padding-top: 24px;">
+        ${activeTab === "new" ? renderNewClientFields() : renderExistingClientFields()}
+      </div>
+    </div>
+  `;
+
+  if (activeTab === "new") {
+    setTimeout(() => {
+      document.getElementById("new-client-form").onsubmit = function (e) {
+        e.preventDefault();
+        const data = new FormData(this);
+        const newClient = {};
+        for (let [k, v] of data.entries()) {
+          if (!v.trim()) return alert("All fields are required.");
+          newClient[k] = v.trim();
+        }
+        clients[newClient.clientName] = newClient;
+        selectedClient = clients[newClient.clientName];
+        formData = { ...newClient };
+        renderClientDetailsForm();
+      };
+    }, 10);
+  }
+}
+
+
+function renderNewClientFields() {
+  return `
+    <form id="new-client-form" style="max-width: 700px; margin: 0 auto;">
+      <div class="form-grid" style="margin-top: 20px;">
+        <div>
+          <label for="clientName">Name</label>
+          <input class="input-field" name="clientName" id="clientName" required>
+        </div>
+        <div>
+          <label for="companyName">Company Name</label>
+          <input class="input-field" name="companyName" id="companyName" required>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" class="input-field" name="email" id="email" required>
+        </div>
+        <div>
+          <label for="phone">Phone</label>
+          <input type="tel" class="input-field" name="phone" id="phone" required>
+        </div>
+        <div style="grid-column: span 2;">
+          <label for="address">Address</label>
+          <textarea class="input-field" name="address" id="address" required></textarea>
+        </div>
+        <div style="grid-column: span 2;">
+          <label for="gst">GST NO</label>
+          <input class="input-field" name="gst" id="gst" required>
+        </div>
+      </div>
+
+      <div class="button-group" style="justify-content: flex-end; margin-top: 30px;">
+        <button type="button" class="btn-secondary" onclick="renderClientTabs('existing')">Cancel</button>
+        <button type="submit" class="btn-primary">Save & Proceed</button>
+      </div>
+    </form>
+  `;
+}
+
+function renderExistingClientFields() {
+  return `
+    <div style="min-height: 300px;">
+      <input type="text" id="client-search" class="input-field search-input" placeholder="🔍 Search client..." oninput="filterClients(this.value)">
+      <div id="client-list" class="client-list">
+        ${Object.keys(clients).map(name => `
+          <div class="client-item" onclick="selectClient('${name}')">
+            <span style="margin-right: 8px;">🕘</span>${name}
+          </div>`).join("")}
+      </div>
+      <div id="client-error" style="color: red; font-size: 13px; margin-top: 6px; display: none;">Please select a client.</div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="goToClientDetails()">Next</button>
+      </div>
+    </div>
+  `;
+}
+
+function filterClients(value) {
+  const filtered = Object.keys(clients).filter(c => c.toLowerCase().includes(value.toLowerCase()));
+  const list = document.getElementById("client-list");
+  list.innerHTML = filtered.map(name => `
+    <div class="client-item" onclick="selectClient('${name}')">
+      <span style="margin-right: 8px;">🕘</span>${name}
+    </div>`).join("");
+}
+
+function selectClient(name) {
+  selectedClient = clients[name];
+  document.querySelectorAll(".client-item").forEach(el => el.classList.remove("selected"));
+  [...document.querySelectorAll(".client-item")].find(el => el.textContent.includes(name))?.classList.add("selected");
+  document.getElementById("client-error").style.display = "none";
+}
+
+function goToClientDetails() {
+  if (!selectedClient) {
+    document.getElementById("client-error").style.display = "block";
+    return;
+  }
+  formData = { ...selectedClient };
+  renderClientDetailsForm();
+}
+
+function renderClientDetailsForm() {
+  document.getElementById("form-container").innerHTML = `
+    <div class="card" style="min-height: 450px;">
+      <h2>Client Details</h2>
+      <form id="client-details-form">
+        <div class="form-grid">
+          <div><label>Client Name</label><input class="input-field" name="clientName" value="${formData.clientName}" required></div>
+          <div><label>Division</label><input class="input-field" name="division" value="${formData.division || ''}" required></div>
+          <div><label>Company Name</label><input class="input-field" name="companyName" value="${formData.companyName}" required></div>
+          <div><label>Project Name</label><input class="input-field" name="projectName" value="${formData.projectName || ''}" required></div>
+          <div><label>Sub Contractor Name</label><input class="input-field" name="subContractorName" value="${formData.subContractorName || ''}" required></div>
+          <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;"><label>Start Date</label><input type="date" class="input-field" name="startDate" required></div>
+            <div style="flex: 1;"><label>End Date</label><input type="date" class="input-field" name="endDate" required></div>
+          </div>
+          <div style="grid-column: span 2;"><label>Site</label><input class="input-field" name="site" value="${formData.site || ''}" required></div>
+        </div>
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="renderClientTabs('existing')">Back</button>
+          <button class="btn-primary" type="submit">Next</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.getElementById("client-details-form").onsubmit = function (e) {
+    e.preventDefault();
+    const data = new FormData(this);
+    for (const [k, v] of data.entries()) formData[k] = v.trim();
+    renderPOForm();
+  };
+}
+
+function renderPOForm() {
+  document.getElementById("form-container").innerHTML = `
+    <div class="card" style="min-height: 450px;">
+      <h2>Purchase Order Details</h2>
+      <form id="po-form">
+        <div class="form-grid">
+          <div><label>PO Number</label><input class="input-field" name="poNumber" required></div>
+          <div><label>PO Amount</label><input class="input-field" name="poAmount" required></div>
+          <div><label>Issued By</label><input class="input-field" name="issuedBy" required></div>
+          <div><label>PO Date</label><input type="date" class="input-field" name="poDate" required></div>
+        </div>
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="renderClientDetailsForm()">Back</button>
+          <button class="btn-primary" type="submit">Next</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.getElementById("po-form").onsubmit = function (e) {
+    e.preventDefault();
+    const data = new FormData(this);
+    for (const [k, v] of data.entries()) formData[k] = v.trim();
+    showSummary();
+  };
+}
+
+function showSummary() {
+  document.getElementById("form-container").innerHTML = `
+    <div class="card" style="min-height: 450px; max-width: 1000px; margin: auto; display: flex; flex-direction: column; justify-content: space-between;">
+      <h2 style="margin-bottom: 20px;">Order Summary</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <!-- Left Column -->
+        <div>
+          ${renderSummarySection("Client Details", {
+            "Client Name": formData.clientName,
+            "Company Name": formData.companyName,
+            "Email": formData.email,
+            "Phone": formData.phone,
+            "GST": formData.gst,
+            "Address": formData.address
+          })}
+
+          ${renderSummarySection("Project Info", {
+            "Division": formData.division,
+            "Project Name": formData.projectName,
+            "Sub Contractor Name": formData.subContractorName,
+            "Site": formData.site,
+            "Start Date": formData.startDate,
+            "End Date": formData.endDate
+          })}
+        </div>
+
+        <!-- Right Column -->
+        <div>
+          ${renderSummarySection("PO Info", {
+            "PO Number": formData.poNumber,
+            "PO Amount": formData.poAmount,
+            "Issued By": formData.issuedBy,
+            "PO Date": formData.poDate
+          })}
+        </div>
+      </div>
+
+      <div class="button-group" style="margin-top: 30px; justify-content: flex-end;">
+        <button class="btn-secondary" onclick="renderPOForm()">Back</button>
+        <button class="btn-primary" onclick="showConfirmation()">Submit</button>
+      </div>
+    </div>
+  `;
+}
+
+
+function renderSummarySection(title, dataObj) {
+  return `
+    <div style="margin-bottom: 20px;">
+      <h3 style="font-size: 15px; font-weight: 600; color: #444; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">${title}</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        ${Object.entries(dataObj).map(([label, value]) => `
+          <div style="background: #f9f9f9; padding: 10px 14px; border-radius: 6px; border: 1px solid #e0e0e0;">
+            <div style="font-size: 12px; color: #666;">${label}</div>
+            <div style="font-size: 14px; font-weight: 500;">${value || '-'}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function showConfirmation() {
+  document.getElementById("form-container").innerHTML = `
+    <div class="card" style="min-height: 450px;">
+      <h2>Order Confirmation</h2>
+      <table class="confirmation-table">
+        <tbody>
+          ${Object.entries(formData).map(([k, v]) => `<tr><td>${k.replace(/([A-Z])/g, ' $1')}</td><td>${v}</td></tr>`).join("")}
+        </tbody>
+      </table>
+      <div class="success-box">✅ The order has been successfully added and confirmed.</div>
+    </div>
+  `;
+}
+
+/*===============================
+==========View===============*/
+ function showSalesOrders(element) {
+  resetActive();
+  element.classList.add("active");
+
+  document.getElementById("main-content").innerHTML = `
+      <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
+        &lt;  View Sales Order
+      </h1>
+
+      <div class="custom-filter-group">
+        <!-- Order ID Dropdown -->
+        <div class="custom-dropdown">
+          <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('order-id-dropdown')">
+            Order ID <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-content" id="order-id-dropdown" onclick="event.stopPropagation()">
+            <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'order-id-list')" />
+            <ul id="order-id-list" class="dropdown-list">
+              <li onclick="filterSalesTableBy('orderId', '1031')"><i class="fas fa-history"></i> 1031</li>
+              <li onclick="filterSalesTableBy('orderId', '1032')"><i class="fas fa-arrow-up"></i> 1032</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="custom-dropdown">
+        <!-- Company Dropdown -->
+          <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('company-dropdown')">
+            Company <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-content" id="company-dropdown" onclick="event.stopPropagation()">
+            <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'company-list')" />
+            <ul id="company-list" class="dropdown-list">
+              <li onclick="filterSalesTableBy('company', 'ABC')"><i class="fas fa-history"></i> ABC</li>
+              <li onclick="filterSalesTableBy('company', 'XYZ Ltd.')"><i class="fas fa-arrow-up"></i> XYZ Ltd.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="sales-order-table" class="sales-order-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Client name</th>
+            <th>Company</th>
+            <th>Project</th>
+            <th>PO Base Value</th>
+            <th>Profit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+       <tbody>
+  ${[
+    { id: "1031", client: "ABC", company: "ABC", project: "Alpha", po: 2000, profit: 500 },
+    { id: "1032", client: "DEF", company: "XYZ Ltd.", project: "Beta", po: 3500, profit: 700 },
+  ].map(row => `
+    <tr>
+      <td>${row.id}</td>
+      <td>${row.client}</td>
+      <td>${row.company}</td>
+      <td>${row.project}</td>
+      <td>${formatINR(row.po)}</td>
+      <td>${formatINR(row.profit)}</td>
+      <td>
+        <i class="fas fa-pen edit-icon"></i>
+        <i class="fas fa-trash delete-icon"></i>
+      </td>
+    </tr>
+  `).join("")}
+</tbody>
+
+      </table>
+    </div>
+
+    <div class="view-order-actions">
+      <button class="btn-download" onclick="downloadTableCSV('sales-order-table')">
+        <i class="fas fa-download"></i> Download
+      </button>
+      
+    </div>
+  `;
+}
+
+function formatINR(amount) {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 2
+  }).format(amount); // → ₹2,000.00
+}
+
+
+function filterDropdownItems(input, listId) {
+  const filter = input.value.toLowerCase();
+  const ul = document.getElementById(listId);
+  const items = ul.getElementsByTagName('li');
+
+  for (let i = 0; i < items.length; i++) {
+    const text = items[i].textContent || items[i].innerText;
+    items[i].style.display = text.toLowerCase().includes(filter) ? "" : "none";
+  }
+
+  // Auto filter table on input:
+  const type = listId.includes("order-id") ? "orderId" : "company";
+  filterSalesTableBy(type, filter);
+}
+
+function filterSalesTableBy(type, value) {
+  const rows = document.querySelectorAll("#sales-order-table tbody tr");
+  rows.forEach(row => {
+    const orderId = row.children[0].textContent.toLowerCase();
+    const company = row.children[2].textContent.toLowerCase();
+
+    let match = true;
+    if (type === "orderId") match = orderId.includes(value.toLowerCase());
+    if (type === "company") match = company.includes(value.toLowerCase());
+
+    row.style.display = match ? "" : "none";
+  });
+}
+
+
+
+
+function toggleFilterPanel() {
+  const panel = document.querySelector('.filter-panel');
+  panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
+}
+
+function deleteRow(icon) {
+  const row = icon.closest('tr');
+  row.remove();
+}
+
+function editRow(icon) {
+  const row = icon.closest('tr');
+  const cells = row.querySelectorAll('td');
+  for (let i = 0; i < cells.length - 1; i++) {
+    const newValue = prompt(`Edit ${document.querySelectorAll('th')[i].textContent}`, cells[i].textContent);
+    if (newValue !== null) {
+      cells[i].textContent = newValue;
+    }
+  }
+}
+
+
+function toggleDropdown(id, iconId) {
+  document.querySelectorAll('.dropdown-content').forEach(drop => {
+    if (drop.id !== id) drop.style.display = 'none';
+  });
+
+  const dropdown = document.getElementById(id);
+  const icon = document.getElementById(iconId);
+
+  const isOpen = dropdown.style.display === 'block';
+  dropdown.style.display = isOpen ? 'none' : 'block';
+
+  // Toggle the icon
+  if (icon) {
+    icon.classList.remove(isOpen ? 'fa-chevron-up' : 'fa-chevron-down');
+    icon.classList.add(isOpen ? 'fa-chevron-down' : 'fa-chevron-up');
+  }
+
+  // Reset other icons
+  document.querySelectorAll('.dropdown-btn i.fas').forEach(i => {
+    if (i.id !== iconId) {
+      i.classList.remove('fa-chevron-up');
+      i.classList.add('fa-chevron-down');
+    }
+  });
+}
+
+
+function downloadTableCSV(tableId) {
+  const table = document.getElementById(tableId);
+  let csv = [];
+  const rows = table.querySelectorAll("tr");
+
+  for (let row of rows) {
+    const cols = row.querySelectorAll("td, th");
+    const data = Array.from(cols).map(col => `"${col.innerText.trim()}"`);
+    csv.push(data.join(","));
+  }
+
+  // Add BOM to fix encoding in Excel
+  const BOM = "\uFEFF";
+  const blob = new Blob([BOM + csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "sales_orders.csv";
+  link.click();
+}
+
+
+
+
+function updateCardIcon(cardElement) {
+  const icon = cardElement.querySelector(".card-icon i");
+  // Change the icon class (example: toggle to a checkmark)
+  if (icon.classList.contains("fa-clipboard-list")) {
+    icon.classList.remove("fa-clipboard-list");
+    icon.classList.add("fa-check-circle");
+  } else {
+    icon.classList.remove("fa-check-circle");
+    icon.classList.add("fa-clipboard-list");
+  }
+}
+
+  function showComingSoon(element) {
+    resetActive();
+    element.classList.add('active');
+    document.getElementById("main-content").innerHTML = `
+      <h1>Coming Soon!</h1>
+      <p>This feature is under development.</p>
+    `;
+  }
+
+  function logout() {
+    window.location.href = "login.html";
+  }
+
+
+function showReportSection(element) {
+  resetActive();
+  element.classList.add("active");
+
+  document.getElementById("main-content").innerHTML = `
+    <h1>Reports</h1>
+    
+    <div class="chart-section">
+      <div class="chart-header">
+        <h2>Performance Overviews</h2>
+        <div class="filters">
+          <label><input type="month" id="from-month"/></label>
+          <label><input type="month" id="to-month" /></label>
+          <button onclick="filterGraph()">Filter</button>
+          <button onclick="downloadChart()">Download</button>
+        </div>
+      </div>
+      <canvas id="performanceChart" style="max-height: 400px;"></canvas>
+      <div id="no-data-message" style="display: none; text-align: center; margin-top: 20px;">
+  <h2 class="no-data-effect">🚫 No Data Found 🚫</h2>
+</div>
+    </div>
+  `;
+  renderChart();
+}
+
+// Dummy chart renderer
+let currentChart = null;
+
+function renderChart() {
+  fetch('/api/chart-data')
+    .then(response => response.json())
+    .then(data => {
+      const ctx = document.getElementById('performanceChart')?.getContext('2d');
+      if (!ctx) {
+        console.error("Canvas with id 'performanceChart' not found.");
+        return;
+      }
+
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      // Combine and sort by end_date (just in case backend didn’t)
+      const combined = data.end_dates.map((date, i) => ({
+        date,
+        percentage: data.percentages[i],
+        timestamp: Date.parse(date)
+      })).sort((a, b) => a.timestamp - b.timestamp);
+
+      const sortedLabels = combined.map(item =>
+  new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+);  
+      const sortedValues = combined.map(item => item.percentage);
+
+      // Gradient fill for the line
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, 'rgba(18, 114, 133, 0.4)');
+      gradient.addColorStop(1, 'rgba(18, 114, 133, 0.05)');
+
+      currentChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sortedLabels,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Bar Graph',
+              data: sortedValues,
+              backgroundColor: '#127285',
+              yAxisID: 'y',
+              order: 2,
+              barPercentage: 0.7,       // Default is 0.9. Lower = thinner bars
+              categoryPercentage: 0.7   // Controls space between bars
+
+            },
+            {
+              type: 'line',
+              label: 'Line Graph',
+              data: sortedValues,
+              borderColor: '#ffa500',
+              backgroundColor: gradient,
+              fill: true,
+              tension: 0,
+              pointBackgroundColor: '#ffa500',
+              pointBorderColor: '#ffa500',
+              pointRadius: 2,
+              pointHoverRadius: 7,
+              yAxisID: 'y',
+              order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          layout: {
+            padding: { top: 20, bottom: 20, left: 10, right: 10 }
+          },
+          scales: {
+  x: {
+    title: {
+      display: true,
+      text: 'Timeframe',
+      color: '#000', // ✅ X-axis title color
+      font: {
+        size: 14,
+        weight: 'bold',
+        family: 'Inter'
+      }
+    },
+    ticks: {
+      color: '#000', // ✅ X-axis ticks color
+      font: {
+        size: 12,
+        family: 'Inter'
+      }
+    },
+    grid: {
+      color: '#eee' // optional: grid line color
+    }
+  },
+  y: {
+    beginAtZero: true,
+    title: {
+      display: true,
+      text: 'Profit %',
+      color: '#000', // ✅ Y-axis title color
+      font: {
+        size: 14,
+        weight: 'bold',
+        family: 'Inter'
+      }
+    },
+    ticks: {
+      color: '#000', // ✅ Y-axis ticks color
+      stepSize: 5
+    },
+    grid: {
+      color: '#eee'
+    }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: '#127285',
+                font: { weight: '600' }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#fff',
+              titleColor: '#127285',
+              bodyColor: '#333',
+              borderColor: '#ccc',
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: function (context) {
+                  return `Profit: ${context.formattedValue}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error rendering chart:', error);
+    });
+}
+
+
+
+function downloadChart() {
+  html2canvas(document.getElementById("performanceChart")).then(canvas => {
+    const imgData = canvas.toDataURL("image/png");
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    pdf.addImage(imgData, "PNG", 10, 10, 180, 90);
+    pdf.save("report-chart.pdf");
+  });
+}
+
+function filterGraph() {
+  const fromMonth = document.getElementById("from-month").value;
+  const toMonth = document.getElementById("to-month").value;
+
+  let url = '/api/chart-data';
+  if (fromMonth && toMonth) {
+    url += `?from=${fromMonth}-01&to=${toMonth}-31`;
+  }
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const ctx = document.getElementById('performanceChart')?.getContext('2d');
+      if (!ctx) return;
+
+      if (currentChart) currentChart.destroy();
+
+      const combined = data.end_dates.map((date, i) => ({
+        date,
+        percentage: data.percentages[i],
+        timestamp: Date.parse(date)
+      })).sort((a, b) => a.timestamp - b.timestamp);
+
+      const sortedLabels = combined.map(item =>
+        new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+      );
+      const sortedValues = combined.map(item => item.percentage);
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, 'rgba(18, 114, 133, 0.4)');
+      gradient.addColorStop(1, 'rgba(18, 114, 133, 0.05)');
+
+      currentChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sortedLabels,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Bar Graph',
+              data: sortedValues,
+              backgroundColor: '#127285',
+              yAxisID: 'y',
+              order: 2,
+              barPercentage: 0.7,
+              categoryPercentage: 0.7
+            },
+            {
+              type: 'line',
+              label: 'Line Graph',
+              data: sortedValues,
+              borderColor: '#ffa500',
+              backgroundColor: gradient,
+              fill: true,
+              tension: 0,
+              pointBackgroundColor: '#ffa500',
+              pointBorderColor: '#ffa500',
+              pointRadius: 2,
+              pointHoverRadius: 7,
+              yAxisID: 'y',
+              order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          layout: { padding: { top: 20, bottom: 20, left: 10, right: 10 } },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Timeframe',
+                color: '#000',
+                font: { size: 14, weight: 'bold', family: 'Inter' }
+              },
+              ticks: { color: '#000', font: { size: 12, family: 'Inter' } },
+              grid: { color: '#eee' }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Profit %',
+                color: '#000',
+                font: { size: 14, weight: 'bold', family: 'Inter' }
+              },
+              ticks: { color: '#000', stepSize: 5 },
+              grid: { color: '#eee' }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              labels: { color: '#127285', font: { weight: '600' } }
+            },
+            tooltip: {
+              backgroundColor: '#fff',
+              titleColor: '#127285',
+              bodyColor: '#333',
+              borderColor: '#ccc',
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: function (context) {
+                  return `Profit: ${context.formattedValue}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(error => {
+      console.error("Error filtering chart:", error);
+    });
+}
+
+
+
+function showReportSection(element) {
+  resetActive();
+  element.classList.add("active");
+
+  document.getElementById("main-content").innerHTML = `
+    
+    <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
+        &lt;  Order Report
+      </h1>
+    <div class="report-section">
+
+      <div class="report-card">
+        <h3>Client Order Timeline</h3>
+        <select>
+          <option>Latest First</option>
+          <option>Oldest First</option>
+          <option>Recently Updated</option>
+        </select>
+        <div class="timeline">
+          <div class="timeline-entry pending">
+            <h4>Project Name</h4>
+            <p>June 2, 2025</p>
+            <p>Order ID</p>
+            <p>Company Name</p>
+          </div>
+          <div class="timeline-entry processing">
+            <h4>Project Name</h4>
+            <p>June 2, 2025</p>
+            <p>Order ID</p>
+            <p>Company Name</p>
+          </div>
+          <div class="timeline-entry shipped">
+            <h4>Project Name</h4>
+            <p>June 2, 2025</p>
+            <p>Order ID</p>
+            <p>Company Name</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <h3>Orders by Status Type</h3>
+        <select>
+          <option>This Month</option>
+          <option>Today</option>
+          <option>This Week</option>
+          <option>This Year</option>
+          <option>Custom Date</option>
+        </select>
+        <div class="status-chart-container">
+          <canvas id="statusChart"></canvas>
+        </div>
+        <div class="status-legend">
+          <span><span class="dot dot-pending"></span>Pending Order</span>
+          <span><span class="dot dot-processing"></span>Processing Order</span>
+          <span><span class="dot dot-shipped"></span>Shipped Order</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-actions">
+      <button class="btn-download">📥 Download Report</button>
+      <button class="btn-share">📤 Share</button>
+    </div>
+  `;
+
+  renderDonutChart(); // You’ll need to define this
+}
+
+
+function renderDonutChart() {
+  const ctx = document.getElementById('statusChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Pending Order', 'Processing Order', 'Shipped Order'],
+      datasets: [{
+        data: [13, 25, 63],
+        backgroundColor: ['#f28e8e', '#f5d97d', '#7edc94'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true }
+      }
+    }
+  });
+}
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

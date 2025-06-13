@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add New Order</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+
+    
+    
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  display: flex;
+  background-color: #f5f6f8;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Container Layout */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: #006D7D;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar .logo img {
+  width: 245px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav ul li {
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.3s;
+}
+
+    .nav-item i,
+.logout i {
+  font-size: 18px;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.356);
+  cursor: pointer;
+}
+
+
+.logout {
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.main-content h1 {
+  font-size: 24px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+/* Greeting section */
+.greeting {
+  margin-bottom: 25px;
+}
+
+.greeting h1 {
+  font-size: 26px;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.greeting p {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Dashboard stat cards */
+.cards-dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: -39px; /* ⬅️ Moves cards closer to greeting */
+  margin-bottom: 20px;
+}
+
+.card-dashboard {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 220px;
+  height: 80px;
+}
+
+.card-icon {
+  background-color: #127285;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+/* Dashboard stat cards */
+.cards-dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: -39px;
+  margin-bottom: 20px;
+}
+
+.card-dashboard {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 220px;
+  height: 80px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dashboard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon */
+.card-icon {
+  background-color: #127285;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+/* Text */
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+
+/* Chart section */
+.chart-section {
+  background-color: white;
+  padding: 24px;
+  border-radius: 15px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.08);
+  width: 88%;
+  max-width: 100%;
+  margin: 0 0 20px 30px; /* Moved left */
+  box-sizing: border-box;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.chart-header h2 {
+  font-size: 20px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 700;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filters select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #127285;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-placeholder {
+  margin-top: 20px;
+  height: 198px;
+  display: flex;
+  justify-content: flex-start; /* Align left */
+  align-items: center;
+  color: #888;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+  padding-left: 20px; /* Optional spacing */
+}
+
+#performanceChart {
+  margin-top: 10px;
+  max-height: 350px;
+}
+
+
+/* Icon styles */
+.nav-item i,
+.logout i {
+  font-size: 18px;
+  margin-right: 8px; /* spacing between icon and text */
+  vertical-align: middle;
+  width: 18px;        /* uniform width */
+  height: 22px;       /* uniform height */
+  display: inline-block;
+}
+    body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background-color: #f5f6f8;
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #006D7D;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar .logo img {
+  width: 245px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav ul li {
+  padding: 12px 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.356);
+  cursor: pointer;
+}
+
+
+    .nav-item i,
+.logout i {
+  font-size: 18px;
+}
+
+.sidebar .logout {
+   padding: 12px 30px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.main {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 900px;
+  margin: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  border-bottom: 3px solid #006D7D;
+  color: #006D7D;
+  font-weight: 600;
+}
+
+.input-field,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+textarea.input-field {
+  min-height: 80px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.button-group {
+  text-align: right;
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.btn-primary {
+  background-color: #007980;
+  color: white;
+}
+
+.client-item {
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.client-item:hover,
+.client-item.selected {
+  background-color: #c7e4ea;
+}
+
+.search-input {
+  margin-bottom: 10px;
+}
+ html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  display: flex;
+  background-color: #f5f6f8;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Container Layout */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: #127285;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar .logo img {
+  width: 245px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav ul li {
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.3s;
+}
+
+    .nav-item i,
+.logout i {
+  font-size: 18px;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.356);
+  cursor: pointer;
+}
+
+
+.logout {
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
+}
+
+
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+      </div>
+    <nav>
+      <ul>
+         <li class="nav-item">
+  <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
+    <i class="fas fa-th-large"></i> <span>  Dashboard</span>
+  </a>
+</li>
+        <li class="nav-item active">
+  <a href="/add-order" style="color: white; text-decoration: none;">
+    <i class="fas fa-plus-circle"></i> Add New Order
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="{{ url_for('clients') }}" style="color: white; text-decoration: none;">
+    <i class="fas fa-user"></i> Clients</a>
+</li>
+
+          <li class="nav-item">
+  <a href="{{ url_for('view_orders') }}" style="color: white; text-decoration: none;">
+    <i class="fas fa-file-alt"></i> View Sales Order</a>
+</li>
+        <li class="nav-item">
+  <a href="javascript:void(0);" onclick="showComingSoon(this)" style="color: white; text-decoration: none;">
+    <i class="fas fa-receipt"></i> <span> Sales Invoice</span>
+  </a>
+</li>
+        <li class="nav-item">
+  <a href="javascript:void(0);" onclick="showReportSection(this)" style="color: white; text-decoration: none;">
+    <i class="fas fa-chart-bar"></i> <span> Report</span>
+  </a>
+</li>
+      </ul>
+</nav>
+<li class="nav-item logout">
+  <a href="/" style="color: white; text-decoration: none;">
+    <i class="fas fa-sign-out-alt"></i> <span> Log Out</span>
+  </a>
+</li>
+</aside>
+
+  <main class="main">
+    <div id="form-container"></div>
+  </main>
+
+  <script>
+  const clients = {
+    "Hell Energy": {
+      clientName: "Hell Energy",
+      division: "A&E and PMC",
+      companyName: "Hell Energy",
+      projectName: "Prefeasibility",
+      subContractorName: "Nill",
+      site: "Mumbai"
+    },
+    "Reliance Retail Limited": {
+      clientName: "Reliance Retail",
+      division: "Retail Ops",
+      companyName: "Reliance",
+      projectName: "Launchpad",
+      subContractorName: "ABC Subcon",
+      site: "Navi Mumbai"
+    }
+  };
+
+  let selectedClient = null;
+  let formData = {};
+
+  function renderClientTabs(activeTab = "new") {
+    document.getElementById("form-container").innerHTML = `
+      <div class="card">
+        <h2>Add Client</h2>
+        <div class="tabs">
+          <div class="tab ${activeTab === "new" ? "active" : ""}" onclick="renderNewClientForm()">New Client</div>
+          <div class="tab ${activeTab === "existing" ? "active" : ""}" onclick="renderClientTabs('existing')">Existing Client</div>
+        </div>
+        ${activeTab === "new" ? renderNewClientFields() : renderExistingClientFields()}
+      </div>
+    `;
+  }
+
+  function renderNewClientFields() {
+    return `
+      <form id="new-client-form">
+        <div class="form-grid">
+          <div><label>Client Name</label><input class="input-field" name="clientName" required></div>
+          <div><label>Division</label><input class="input-field" name="division" required></div>
+          <div><label>Company Name</label><input class="input-field" name="companyName" required></div>
+          <div><label>Project Name</label><input class="input-field" name="projectName" required></div>
+          <div><label>Sub Contractor Name</label><input class="input-field" name="subContractorName" required></div>
+          <div><label>Site</label><input class="input-field" name="site" required></div>
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn-primary">Add Client</button>
+        </div>
+      </form>
+    `;
+  }
+
+  function renderExistingClientFields() {
+    return `
+      <input type="text" class="input-field search-input" placeholder="Search client..." oninput="filterClients(this.value)">
+      <div id="client-list">
+        ${Object.keys(clients).map(name => `<div class="client-item" onclick="selectClient('${name}')">${name}</div>`).join("")}
+      </div>
+      <div class="button-group">
+        <button class="btn-secondary" onclick="alert('Cancelled')">Cancel</button>
+        <button class="btn-primary" onclick="goToClientDetails()">Next</button>
+      </div>
+    `;
+  }
+
+  function renderNewClientForm() {
+    renderClientTabs("new");
+    setTimeout(() => {
+      document.getElementById("new-client-form").onsubmit = function (e) {
+        e.preventDefault();
+        const data = new FormData(this);
+        const newClient = {};
+        for (let [k, v] of data.entries()) newClient[k] = v;
+
+        clients[newClient.clientName] = newClient;
+        selectedClient = clients[newClient.clientName];
+
+        renderClientTabs("existing");
+
+        setTimeout(() => {
+          selectClient(newClient.clientName);
+        }, 50);
+      };
+    }, 10);
+  }
+
+  function filterClients(value) {
+    const filtered = Object.keys(clients).filter(c => c.toLowerCase().includes(value.toLowerCase()));
+    const list = document.getElementById("client-list");
+    list.innerHTML = filtered.map(name => `<div class="client-item" onclick="selectClient('${name}')">${name}</div>`).join("");
+  }
+
+  function selectClient(name) {
+    selectedClient = clients[name];
+    document.querySelectorAll(".client-item").forEach(el => el.classList.remove("selected"));
+    [...document.querySelectorAll(".client-item")].find(el => el.textContent === name)?.classList.add("selected");
+  }
+
+  function goToClientDetails() {
+    if (!selectedClient) return alert("Please select a client.");
+    formData = { ...selectedClient };
+    renderClientDetailsForm();
+  }
+
+  function renderClientDetailsForm() {
+    document.getElementById("form-container").innerHTML = `
+      <div class="card">
+        <h2>Client Details</h2>
+        <form id="client-details-form">
+          <div class="form-grid">
+            <div><label>Client Name</label><input class="input-field" name="clientName" value="${formData.clientName}" required></div>
+            <div><label>Division</label><input class="input-field" name="division" value="${formData.division}" required></div>
+            <div><label>Company Name</label><input class="input-field" name="companyName" value="${formData.companyName}" required></div>
+            <div><label>Project Name</label><input class="input-field" name="projectName" value="${formData.projectName}" required></div>
+            <div><label>Sub Contractor Name</label><input class="input-field" name="subContractorName" value="${formData.subContractorName}" required></div>
+            <div><label>Start Date</label><input type="date" class="input-field" name="startDate" required></div>
+            <div><label>End Date</label><input type="date" class="input-field" name="endDate" required></div>
+            <div style="grid-column: span 2;"><label>Site</label><input class="input-field" name="site" value="${formData.site}" required></div>
+          </div>
+          <div class="button-group">
+            <button type="button" class="btn-secondary" onclick="renderClientTabs('existing')">Back</button>
+            <button class="btn-primary" type="submit">Next</button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.getElementById("client-details-form").onsubmit = function (e) {
+      e.preventDefault();
+      const data = new FormData(this);
+      for (const [k, v] of data.entries()) formData[k] = v;
+      renderPOForm();
+    };
+  }
+
+  function renderPOForm() {
+    document.getElementById("form-container").innerHTML = `
+      <div class="card">
+        <h2>Purchase Order Details</h2>
+        <form id="po-form">
+          <div class="form-grid">
+            <div><label>PO Number</label><input class="input-field" name="poNumber" required></div>
+            <div><label>PO Amount</label><input class="input-field" name="poAmount" required></div>
+            <div><label>Issued By</label><input class="input-field" name="issuedBy" required></div>
+            <div><label>PO Date</label><input type="date" class="input-field" name="poDate" required></div>
+          </div>
+          <div class="button-group">
+            <button type="button" class="btn-secondary" onclick="renderClientDetailsForm()">Back</button>
+            <button class="btn-primary" type="submit">Next</button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.getElementById("po-form").onsubmit = function (e) {
+      e.preventDefault();
+      const data = new FormData(this);
+      for (const [k, v] of data.entries()) formData[k] = v;
+      showSummary();
+    };
+  }
+
+  function showSummary() {
+    document.getElementById("form-container").innerHTML = `
+      <div class="card" style="max-width: 700px; padding: 20px;">
+        <h2 style="font-size: 20px;">Order Summary</h2>
+        <table style="width:100%; border-collapse: collapse; margin-top: 1rem; font-size: 14px;">
+          <thead>
+            <tr style="background-color: #f2f2f2;">
+              <th style="border: 1px solid #ccc; padding: 6px;">Field</th>
+              <th style="border: 1px solid #ccc; padding: 6px;">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Object.entries(formData).map(([k, v]) => `
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 6px;">${k.replace(/([A-Z])/g, ' $1')}</td>
+                <td style="border: 1px solid #ccc; padding: 6px;">${v}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+        <div class="button-group" style="margin-top: 1.5rem;">
+          <button class="btn-secondary" onclick="renderPOForm()">Back</button>
+          <button class="btn-primary" onclick="submitToFlask()">Submit</button>
+        </div>
+      </div>
+    `;
+  }
+
+function submitToFlask() {
+  formData.profitPercentage = 50;  // always set it, since the field doesn't exist in the form
+
+  fetch('/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(res => res.ok ? showConfirmation() : alert("Submission failed."))
+  .catch(err => {
+    console.error("Error:", err);
+    alert("An error occurred.");
+  });
+}
+
+  function showConfirmation() {
+    document.getElementById("form-container").innerHTML = `
+      <div class="card" style="max-width: 700px; padding: 20px;">
+        <h2 style="font-size: 20px;">Order Confirmation</h2>
+        <table style="width:100%; border-collapse: collapse; margin-top: 1rem; font-size: 14px;">
+          <tbody>
+            ${Object.entries(formData).map(([k, v]) => `
+              <tr>
+                <td style="padding: 6px; font-weight: 500; width: 30%;">${k.replace(/([A-Z])/g, ' $1')}</td>
+                <td style="padding: 6px; width: 70%;">${v}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+        <div style="margin-top: 1.5rem; padding: 1rem; background-color: #e6f7e6; border: 1px solid #b2e2b2; border-radius: 6px; color: #2d702d; font-weight: 600; font-size: 15px;">
+          ✅ The order has been successfully added and confirmed.
+        </div>
+      </div>
+    `;
+  }
+
+  // Initialize
+  renderClientTabs();
+</script>
+</body>
+</html>

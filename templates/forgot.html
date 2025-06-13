@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Password</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @font-face {
+      font-family: 'MyFontBold';
+      src: url('/static/fonts/MyFontBold.otf') format('opentype');
+    }
+
+    @font-face {
+      font-family: 'MyFontRegular';
+      src: url('/static/fonts/MyFontRegular.otf') format('opentype');
+    }
+
+    body, html {
+      font-family: 'MyFontRegular', sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      width: 100%;
+      height: 100%;
+    }
+
+    .page-wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      width: 95vw;
+      height: 95vh;
+      display: flex;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .login-container {
+      display: flex;
+      flex: 1;
+    }
+
+    .login-left {
+      width: 50%;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .login-content {
+      width: 100%;
+    }
+
+    .heading {
+      font-size: 32px;
+      font-family: 'MyFontBold', sans-serif;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      font-family: 'MyFontRegular', sans-serif;
+      color: #555;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .input-field {
+      font-family: 'MyFontRegular', sans-serif;
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .icon {
+      margin-right: 8px;
+      font-size: 16px;
+      color: #127285;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+      font-size: 15px;
+    }
+
+    .login-btn {
+      font-family: 'MyFontBold', sans-serif;
+      width: 100%;
+      background-color: #127285;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .cancel-btn {
+      font-family: 'MyFontBold', sans-serif;
+      background-color: #ffffff;
+      color: #000;
+      border: 1px solid #aaa;
+      margin-top: 10px;
+    
+    }
+
+    .login-right {
+      width: calc(50% - 16px);
+      background-color: #127285;
+      padding: 30px;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      margin: 8px;
+    }
+
+    .right-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .reset-password-buttons {
+      font-family: 'MyFontBold', sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 25px;
+      
+    }
+
+    .timer-resend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+    .resend-text {
+      font-size: 13px;
+      color: #127285;
+    }
+
+    .resend-link {
+      font-size: 13px;
+      color: #127285;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .message-error {
+      font-size: 13px;
+      color: red;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="login-box">
+      <div class="login-container">
+
+        <!-- Left Panel -->
+        <div class="login-left">
+          <div class="login-content" id="login-content">
+            <h2 class="heading">Reset Password</h2>
+            <p class="subtitle">A password reset email will be sent to your registered Outlook email associated with your Activus account.</p>
+
+            <label><span class="icon"><i class="fas fa-envelope"></i></span> Email</label>
+            <input type="email" id="reset-email" class="input-field" placeholder="Enter Your Registered Email" />
+            <p id="email-message" class="message-error"></p>
+
+            <div class="reset-password-buttons">
+              <button onclick="sendVerificationCode()" id="send-code-btn" class="login-btn" disabled style="background-color: #ccc;">Send Code</button>
+              <button onclick="window.location.href='/loginback'" class="login-btn cancel-btn">Cancel</button>
+
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="login-right">
+          <img src="{{ url_for('static', filename='assets/Group 2.png') }}" alt="Login Graphic" class="right-image">
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    document.getElementById('reset-email').addEventListener('input', function () {
+  const emailInput = this.value.trim();  // trim to ignore spaces at start/end
+  const messageElement = document.getElementById('email-message');
+  const sendCodeButton = document.getElementById('send-code-btn'); // ← Added
+
+  const regex = /^[a-zA-Z][a-zA-Z0-9]*@[a-zA-Z0-9]+(\.[a-zA-Z]{2,})+$/;
+
+  if (emailInput === "") {
+    messageElement.textContent = "";
+    sendCodeButton.disabled = true;
+    sendCodeButton.style.backgroundColor = "#ccc";
+  } else if (/\s/.test(emailInput)) {
+    messageElement.textContent = "Not a Valid Email!";
+    sendCodeButton.disabled = true;
+    sendCodeButton.style.backgroundColor = "#ccc";
+  } else if (/^[^a-zA-Z0-9]/.test(emailInput)) {
+    messageElement.textContent = "Not a Valid Email!";
+    sendCodeButton.disabled = true;
+    sendCodeButton.style.backgroundColor = "#ccc";
+  } else if (/^[0-9]/.test(emailInput)) {
+    messageElement.textContent = "Not a Valid Email!";
+    sendCodeButton.disabled = true;
+    sendCodeButton.style.backgroundColor = "#ccc";
+  } else if (!regex.test(emailInput)) {
+    messageElement.textContent = "Not a Valid Email!";
+    sendCodeButton.disabled = true;
+    sendCodeButton.style.backgroundColor = "#ccc";
+  } else {
+    messageElement.textContent = "";
+    sendCodeButton.disabled = false;
+    sendCodeButton.style.backgroundColor = "#127285"; // Your active color
+  }
+});
+
+function sendVerificationCode() {
+  const email = document.getElementById("reset-email").value;
+  const msg = document.getElementById("email-message");
+
+  if (!email) {
+    msg.textContent = "Please enter your email.";
+    return;
+  }
+
+  fetch("/send-code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showVerificationUI(email);
+      startTimer();
+    } else {
+      msg.textContent = data.message;
+    }
+  });
+}
+
+function showVerificationUI(email) {
+  document.getElementById('login-content').innerHTML = `
+    <h2 class="heading">Reset Password</h2>
+    <p class="subtitle">The verification code will be sent to your mailbox. Please check it.</p>
+
+    <label><span class="icon"><i class="fas fa-envelope"></i></span> Email</label>
+    <input type="email" class="input-field" value="${email}" readonly />
+
+    <label><span class="icon"><i class="fas fa-shield-alt"></i></span> Enter Verification Code</label>
+    <input type="text" id="verification-code" class="input-field" placeholder="Enter verification code" />
+    <p id="code-message" class="message-error"></p>
+
+    <div class="timer-resend">
+      <span id="timer" class="resend-text"></span>
+      <button id="resend-btn" onclick="resendCode('${email}')" class="resend-link" style="display: none;">Resend Code</button>
+    </div>
+
+    <div class="reset-password-buttons">
+      <button onclick="validateCode('${email}')" class="login-btn">Submit</button>
+      <button onclick="window.location.href='/loginback'" class="login-btn cancel-btn">Cancel</button>
+    </div>
+  `;
+
+  // 👇 Restrict input to 6 numeric digits
+  const input = document.getElementById('verification-code');
+  input.addEventListener('input', function () {
+    // Remove non-digits
+    this.value = this.value.replace(/\D/g, '');
+    // Limit to 6 digits
+    if (this.value.length > 6) {
+      this.value = this.value.slice(0, 6);
+    }
+  });
+
+  startTimer(); // 🔁 Start countdown
+}
+
+function validateCode(email) {
+  const code = document.getElementById("verification-code").value;
+  const msg = document.getElementById("code-message");
+
+  if (!code) {
+    msg.textContent = "Please enter the verification code.";
+    return;
+  }
+
+  fetch("/verify-code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      // Show reset password form
+      document.getElementById('login-content').innerHTML = `
+        <h2 class="heading">Reset Password</h2>
+        <p class="subtitle">Enter a new password below. Make it something secure and memorable.</p>
+
+        <label><span class="icon"><i class="fas fa-lock"></i></span> Enter New Password</label>
+        <div class="input-wrapper">
+          <input type="password" min="6" id="new-password" class="input-field" placeholder="Enter new password" />
+        </div>
+
+        <label><span class="icon"><i class="fas fa-lock"></i></span> Re-enter New Password</label>
+        <div class="input-wrapper">
+          <input type="password" min="6" id="confirm-password" class="input-field" placeholder="Re-enter new password" />
+        </div>
+
+        <p id="reset-message" class="message-error"></p>
+
+        <div class="reset-password-buttons">
+          <button onclick="submitReset('${email}')" class="login-btn">Reset Password</button>
+          <button onclick="window.location.href='/loginback'" class="login-btn cancel-btn">Cancel</button>
+
+        </div>
+      `;
+
+      // Prevent spaces in password fields
+      document.getElementById("new-password").addEventListener("input", function () {
+        this.value = this.value.replace(/\s/g, ""); // Remove all spaces
+      });
+
+      document.getElementById("confirm-password").addEventListener("input", function () {
+        this.value = this.value.replace(/\s/g, ""); // Remove all spaces
+      });
+
+    } else {
+      msg.textContent = data.message;
+    }
+  });
+}
+
+function resendCode(email) {
+  const msg = document.getElementById('code-message');
+  msg.textContent = '';
+
+  fetch('/send-code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      msg.style.color = 'green';
+      msg.textContent = 'New code sent to your email.';
+      startTimer(); // ⏱ Restart timer
+    } else {
+      msg.style.color = 'red';
+      msg.textContent = data.message || 'Failed to resend code.';
+    }
+  })
+  .catch(() => {
+    msg.style.color = 'red';
+    msg.textContent = 'Something went wrong. Try again.';
+  });
+}
+let countdown;
+let timeLeft;
+
+function startTimer() {
+  const timerDisplay = document.getElementById('timer');
+  const resendBtn = document.getElementById('resend-btn');
+
+  timeLeft = 60;
+  resendBtn.style.display = 'none'; // Hide button
+  timerDisplay.style.display = 'inline';
+
+  countdown = setInterval(() => {
+    if (timeLeft > 0) {
+      timerDisplay.textContent = `Resend code in ${timeLeft}s`;
+      timeLeft--;
+    } else {
+      clearInterval(countdown);
+      timerDisplay.textContent = '';
+      resendBtn.style.display = 'inline-block'; // Show button after countdown
+    }
+  }, 1000);
+}
+function submitReset(email) {
+  const newPass = document.getElementById("new-password").value;
+  const confirmPass = document.getElementById("confirm-password").value;
+  const msg = document.getElementById("reset-message");
+
+  if (!newPass || !confirmPass) {
+    msg.textContent = "Please fill in both fields.";
+    return;
+  }
+
+  if (newPass.includes(" ")) {
+    msg.textContent = "Password must not contain spaces.";
+    return;
+  }
+
+  if (newPass.length < 6) {
+    msg.textContent = "Password must be at least 6 characters long.";
+    return;
+  }
+
+  if (newPass !== confirmPass) {
+    msg.textContent = "Passwords do not match.";
+    return;
+  }
+
+  fetch("/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, new_password: newPass })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('login-content').innerHTML = `
+        <h2 class="heading" style="color: green;">Success</h2>
+        <p class="subtitle">Your password has been updated. You can now log in with your new password.</p>
+        <button onclick="window.location.href='/'" class="login-btn">Go to Login</button>
+      `;
+    } else {
+      msg.textContent = data.message || "An error occurred. Please try again.";
+    }
+  });
+}
+
+
+</script>
+
+</body>
+</html>
