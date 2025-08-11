@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'SF Pro Display', sans-serif;
+    }
+
+    body {
+  margin: 0;
+  height: 99vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+
+    .header {
+      background-color: #127285;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo {
+      flex: 0;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .logo img {
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .center-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .center-title h2 {
+      margin: 0;
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; 
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .right a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+  .main {
+  display: flex;
+  flex: 1;
+  padding: 10px 30px 20px 30px; /* reduce top padding from 20px to 10px */
+  margin-top: 0px; /* this moves it upward slightly */
+  overflow: hidden;
+}
+
+
+
+    .left-section, .right-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 30px;
+      
+      
+    }
+
+    .left-section {
+  flex: 1.1;
+  margin-right: 0;
+  padding-right: 30px;
+  margin-top: -20px;
+  
+ 
+}
+ .right-section {
+  flex: 0.8;
+  margin-top: -20px;
+  padding-bottom: 100px; /* Add extra space for the button */
+}
+
+   h3 {
+  margin-top: 0;
+  font-size: 25px;
+  font-weight: bold;
+}
+h4 {
+  font-size: 21px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+
+table th, table td {
+  padding: 12px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+    th, td {
+      text-align: left;
+      padding: 10px;
+    }
+
+    th {
+      background-color: #127285;
+      color: white;
+    }
+
+    tr:nth-child(even) { background-color: #E0F1F5; }
+
+    tr:nth-child(odd) { background-color: #CDE6EA; }
+
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-direction: column;
+    }
+
+    .toggle {
+      width: 30px;
+      height: 15px;
+      border-radius: 15px;
+      background: #ccc;
+      position: relative;
+    }
+
+    .toggle.enabled {
+      background: #4CAF50;
+    }
+
+    .toggle::before {
+      content: "";
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      background: white;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      transition: 0.3s;
+    }
+
+    .toggle.enabled::before {
+      left: 16px;
+    }
+
+    .action-icon {
+      color: red;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background-color: #127285;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .right-section h3 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 21px;
+  font-weight: bold;
+}
+
+
+    .input-group {
+      margin-bottom: 8px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #127285;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 15px;
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+/* Match font style for subtitle */
+.center-title h2 small {
+  font-weight: normal;
+  font-size: 16px;
+  display: block;
+  margin-top: 4px;
+  color: #f0f0f0;
+}
+
+.divider {
+  width: 1px;
+  background-color: #c4c4c4;
+  margin: 0 20px;
+  height: auto;
+  align-self: stretch; /* add this */
+}
+
+
+select {
+  position: relative;
+  z-index: 1;
+}
+
+.main {
+  height: calc(100vh - 90px); /* Fits below header */
+  display: flex;
+  align-items: stretch; /* important to match height of both sections */
+}
+
+.right-section label i,
+.register-btn i {
+  color: #127285; /* Teal-blue to match your theme */
+  margin-right: 6px;
+}
+.modal {
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; justify-content: center; align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  text-align: center;
+  position: relative;
+}
+
+.modal-header .trash-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #f44336;
+}
+
+.modal-details p {
+  margin: 6px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  border: 1px solid gray;
+  background: white;
+  cursor: pointer;
+}
+
+.delete-btn {
+  padding: 10px 20px;
+  background: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+  .highlight-user {
+    color: green;
+    font-weight: regular;
+  }
+
+  button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .message-error {
+  font-size: 13px;
+  color: red;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+.right-section .input-group input,
+.right-section .input-group select {
+  padding: 9px 10px;      /* Reduced from 10px */
+  font-size: 14px;        /* Optional: slightly smaller text */
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.table-wrapper {
+  max-height: 325px; /* Adjusted height to fit header + 5 rows */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* Sticky header for better UX */
+.table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  background-color: #127285;
+  z-index: 1;
+}
+.password-group {
+  position: relative;
+}
+
+.password-group .toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 35px;
+  color: #127285; /* Teal-blue color */
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.password-group .toggle-password:hover {
+  color: #0d5b6c; /* Slightly darker on hover */
+}
+.register-btn i {
+  color: white;
+}
+
+.filterable-header {
+  position: relative;
+}
+
+.filter-dropdown-panel {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  transform: translateY(100%);
+  display: none;
+  width: 220px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+
+.filter-search {
+  width: 100%;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.checkbox-list {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.checkbox-list label {
+  display: block;
+  font-size: 14px;
+  padding: 4px 0;
+}
+th {
+  position: relative;
+}
+
+.filter-icon {
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color: white; /* ✅ White icon */
+}
+
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  width: 220px;
+}
+
+.filter-dropdown input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-dropdown label {
+  display: flex;
+  color: black;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  width: 220px;
+  max-height: 240px;
+  overflow-y: auto;  /* ✅ One scroll here only */
+}
+
+.checkbox-list {
+  display: block;
+  padding-right: 2px; /* subtle spacing */
+}
+
+
+/* cross mark/  clear icon in search bar */
+.clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 40%;
+  transform: translateY(-50%);
+  color: #fa0000;
+  cursor: pointer;
+  font-size: 14px;
+}
+.filter-dropdown {
+  position: fixed; /* Change from absolute to fixed */
+   top: auto !important; 
+  left: auto !important;
+  transform: translate(10px, 12px); /* Adjust as per visual offset */
+  background-color: white;
+  z-index: 99999; /* Ensure it appears on top */
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 200px;
+  max-height: 300px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+th {
+  position: relative;
+  overflow: visible; /* 👈 allows dropdown to extend */
+  white-space: nowrap;
+}
+.filter-dropdown {
+  z-index: 9999;  /* already added in your code — good */
+}
+/* Add these for the new Detailed Performance Monitor */
+.perf-grid-detailed {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.perf-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.metric-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+  font-size: 14px;
+}
+.metric-group strong {
+  color: #343a40;
+}
+.metric-group span {
+  font-weight: bold;
+  color: #0056b3;
+  background-color: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.metric-group small {
+  color: #6c757d;
+}
+.perf-hr {
+  border: none;
+  border-top: 1px solid #dee2e6;
+  margin: 8px 0;
+}
+.metric-item > span:last-child {
+  width: 110px; /* More space for GB text */
+}
+
+
+
+
+  </style>
+<style>
+.site-perf-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  width: 90%;
+  max-width: 880px;
+  max-height: 95vh; /* ⬅️ Restrict height */
+  overflow-y: auto;  /* Allow scrolling if content overflows */
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+.perf-grid-detailed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.metric-group {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: all 0.2s ease-in-out;
+}
+
+.metric-group:hover {
+  background-color: #f3f4f6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+.metric-group strong {
+  font-size: 13px;
+  color: #4b5563;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.metric-group span {
+  font-size: 17px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.close-btn {
+  background-color: #3b82f6;
+  color: white;
+  font-size: 14px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #2563eb;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.unit {
+  display: inline-block;
+  font-size: 0.95em;
+  font-weight: 500;
+  color: #333; /* change to #fff if dark background */
+  margin-left: 4px;
+}
+
+.metric-value {
+  font-weight: 600;
+}
+
+.good {
+  color: #10b981; /* green-500 */
+}
+
+.moderate {
+  color: #f59e0b; /* yellow-500 */
+}
+
+.bad {
+  color: #ef4444; /* red-500 */
+}
+.metric-group i {
+  margin-right: 8px;
+  color: #127285; /* Tailwind gray-500 */
+}
+
+</style>
+</head>
+<body>
+
+  <div class="header">
+        <!-- Right Support/Logout -->
+<div class="right">
+  <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+  <button onclick="createSupportTicket()" style="background:none; border:none; color:white; font:inherit; cursor:pointer; display:flex; align-items:center;">
+    <i class="fas fa-envelope"></i>
+    <span style="margin-left: 6px;">Support</span>
+  </button><span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+</div>
+
+    <!-- Center Title -->
+    <div class="center-title">
+  <h2>
+    <a href="{{ url_for('portal_redirect') }}" style="text-decoration: none; color: inherit;">
+      Sales Order Tracker Portal
+    </a><br>
+    <small style="font-size: 18px; font-weight: 1000;">ADMIN PANEL</small>
+  </h2>
+</div>
+
+
+   <!-- Left Logo -->
+    <div class="logo">
+      <img src="/static/assets/LOGO.png" alt="Logo">
+    </div>
+
+
+
+    </div>
+  </div>
+
+
+  
+  <div class="main">
+    <!-- Left Section -->
+    <div class="left-section">
+      <h3>{{ greeting }} {{ name }}</h3>
+
+      <h4>
+  <i class="fas fa-users" style="margin-right: 10px; font-size: 20px; color: #127285;"></i>
+   Existing Users:
+</h4>
+
+
+    <div class="table-wrapper">
+      <table>
+  <thead>
+  <tr>
+    <th>
+      Name
+      <i class="fas fa-chevron-down filter-icon" onclick="toggleDropdown(this, 'name')"></i>
+      <div class="filter-dropdown" id="dropdown-name">
+        <div style="position: relative;">
+  <input type="text" placeholder="Search..." oninput="searchInDropdown(this)" class="dropdown-search">
+  <i class="fas fa-times clear-icon" onclick="clearDropdownSearch(this)"></i>
+</div>
+
+        <label><input type="checkbox" onchange="selectAll(this)"> <strong>Select All</strong></label>
+      </div>
+    </th>
+    <th>
+      Email
+      <i class="fas fa-chevron-down filter-icon" onclick="toggleDropdown(this, 'email')"></i>
+      <div class="filter-dropdown" id="dropdown-email">
+        <div style="position: relative;">
+  <input type="text" placeholder="Search..." oninput="searchInDropdown(this)" class="dropdown-search">
+  <i class="fas fa-times clear-icon" onclick="clearDropdownSearch(this)"></i>
+</div>
+
+        <label><input type="checkbox" onchange="selectAll(this)"> <strong>Select All</strong></label>
+      </div>
+    </th>
+    <th>
+      Role
+      <i class="fas fa-chevron-down filter-icon" onclick="toggleDropdown(this, 'role')"></i>
+      <div class="filter-dropdown" id="dropdown-role">
+        <div style="position: relative;">
+  <input type="text" placeholder="Search..." oninput="searchInDropdown(this)" class="dropdown-search">
+  <i class="fas fa-times clear-icon" onclick="clearDropdownSearch(this)"></i>
+</div>
+
+        <label><input type="checkbox" onchange="selectAll(this)"> <strong>Select All</strong></label>
+      </div>
+    </th>
+    <th>
+      Reg. Date
+      <i class="fas fa-chevron-down filter-icon" onclick="toggleDropdown(this, 'date')"></i>
+      <div class="filter-dropdown" id="dropdown-date">
+        <div style="position: relative;">
+  <input type="text" placeholder="Search..." oninput="searchInDropdown(this)" class="dropdown-search">
+  <i class="fas fa-times clear-icon" onclick="clearDropdownSearch(this)"></i>
+</div>
+
+        <label><input type="checkbox" onchange="selectAll(this)"> <strong>Select All</strong></label>
+      </div>
+    </th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+</thead>
+
+  <tbody>
+    {% for user in users %}
+      {% set is_current = user.email.lower() == current_email.lower() %}
+      {# --- PERMISSION LOGIC --- #}
+      {% set can_be_managed = 
+        (current_user_real_role == 'Superadmin' and user.real_role != 'Superadmin') or 
+        (current_user_real_role == 'Admin' and user.real_role == 'User') 
+      %}
+      {% set is_actionable = not is_current and can_be_managed %}
+
+    <tr class="{% if is_current %}highlight-user{% endif %}">
+      <td>{{ user.role }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.real_role }}</td>
+      <td>{{ user.registered_date.strftime('%d/%m/%Y') if user.registered_date else '-' }}</td>
+
+      <!-- STATUS column -->
+      <!-- STATUS column -->
+<td class="status">
+  {# The 'is_actionable' variable already checks for permissions and self-modification #}
+  {% if is_actionable %}
+    {# Render an active, clickable toggle switch #}
+    <div class="toggle {% if user.status == 'Enabled' %}enabled{% endif %}" 
+         data-email="{{ user.email }}" 
+         data-current="{{ user.status }}"
+         title="Click to toggle status">
+    </div>
+  {% else %}
+    {# Render a disabled, greyed-out toggle switch #}
+    <div class="toggle {% if user.status == 'Enabled' %}enabled{% endif %}" 
+         style="pointer-events: none; opacity: 0.5;"
+         title="{% if is_current %}You cannot change your own status{% else %}Permission Denied{% endif %}">
+    </div>
+  {% endif %}
+  <span class="status-label">{{ user.status }}</span>
+</td>
+
+      <!-- ACTION column -->
+      <td>
+        <div style="display: flex; justify-content: center; gap: 12px;">
+          <!-- Delete Icon -->
+          <span class="action-icon"
+                {% if is_actionable %}
+                  style="cursor:pointer;"
+                  onclick="openDeleteModal('{{ user.real_role }}', '{{ user.role }}', '{{ user.email }}')"
+                {% else %}
+                  style="opacity:0.5; pointer-events: none;"
+                {% endif %}>
+            <i class="fas fa-trash-alt" title="{% if is_current %}You cannot delete yourself{% elif not can_be_managed %}Permission Denied{% else %}Delete user{% endif %}"></i>
+          </span>
+
+          <!-- Edit Icon -->
+          <span class="action-icon"
+                {% if is_actionable %}
+                  style="color: #127285; cursor: pointer;"
+                  onclick="openEditRoleModal('{{ user.email }}', '{{ user.real_role }}')"
+                {% else %}
+                  style="color: #127285; opacity:0.5; pointer-events: none;"
+                {% endif %}>
+            <i class="fas fa-edit" title="{% if is_current %}You cannot edit yourself{% elif not can_be_managed %}Permission Denied{% else %}Edit role{% endif %}"></i>
+          </span>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+
+      <div class="btn-group">
+  <button class="btn" onclick="window.location.href='/activity-log'">
+  <i class="fas fa-clock"></i> View Activity Log
+</button>
+
+<button class="btn" onclick="openSitePerfOverlay()">
+  <i class="fas fa-gauge-high" style=" color: #ffffff;"></i> Site Performance Metrics
+</button>
+
+
+
+
+
+
+
+
+<button class="btn" onclick="downloadFilteredUsers()">
+  <i class="fas fa-download"></i> Download
+</button>
+
+<script>
+
+async function createSupportTicket() {
+    try {
+        const response = await fetch('/api/generate-support-ticket');
+        const data = await response.json();
+
+        if (data.ticket_id) {
+            const recipient = 'dt@activusdesignbuild.in';
+            const subject = `Support Ticket: ${data.ticket_id}`;
+            
+            // This creates the mailto link and programmatically "clicks" it
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+        } else {
+            // Fallback in case of an error
+            alert('Could not generate a support ticket ID. Please email dt@activusdesignbuild.in directly.');
+        }
+    } catch (error) {
+        console.error("Failed to create support ticket:", error);
+        alert('An error occurred. Please email dt@activusdesignbuild.in directly.');
+    }
+}
+
+function downloadFilteredUsers() {
+  const rows = document.querySelectorAll('tbody tr');
+  const selectedEmails = [];
+
+  rows.forEach(row => {
+    // Only include rows that are visible (i.e., filtered)
+    if (row.style.display !== 'none') {
+      const email = row.querySelector('td:nth-child(2)').textContent.trim(); // adjust index if email is in another column
+      selectedEmails.push(encodeURIComponent(email));
+    }
+  });
+
+  const query = selectedEmails.map(email => `emails=${email}`).join('&');
+  const url = selectedEmails.length
+    ? `/download-users-csv?${query}`
+    : '/download-users-csv';
+
+  window.location.href = url;
+}
+</script>
+
+
+</div>
+
+    </div>
+
+     <!-- Vertical Divider -->
+  <div class="divider"></div>
+
+    <!-- Right Section -->
+    <!-- This is the complete section for the "Register New User" form -->
+<div class="right-section">
+  <h3>Register New User</h3>
+
+  <form method="POST" action="/admin">
+    
+    <!-- =================== THE ONLY CHANGE IS IN THIS DIV =================== -->
+    <div class="input-group">
+      <label><i class="fas fa-user-tag" style="margin-right: 6px;"></i>Select Role</label>
+      <select name="real_role" required>
+        <option value="" disabled selected>Select a Role...</option> <!-- A better placeholder -->
+
+        {# --- Logic for SUPERADMIN --- #}
+        {# If the logged-in user is a Superadmin, show all three roles #}
+        {% if current_user_real_role == 'Superadmin' %}
+          <option value="Superadmin">Superadmin</option>
+          <option value="Admin">Admin</option>
+          <option value="User">User</option>
+
+        {# --- Logic for ADMIN --- #}
+        {# If the logged-in user is an Admin, ONLY show the User role #}
+        {% elif current_user_real_role == 'Admin' %}
+          <option value="User">User</option>
+        {% endif %}
+
+      </select>
+    </div>
+    <!-- ======================================================================= -->
+
+    <div class="input-group">
+      <label><i class="fas fa-user" style="margin-right: 6px;"></i>Name</label>
+      <input type="text" name="role" id="name" placeholder="Enter Name" required />
+      <p id="name-error" class="message-error" style="display: none;"></p>
+    </div>
+
+    <div class="input-group">
+      <label><i class="fas fa-envelope" style="margin-right: 6px;"></i>Email</label>
+      <input type="email" name="email" id="email" placeholder="Enter Your Mail" required />
+      <p id="email-error" class="message-error" style="display: none;"></p>
+    </div>
+
+    <div class="input-group password-group">
+      <label><i class="fas fa-lock" style="margin-right: 6px;"></i>Create Password</label>
+      <input type="password" name="password" id="password" placeholder="Type Password" required />
+      <i class="fas fa-eye toggle-password" id="toggle-password"></i>
+      <p id="password-error" class="message-error" style="display: none;"></p>
+    </div>
+
+    <div class="input-group password-group">
+      <label><i class="fas fa-key" style="margin-right: 6px;"></i>Re-Enter Password</label>
+      <input type="password" name="confirm_password" id="confirm_password" placeholder="Type Password" required />
+      <i class="fas fa-eye toggle-password" id="toggle-confirm-password"></i>
+      <p id="confirm-password-error" class="message-error" style="display: none;"></p>
+    </div>
+
+    <!-- Password Strength Meter -->
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 15px;">
+      <label style="font-size: 14px; font-weight: bold; white-space: nowrap;">
+        <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>Password Strength:
+      </label>
+      <div style="flex-grow: 1; margin-left: 10px;">
+        <div id="password-strength-bar" style="height: 10px; border-radius: 6px; background-color: #eee; overflow: hidden;">
+          <div id="strength-fill" style="height: 100%; width: 0%; background-color: red; transition: width 0.3s ease;"></div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="register-btn">
+      <i class="fas fa-user-plus" style="margin-right: 6px;  color: white; font-size: 13px;"></i>Register
+    </button>
+  </form>
+</div>
+
+
+<!-- Edit Role Modal -->
+<div id="editRoleModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <i class="fas fa-edit" style="font-size: 32px; color: #127285; margin-bottom: 10px;"></i>
+      <h3>Edit User Role</h3>
+    </div>
+    <form method="POST" action="/edit-role">
+      <input type="hidden" name="email" id="edit-role-email" />
+      <div class="input-group">
+        <label>New Role</label>
+        <select name="new_role" id="new-role-select" required>
+          {# --- Only Superadmins can assign the Superadmin/Admin roles --- #}
+          {% if current_user_real_role == 'Superadmin' %}
+          <option value="Admin">Admin</option>
+          {% endif %}
+          <option value="User">User</option>
+        </select>
+      </div>
+      <div class="modal-actions" style="margin-top: 20px;">
+        <button type="button" onclick="closeEditRoleModal()" class="cancel-btn">Cancel</button>
+        <button type="submit" class="btn"><i class="fas fa-check"></i> Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+</body>
+<div id="deleteModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="trash-icon"><i class="fas fa-trash-alt"></i></div>
+    </div>
+    <p>Are you sure you want to delete this User?</p>
+    <div class="modal-details">
+      <p><strong>User Role</strong> : <span id="modal-role"></span></p>
+      <p><strong>User Name</strong> : <span id="modal-name"></span></p>
+      <p><strong>Email</strong> : <span id="modal-email"></span></p>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeModal()" class="cancel-btn">Cancel</button>
+      <form method="POST" action="/delete-user">
+        <input type="hidden" id="delete-email" name="email" />
+        <button type="submit" class="delete-btn">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ❌ Email Exists Modal -->
+<div id="emailExistsModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #f44336; margin-bottom: 10px;"></i>
+      <h3>Email Already Exists</h3>
+    </div>
+    <p style="margin-top: 10px;">The email you entered is already registered. Please use a different email.</p>
+    <div class="modal-actions" style="margin-top: 20px;">
+      <button onclick="closeEmailExistsModal()" class="cancel-btn">Okay</button>
+    </div>
+  </div>
+</div>
+
+<div class="site-perf-modal" id="sitePerfModal" style="display: none;">
+  <div class="modal-content">
+    <h3 class="modal-title" style="text-align: center; font-size: 24px; margin-bottom: 20px; color: black;">
+  <i class="fas fa-gauge-high" style="color: #127285; margin-right: 10px;"></i>
+  Live Site Performance Metrics
+</h3>
+
+
+    <div class="perf-grid-detailed">
+
+      <div class="metric-group">
+        <strong><i class="fas fa-tachometer-alt"></i> Latency (server response time)</strong>
+        <span id="metric-latency" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-network-wired"></i> Total number of requests</strong>
+        <span id="metric-requests" class="metric-value">-</span><span class="unit"> requests</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-exclamation-triangle"></i> Failed request percentage</strong>
+        <span id="metric-errors" class="metric-value">-</span><span class="unit"> %</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-code-branch"></i> Unique API endpoints hit</strong>
+        <span id="metric-endpoints" class="metric-value">-</span><span class="unit"> endpoints</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-route"></i> Most used route</strong>
+        <span id="metric-top-endpoint" class="metric-value">-</span><span class="unit"> route</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-stopwatch"></i> First Contentful Paint</strong>
+        <span id="metric-fcp" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-ruler-horizontal"></i> Largest Contentful Paint</strong>
+        <span id="metric-lcp" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-bolt"></i> Time To First Byte</strong>
+        <span id="metric-ttfb" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-mouse-pointer"></i> Interaction to Next Paint</strong>
+        <span id="metric-inp" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+
+      <!-- ======================= CLIENT-SIDE METRICS ======================= -->
+      <div class="metric-group">
+        <strong><i class="fas fa-hourglass-end"></i> Total Page Load Time</strong>
+        <span id="metric-page-load" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+
+      <div class="metric-group">
+        <strong><i class="fas fa-hand-pointer"></i> Time to Interactive (TTI)</strong>
+        <span id="metric-tti" class="metric-value">-</span><span class="unit"> ms</span>
+      </div>
+      
+      <div class="metric-group">
+        <strong><i class="fas fa-bug"></i> JavaScript Errors</strong>
+        <span id="metric-js-errors" class="metric-value">0</span><span class="unit"> errors</span>
+      </div>
+      <!-- ================================================================= -->
+
+
+    </div>
+
+    <div class="modal-footer">
+  <button class="close-btn" onclick="closeSitePerfOverlay()" style="background-color: #127285; color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+    <i class="fas fa-times" style="margin-right: 6px;"></i>Close
+  </button>
+</div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+
+document.querySelector('form').addEventListener('submit', async function (e) {
+  e.preventDefault(); // Stop default form submission
+
+  // Clear all previous error messages
+  document.getElementById('name-error').style.display = 'none';
+  document.getElementById('email-error').style.display = 'none';
+  document.getElementById('password-error').style.display = 'none';
+  document.getElementById('confirm-password-error').style.display = 'none';
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirm_password').value;
+
+  let isValid = true;
+
+  // Validate name
+  if (!/^[a-zA-Z\s]+$/.test(name)) {
+    document.getElementById('name-error').textContent = "Name must contain only letters and spaces.";
+    document.getElementById('name-error').style.display = "block";
+    isValid = false;
+  }
+
+  // Validate email format
+  if (!emailRegex.test(email)) {
+    document.getElementById('email-error').textContent = "Please enter a valid email address.";
+    document.getElementById('email-error').style.display = "block";
+    isValid = false;
+  }
+
+  // Validate password length
+  if (password.length < 6) {
+    document.getElementById('password-error').textContent = "Password must be at least 6 characters.";
+    document.getElementById('password-error').style.display = "block";
+    isValid = false;
+  }
+
+  // Validate password match
+  if (password !== confirmPassword) {
+    document.getElementById('confirm-password-error').textContent = "Passwords do not match.";
+    document.getElementById('confirm-password-error').style.display = "block";
+    isValid = false;
+  }
+
+  if (passwordStrengthLevel < 2) {
+  document.getElementById('password-error').textContent = "Password is too weak. Please choose a stronger one.";
+  document.getElementById('password-error').style.display = "block";
+  isValid = false;
+}
+
+  if (!isValid) return; // Stop if any validation failed
+
+  // Check email existence via backend
+  try {
+    const response = await fetch('/check-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const result = await response.json();
+
+    if (result.exists) {
+      // Email already registered
+      document.getElementById('emailExistsModal').style.display = 'flex';
+      return; // Don't submit form
+    }
+
+    // Email is unique → Submit the form manually
+    this.submit();
+
+  } catch (err) {
+    alert("Something went wrong while checking email. Please try again.");
+    console.error(err);
+  }
+});
+
+// Lowercase email input as user types
+document.getElementById('email').addEventListener('input', function () {
+  this.value = this.value.toLowerCase();
+});
+
+// Close duplicate email modal
+function closeEmailExistsModal() {
+  document.getElementById('emailExistsModal').style.display = 'none';
+}
+
+// Status toggle switch (Enable/Disable)
+document.addEventListener('DOMContentLoaded', () => {
+  const toggles = document.querySelectorAll('.toggle');
+
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', async () => {
+      const email = toggle.dataset.email;
+      const current = toggle.dataset.current;
+      const newStatus = current === "Enabled" ? "Disabled" : "Enabled";
+
+      // Optimistically update UI
+      toggle.classList.toggle("enabled");
+      toggle.nextElementSibling.textContent = newStatus;
+      toggle.dataset.current = newStatus;
+
+      // Send update to backend
+      const res = await fetch("/api/toggle-user-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, status: newStatus })
+      });
+
+      const data = await res.json();
+      if (!data.success) {
+        alert("❌ Failed to update status");
+      }
+    });
+  });
+});
+
+// Delete modal open/close
+function openDeleteModal(role, name, email) {
+  document.getElementById("modal-role").textContent = role;
+  document.getElementById("modal-name").textContent = name;
+  document.getElementById("modal-email").textContent = email;
+  document.getElementById("delete-email").value = email;
+  document.getElementById("deleteModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("deleteModal").style.display = "none";
+}
+
+// Edit Role modal open/close
+function openEditRoleModal(email, currentRole) {
+  document.getElementById('edit-role-email').value = email;
+  document.getElementById('new-role-select').value = currentRole;
+  document.getElementById('editRoleModal').style.display = 'flex';
+}
+
+
+document.getElementById('password').addEventListener('input', function () {
+  const password = this.value;
+  const fill = document.getElementById('strength-fill');
+
+  if (!password) {
+    fill.style.width = '0%';
+    fill.style.backgroundColor = '#eee';
+    passwordStrengthLevel = 0;
+    return;
+  }
+
+  let strength = 0;
+
+  if (password.length >= 6) strength += 1;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+  if (/\d/.test(password)) strength += 1;
+  if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+  passwordStrengthLevel = strength;
+
+  if (strength <= 1) {
+    fill.style.width = '30%';
+    fill.style.backgroundColor = 'red';
+  } else if (strength === 2 || strength === 3) {
+    fill.style.width = '65%';
+    fill.style.backgroundColor = 'orange';
+  } else if (strength >= 4) {
+    fill.style.width = '100%';
+    fill.style.backgroundColor = 'green';
+  }
+});
+
+
+function closeEditRoleModal() {
+  document.getElementById('editRoleModal').style.display = 'none';
+}
+
+
+// Password strength checker with empty handling
+document.getElementById('password').addEventListener('input', function () {
+  const password = this.value;
+  const fill = document.getElementById('strength-fill');
+
+  if (!password) {
+    fill.style.width = '0%';
+    fill.style.backgroundColor = '#eee';
+    return;
+  }
+
+  let strength = 0;
+
+  if (password.length >= 6) strength += 1;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+  if (/\d/.test(password)) strength += 1;
+  if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+  if (strength <= 1) {
+    fill.style.width = '30%';
+    fill.style.backgroundColor = 'red';
+  } else if (strength === 2 || strength === 3) {
+    fill.style.width = '65%';
+    fill.style.backgroundColor = 'orange';
+  } else if (strength >= 4) {
+    fill.style.width = '100%';
+    fill.style.backgroundColor = 'green';
+  }
+});
+
+// Password Eye Toggle
+document.getElementById('toggle-password').addEventListener('click', function () {
+  const passwordInput = document.getElementById('password');
+  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+  passwordInput.setAttribute('type', type);
+  this.classList.toggle('fa-eye');
+  this.classList.toggle('fa-eye-slash');
+});
+
+document.getElementById('toggle-confirm-password').addEventListener('click', function () {
+  const confirmInput = document.getElementById('confirm_password');
+  const type = confirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+  confirmInput.setAttribute('type', type);
+  this.classList.toggle('fa-eye');
+  this.classList.toggle('fa-eye-slash');
+});
+function toggleFilter(icon, filterId) {
+  document.querySelectorAll('.filter-dropdown-panel').forEach(drop => {
+    if (drop.id !== filterId) drop.style.display = 'none';
+  });
+
+  const dropdown = document.getElementById(filterId);
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+document.addEventListener("click", function (e) {
+  if (!e.target.closest('.filterable-header')) {
+    document.querySelectorAll('.filter-dropdown-panel').forEach(drop => drop.style.display = 'none');
+  }
+});
+
+function filterDropdownOptions(inputEl) {
+  const value = inputEl.value.toLowerCase();
+  const labels = inputEl.closest('.filter-dropdown-panel').querySelectorAll('.checkbox-list label');
+  labels.forEach(label => {
+    const text = label.textContent.toLowerCase();
+    label.style.display = text.includes(value) ? 'block' : 'none';
+  });
+}
+
+function selectAllCheckbox(master) {
+  const checkboxes = master.closest('.checkbox-list').querySelectorAll('input[type="checkbox"]:not(:first-child)');
+  checkboxes.forEach(cb => cb.checked = master.checked);
+  filterTable();
+}
+function toggleDropdown(icon, type) {
+  const dropdown = document.getElementById(`dropdown-${type}`);
+  const iconClass = icon.classList;
+
+  // Toggle icon
+  if (dropdown.style.display === 'block') {
+    dropdown.style.display = 'none';
+    iconClass.remove('fa-chevron-up');
+    iconClass.add('fa-chevron-down');
+  } else {
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none');
+    document.querySelectorAll('.filter-icon').forEach(i => {
+      i.classList.remove('fa-chevron-up');
+      i.classList.add('fa-chevron-down');
+    });
+
+    dropdown.style.display = 'block';
+    iconClass.remove('fa-chevron-down');
+    iconClass.add('fa-chevron-up');
+  }
+}
+
+// Click outside to close all dropdowns
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('th')) {
+    document.querySelectorAll('.filter-dropdown').forEach(drop => drop.style.display = 'none');
+    document.querySelectorAll('.filter-icon').forEach(icon => {
+      icon.classList.remove('fa-chevron-up');
+      icon.classList.add('fa-chevron-down');
+    });
+  }
+});
+
+function searchInDropdown(input) {
+  const filter = input.value.toLowerCase();
+  const labels = input.closest('.filter-dropdown').querySelectorAll('label');
+
+  labels.forEach((label, index) => {
+    if (index === 1) return; // skip Select All
+    const text = label.textContent.toLowerCase();
+    label.style.display = text.includes(filter) ? 'flex' : 'none';
+  });
+}
+
+
+function selectAll(masterCheckbox) {
+  const container = masterCheckbox.closest('.filter-dropdown');
+  const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+
+  checkboxes.forEach((cb, index) => {
+    if (index !== 0) cb.checked = masterCheckbox.checked; // skip master
+  });
+
+  filterTable();
+}
+
+
+
+function populateDropdowns() {
+  const rows = document.querySelectorAll('tbody tr');
+  const nameSet = new Set();
+  const emailSet = new Set();
+  const roleSet = new Set();
+  const dateSet = new Set();
+
+  rows.forEach(row => {
+    nameSet.add(row.cells[0].textContent.trim());
+    emailSet.add(row.cells[1].textContent.trim());
+    roleSet.add(row.cells[2].textContent.trim());
+    dateSet.add(row.cells[3].textContent.trim());
+  });
+
+  injectOptions('dropdown-name', nameSet);
+  injectOptions('dropdown-email', emailSet);
+  injectOptions('dropdown-role', roleSet);
+  injectOptions('dropdown-date', dateSet);
+}
+
+function getCheckedValues(id) {
+  const all = document.querySelectorAll(`#${id} input[type="checkbox"]`);
+  return Array.from(all).filter((cb, idx) => idx > 0 && cb.checked).map(cb => cb.value);
+}
+
+
+function filterTable() {
+  const rows = document.querySelectorAll('tbody tr');
+
+  const names = getCheckedValues('dropdown-name');
+  const emails = getCheckedValues('dropdown-email');
+  const roles = getCheckedValues('dropdown-role');
+  const dates = getCheckedValues('dropdown-date');
+
+  rows.forEach(row => {
+    const name = row.cells[0].textContent.trim();
+    const email = row.cells[1].textContent.trim();
+    const role = row.cells[2].textContent.trim();
+    const date = row.cells[3].textContent.trim();
+
+    const show =
+      (names.length === 0 || names.includes(name)) &&
+      (emails.length === 0 || emails.includes(email)) &&
+      (roles.length === 0 || roles.includes(role)) &&
+      (dates.length === 0 || dates.includes(date));
+
+    row.style.display = show ? '' : 'none';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', populateDropdowns);
+
+function injectOptions(dropdownId, values) {
+  const container = document.getElementById(dropdownId);
+
+  // Clear old checkboxes except the first two (Search + Select All)
+  const labels = container.querySelectorAll('label');
+  labels.forEach((label, index) => {
+    if (index >= 2) label.remove();
+  });
+
+  Array.from(values).sort().forEach(val => {
+  const label = document.createElement('label');
+  label.style.display = 'flex';
+  label.style.alignItems = 'center';
+
+  label.innerHTML = `
+    <input type="checkbox" value="${val}" onchange="filterTable()" style="margin-right: 8px;">${val}
+  `;
+
+  container.appendChild(label);
+});
+
+}
+
+function clearDropdownSearch(icon) {
+  const input = icon.parentElement.querySelector('input[type="text"]');
+  input.value = '';
+  searchInDropdown(input);
+}
+
+setInterval(() => {
+  fetch("/api/ping", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ page: window.location.pathname })
+  });
+}, 1000); // every 30 seconds
+
+function downloadFilteredCSV() {
+  const visibleEmails = [];
+  const rows = document.querySelectorAll('tbody tr');
+
+  rows.forEach(row => {
+    if (row.style.display !== 'none') {
+      const email = row.cells[1].textContent.trim(); // assuming 2nd column is email
+      visibleEmails.push(email);
+    }
+  });
+
+  const params = new URLSearchParams();
+  visibleEmails.forEach(email => params.append('emails', email));
+
+  window.location.href = `/download-users-csv?${params.toString()}`;
+}
+
+
+</script>
+<script src="https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js"></script>
+<script>
+let perfInterval;
+// ======================= CLIENT-SIDE METRIC TRACKING =======================
+let jsErrorCount = 0;
+
+// Listener for tracking JavaScript errors
+window.addEventListener('error', function(event) {
+  jsErrorCount++;
+  const errorElement = document.getElementById("metric-js-errors");
+  if (errorElement) {
+      errorElement.innerText = jsErrorCount;
+  }
+});
+
+// Listener for tracking page load timings
+window.addEventListener('load', (event) => {
+    // Use a timeout to ensure the Performance API has the final numbers
+    setTimeout(() => {
+        if (performance && performance.getEntriesByType("navigation").length > 0) {
+            const perf = performance.getEntriesByType("navigation")[0];
+            
+            // Total Page Load Time
+            const totalLoadTime = Math.round(perf.duration);
+            document.getElementById('metric-page-load').innerText = totalLoadTime;
+
+            // Time to Interactive (using domInteractive as a reliable proxy)
+            const timeToInteractive = Math.round(perf.domInteractive);
+            document.getElementById('metric-tti').innerText = timeToInteractive;
+        }
+    }, 0);
+});
+// =============================================================================
+
+
+function openSitePerfOverlay() {
+  document.getElementById('sitePerfModal').style.display = 'flex';
+  fetchPerfMetrics(); // make sure this is defined
+  sitePerfInterval = setInterval(fetchPerfMetrics, 2000);
+}
+
+function closeSitePerfOverlay() {
+  document.getElementById('sitePerfModal').style.display = 'none';
+  clearInterval(sitePerfInterval);
+}
+
+function fetchPerfMetrics() {
+  fetch('/api/live-performance')
+    .then(res => res.json())
+    .then(data => {
+      // --- EXISTING METRICS ---
+      document.getElementById("metric-latency").innerText = data["Latency (ms)"] || "-";
+      document.getElementById("metric-requests").innerText = data["Total Requests"] || "-";
+      document.getElementById("metric-errors").innerText = data["Error Rate (%)"] || "-";
+      document.getElementById("metric-endpoints").innerText = data["Unique Endpoints"] || "-";
+      document.getElementById("metric-top-endpoint").innerText = data["Top Endpoint"] || "-";
+      document.getElementById("metric-fcp").innerText = data["FCP"] || "-";
+      document.getElementById("metric-lcp").innerText = data["LCP"] || "-";
+      document.getElementById("metric-ttfb").innerText = data["TTFB"] || "-";
+      document.getElementById("metric-inp").innerText = data["INP"] || "-";
+
+      // --- CLIENT-SIDE METRICS (Update JS errors count) ---
+      document.getElementById("metric-js-errors").innerText = jsErrorCount;
+    })
+    .catch(error => console.error("Failed to fetch performance data", error));
+}
+
+function setMetric(id, value, thresholds, unit = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.innerText = value !== undefined ? value : "-";
+
+  // Remove previous classes
+  el.classList.remove("good", "moderate", "bad");
+
+  // Decide class
+  if (value === "-" || value === null || value === undefined) return;
+
+  let num = parseFloat(value);
+  if (isNaN(num)) return;
+
+  if (num <= thresholds.good) {
+    el.classList.add("good");
+  } else if (num <= thresholds.moderate) {
+    el.classList.add("moderate");
+  } else {
+    el.classList.add("bad");
+  }
+}
+
+
+// Web Vitals reporter
+function reportVitalsToBackend(name, value) {
+  fetch('/api/track-web-vitals', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, value })
+  });
+}
+
+webVitals.getFCP(metric => reportVitalsToBackend(metric.name, metric.value));
+webVitals.getLCP(metric => reportVitalsToBackend(metric.name, metric.value));
+webVitals.getTTFB(metric => reportVitalsToBackend(metric.name, metric.value));
+webVitals.getINP(metric => reportVitalsToBackend(metric.name, metric.value));
+
+
+
+</script>
+
+
+</html>

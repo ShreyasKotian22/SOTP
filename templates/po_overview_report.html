@@ -1,0 +1,1489 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>PO Overview Report</title>
+
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+      <!-- Font Awesome -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+     
+
+ <style>
+
+   select[multiple] {
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding-right: 32px; /* for arrow space */
+  background-color: var(--teal-light);
+  cursor: pointer;
+}
+ 
+    :root {
+      --teal: #127285;
+      --teal-light: #e0f6f8;
+    }
+
+  
+     * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: SF Pro Display, sans-serif;
+}
+
+  
+
+
+
+    .sidebar .logo img {
+      width: 245px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li {
+      padding: 12px 30px;
+      cursor: pointer;    
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
+
+    .nav-item i,
+    .logout i {
+      font-size: 18px;
+      margin-right: 8px;
+      vertical-align: middle;
+      width: 18px;
+      height: 22px;
+      display: inline-block;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
+
+    .logout {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    /* Sidebar text and icon color */
+    .sidebar nav ul li a,
+    .sidebar nav ul li a i,
+    .sidebar nav ul li a span,
+    .sidebar .logout a,
+    .sidebar .logout a i,
+    .sidebar .logout a span {
+      color: white;
+      text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar .logout a:hover {
+      color: white;
+    }
+   
+
+
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: nowrap;        /* Keep all filters on a single line */
+  gap: 16px;                /* Smaller gap between filters */
+  margin-bottom: 24px;
+  justify-content: space-between;
+}
+
+.filter-group {
+  width: 19%;               /* Slightly smaller to fit 6 in one row */
+  min-width: 120px;         /* Prevents breaking on smaller screens */
+  position: relative;
+}
+
+/*Back button hovering effect*/
+.back-heading {
+  text-decoration: none;
+  color: inherit;
+ 
+}
+
+.back-heading h1 {
+  font-size: 24px;
+  margin: 5px;
+  margin-bottom: 10px;
+  transition: color 0.2s ease;
+}
+
+.back-heading:hover h1 {
+  color: #127285;
+  cursor: pointer;
+  transform: translateX(-2px);
+}
+
+
+.filter-group select,
+.filter-group input.flatpickr-input {
+  width: 100%;
+  height: 60px;
+  padding: 12px 36px 12px 16px;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  background-color: white;
+  color: var(--teal);
+  font-weight: 500;
+  font-size: 16px;
+  appearance: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Optional label above each select (if used later) */
+.filter-group label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Custom dropdown icon using Font Awesome */
+.filter-group::after {
+ 
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--teal);
+  font-size: 11px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+cursor: pointer;
+}
+
+/* Focus effect for inputs/selects */
+.filter-group select:focus,
+.filter-group input.flatpickr-input:focus {
+  background-color: var(--teal-light);
+  outline: none;
+  border-color: var(--teal);
+}
+
+    select, input.flatpickr-input {
+      padding: 8px 12px;
+      border: 1px solid var(--teal);
+      border-radius: 6px;
+      color: var(--teal);
+      font-weight: 500;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    select:focus, input.flatpickr-input:focus {
+      background-color: var(--teal-light);
+      outline: none;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .sort-btn {
+      padding: 6px 14px;
+      background-color: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    
+
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    #downloadBtn {
+      background-color: var(--teal);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* Flatpickr calendar styling */
+    .flatpickr-months {
+      background-color: #127285;
+      color: white;
+    }
+
+    .flatpickr-weekday {
+      background-color: #127285;
+      color: white;
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange {
+      background-color: #127285 !important;
+      color: white;
+    }
+
+    .flatpickr-day:hover {
+      background-color: #5ab3bd;
+      color: white;
+    }
+       .nav-item.active {
+  background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
+}
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.selected-value {
+  padding: 18px 12px !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+}
+.selected-value span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: calc(100% - 40px); /* Reserve space for arrow and clear icons */
+}
+
+
+.dropdown-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 260px;
+  border: 1px solid #ccc;
+  background: white;
+  z-index: 1000;
+  border-radius: 0 0 12px 12px;
+  overflow-y: auto;
+}
+
+.dropdown-list.active {
+  display: block;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.options-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options-list li:hover {
+  background-color: #f0f0f0;
+}
+
+
+#resetBtn {
+  background-color: white;
+  color: #ffffff;
+  border: 2px solid rgb(243, 243, 244);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#resetBtn:hover {
+  background-color: #127285;
+  color: #ffffff;
+  transform: translateY(-4px); /* Slight lift */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Deeper shadow */
+  transition: all 0.3s ease;
+}
+
+/* Ensure the clear icon is hidden by default */
+.clear-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  display: none; /* ⛔️ Hide by default */
+}
+
+/* Only show clear icon when dropdown has a selection */
+.custom-dropdown.has-selection .clear-icon {
+  display: block; /* ✅ Show only when .has-selection is present */
+}
+
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #127285;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+#floatingDatePanel {
+  position: fixed;
+  top: 100px;
+  left: -250px;
+  width: 250px;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  padding: 16px;
+  border-radius: 12px;
+  z-index: 999;
+  transition: left 0.3s ease;
+}
+
+#floatingDatePanel.show {
+  left: 20px; /* Slide into view */
+}
+
+.date-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toggle-filters-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  margin-left: -20px; /* 🔧 move to the left */
+}
+
+.toggle-filters-container span {
+  white-space: nowrap;
+}
+
+
+.date-filters {
+  display: flex;
+  gap: 8px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+}
+
+.date-filters.show {
+  max-width: 292px;
+  opacity: 1;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+
+
+.has-submenu {
+  position: relative;
+}
+
+.has-submenu .submenu {
+  display: none;
+  list-style: none;
+  background-color: #0a6a7c;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 280px;
+  border-radius: 0 0 12px 12px;
+  z-index: 999;
+  padding: 8px 0;
+}
+
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 0px 30px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+   margin-bottom: -7px; /* ✅ Add spacing between items */
+}
+
+.submenu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.submenu-arrow {
+  margin-left: auto;
+}
+
+.selected-value {
+  padding: 18px 12px !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+}
+
+/* Divider to simulate dual button */
+.selected-value::after {
+  content: "";
+  position: absolute;
+  right: 42px; /* space before arrow */
+  top: 0%;
+  height: 100%;
+  width: 2px;
+  background-color: var(--teal);
+  opacity: 0.5;
+}
+
+
+
+/* Arrow on right like a fixed button */
+.selected-value .arrow-icon {
+  width: 30px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--teal);
+  pointer-events: none; /* Prevents hover or click effects */
+  user-select: none;
+  font-size: 14px;
+}
+
+
+/* Hover only on right arrow area */
+.selected-value .arrow-icon {
+  pointer-events: auto; /* ✅ Make it clickable again */
+  cursor: pointer;
+}
+.entity-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.entity-details-table th,
+.entity-details-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.entity-details-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+.scroll-table-container {
+  overflow-x: auto;      /* Allows horizontal scrolling for wide tables */
+  overflow-y: auto;      /* Adds the vertical scrollbar when needed */
+  max-height: 400px;     /* This is the KEY: limits the container's height. Adjust as you like. */
+  max-width: 100%;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+
+/* Keep table header sticky */
+#detailsTable thead th {
+  position: sticky;
+  top: 0;
+  background-color: #127285;
+  color: white;
+  font-weight: 600;
+  z-index: 2;
+}
+
+/* Table structure and styling */
+#detailsTable {
+  width: 1600px; /* can be changed to auto for dynamic width */
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#detailsTable th,
+#detailsTable td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+
+
+/* Hover effect */
+.filter-group:hover .selected-value {
+  background-color: #127285;
+  color: white;
+  border-radius: 9px;
+ 
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.filter-group:hover .arrow-icon {
+  color: white;
+}
+
+/* Divider turns white */
+.filter-group:hover .selected-value::after {
+  background-color: #ffffff;
+  opacity: 1;
+  border-radius: 9px;
+}
+
+/* On click: white background, teal text/icon */
+.filter-group .selected-value.active {
+  background-color: #127285;
+  color: white;
+  border-radius: 9px;
+  
+}
+
+.filter-group .selected-value.active .arrow-icon {
+  color: #ffffff;
+}
+
+.filter-group .selected-value.active::after {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+/* ===== START: DEFINITIVE LAYOUT & CHART STYLES ===== */
+
+body {
+  margin: 0;
+  font-family: SF Pro Display, sans-serif;
+  display: flex;
+  /* This forces the body to be a frame that fills the browser window exactly */
+  height: 100vh;
+  /* This PREVENTS the main browser scrollbar, which is what we want */
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #0A7386;
+  /* This makes sure the sidebar itself doesn't shrink */
+  flex-shrink: 0; 
+  
+  /* These are for aligning content INSIDE the sidebar */
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  /* This makes the main area take all remaining horizontal space */
+  flex-grow: 1;
+  background-color: white;
+  padding: 30px;
+  /* THIS IS THE KEY: This gives the main content area its own vertical scrollbar */
+  overflow-y: auto;
+}
+
+.chart-container {
+  /* This restores the large, fixed height for your graph */
+  height: 550px;
+}
+
+/* ===== START: NEW Back Button Hover Effect ===== */
+
+.back-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  /* Add a smooth transition for the color and movement */
+  transition: all 0.2s ease-in-out;
+}
+
+.back-link:hover {
+  /* Change the color to your theme's primary color on hover */
+  color: #127285;
+  cursor: pointer;
+  /* Add a subtle movement effect to the left */
+  transform: translateX(-3px);
+}
+
+
+/* ===== START: Back Button Hover Color Effect ===== */
+
+.back-link {
+  /* This sets up a smooth transition for the color change */
+  transition: color 0.2s ease-in-out;
+}
+
+.back-link:hover {
+  /* This changes the color of the text AND the icon to your theme's teal color */
+  color: #127285 !important; 
+}
+
+/* ===== START: Filter Dropdown Highlight Styles ===== */
+
+/* Style for when a dropdown's list is open (active) */
+.filter-group .selected-value.active {
+  background-color: #127285; /* Your theme's teal color */
+  color: white;
+  border-radius: 9px;
+}
+
+.filter-group .selected-value.active .arrow-icon {
+  color: #ffffff;
+}
+
+.filter-group .selected-value.active::after {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+/* ===== END: Filter Dropdown Highlight Styles ===== */
+
+</style>
+
+
+  </head>
+  <body>
+
+  <!-- Sidebar -->
+    <aside class="sidebar" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+    </div>
+
+    <nav>
+      <ul>
+        <li class="nav-item"><a href="{{ url_for('dashboard') }}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="/add-order"><i class="fas fa-plus-circle"></i> <span>Add New Order</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('clients') }}"><i class="fas fa-user"></i> <span>Clients</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('view_orders') }}"><i class="fas fa-file-alt"></i> <span>View Sales Order</span></a></li>
+
+        <li class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+          <div class="report-toggle" style="display: flex; align-items: center; width: 100%; color: white;">
+            <i class="fas fa-chart-bar"></i>
+            <span style="margin-left: 6px;">Report</span>
+            <i class="fas fa-chevron-down submenu-arrow" style="margin-left: auto;"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="window.location.href='/report'" class="submenu-item active">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Sales Order Overview</span>
+            </li>
+            <li onclick="window.location.href='/po-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">PO’s Overview</span>
+            </li>
+            <li onclick="window.location.href='/growth-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Growth Overview</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- ✅ Bottom Section: Support + Logout -->
+<div style="display: flex; flex-direction: column;">
+    <li class="nav-item" style="list-style: none; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 26px; margin-bottom: 7px;">
+        <button onclick="createSupportTicket()" style="background: none; border: none; color: white; padding: 0; font: inherit; cursor: pointer; display: flex; align-items: center;">
+            <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+            <span>Support</span>
+        </button>
+        <span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+    </li>
+
+  <li class="nav-item logout">
+    <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a>
+  </li>
+</div>
+
+</aside>
+
+  <!-- Main Content -->
+  <!-- Main Content -->
+  <div class="main">
+    <!-- This is the NEW, corrected structure -->
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap;">
+    
+    <!-- Left Section: Contains Title and Note -->
+    <div style="flex: 1;">
+        <h1 style="margin: 0; font-size: x-large;">
+            <a href="{{ url_for('dashboard') }}" class="back-link" style="text-decoration: none; color: inherit;">
+                <i class="fas fa-th-large"></i> ‎Reports
+            </a>
+        </h1>
+        <p style="font-size: 12px; color: #474747; margin: 5px 0 0 0;">
+            Note: The sales values displayed in the graph represent the PO Base Value, not the total amount. 
+            
+        </p>
+        
+         <h4 id="reportSubheading" style="color: black; font-weight: 700; margin: 0 0 10px 0; ">
+            PO's Overview
+        </h4>
+    </div>
+
+    <!-- Right Section: Contains Subheading and Sort Dropdown -->
+    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+       
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="poSortDropdown" style="font-weight: 600; color: #127285;">Sort:</label>
+            <select id="poSortDropdown" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+                <option value="">None</option>
+                <option value="sales_desc">Sales Value (High to Low)</option>
+                <option value="sales_asc">Sales Value (Low to High)</option>
+            </select>
+        </div>
+    </div>
+
+</div>
+
+  
+<div class="filters">
+    
+    <!-- Company Dropdown -->
+    <div class="filter-group">
+        <div class="custom-dropdown" id="companyDropdown">
+            <!-- The onclick has been moved to the correct div -->
+            <div class="selected-value" onclick="toggleDropdown(this, 'company')">
+                <span>Company</span>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </div>
+            <div class="clear-icon" onclick="clearDropdown('company')">×</div>
+            <div class="dropdown-list" id="companyDropdownList">
+                <input type="text" class="search-input" placeholder="Search company..." onkeyup="filterDropdownOptions(this)">
+                <ul class="options-list" id="companyOptionsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Dropdown -->
+    <div class="filter-group">
+        <div class="custom-dropdown" id="clientDropdown">
+            <div class="selected-value" onclick="toggleDropdown(this, 'client')">
+                <span>Client</span>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </div>
+            <div class="clear-icon" onclick="clearDropdown('client')">×</div>
+            <div class="dropdown-list" id="clientDropdownList">
+                <input type="text" class="search-input" placeholder="Search client..." onkeyup="filterDropdownOptions(this)">
+                <ul class="options-list" id="clientOptionsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subcontractor Dropdown -->
+    <div class="filter-group">
+        <div class="custom-dropdown" id="subcontractorDropdown">
+            <div class="selected-value" onclick="toggleDropdown(this, 'subcontractor')">
+                <span>Subcontractor</span>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </div>
+            <div class="clear-icon" onclick="clearDropdown('subcontractor')">×</div>
+            <div class="dropdown-list" id="subcontractorDropdownList">
+                <input type="text" class="search-input" placeholder="Search subcontractor..." onkeyup="filterDropdownOptions(this)">
+                <ul class="options-list" id="subcontractorOptionsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Dropdown -->
+    <div class="filter-group">
+        <div class="custom-dropdown" id="siteDropdown">
+            <div class="selected-value" onclick="toggleDropdown(this, 'site')">
+                <span>Site</span>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </div>
+            <div class="clear-icon" onclick="clearDropdown('site')">×</div>
+            <div class="dropdown-list" id="siteDropdownList">
+                <input type="text" class="search-input" placeholder="Search site..." onkeyup="filterDropdownOptions(this)">
+                <ul class="options-list" id="siteOptionsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Division Dropdown -->
+    <div class="filter-group">
+        <div class="custom-dropdown" id="divisionDropdown">
+            <div class="selected-value" onclick="toggleDropdown(this, 'division')">
+                <span>Division</span>
+                <i class="fas fa-chevron-down arrow-icon"></i>
+            </div>
+            <div class="clear-icon" onclick="clearDropdown('division')">×</div>
+            <div class="dropdown-list" id="divisionDropdownList">
+                <input type="text" class="search-input" placeholder="Search division..." onkeyup="filterDropdownOptions(this)">
+                <ul class="options-list" id="divisionOptionsList"></ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Header Row for Date, Reset -->
+<div class="header-row">
+    <h3>PO Performance Overview</h3>
+    <div class="toggle-filters-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <!-- From-To Date Filters -->
+        <div class="date-filters show" id="poDateFilterContainer" style="display: flex; gap: 10px; align-items: center;">
+            <label style="font-size: 14px; font-weight: 500; color: #127285;">
+                From: <input type="date" id="po-from-date" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">  
+            </label>
+            <label style="font-size: 14px; font-weight: 500; color: #127285;">
+                To: <input type="date" id="po-to-date" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+            </label>
+            <button class="sort-btn" onclick="fetchAndRenderPOChart()">
+                Filter <i class="fas fa-filter"></i>
+            </button>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="poResetBtn" class="sort-btn" style="background-color: #127285;">
+            <i class="fas fa-undo"></i> Reset
+        </button>
+    </div>
+</div>
+
+    <!-- Chart Section -->
+    <div class="chart-container" style="margin-top: 20px;">
+        <canvas id="poChart"></canvas>
+    </div>
+
+    <!-- Details Table Container -->
+    <div class="scroll-table-container" style="margin-top: 30px;" id="detailsTableContainer">
+        <!-- The table will be rendered here by JavaScript -->
+    </div>
+    <!-- This is the NEW Download Button and Footer -->
+<div class="footer">
+    <button id="downloadBtn"><i class="fas fa-download"></i> Download Report</button>
+</div>
+</div>
+
+
+
+<script>
+// --- GLOBAL VARIABLES ---
+let poChart; // This will hold our Chart.js instance
+
+/**
+ * Main function to fetch data and render the chart and table.
+ * This is the central hub for all updates.
+ */
+async function fetchAndRenderPOChart() {
+    const filters = getPOFilterValues();
+
+    try {
+        const response = await fetch('/api/po-overview-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(filters)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        renderPOChart(result.graph_data || []);
+        renderPOTable(result.records || []);
+
+    } catch (error) {
+        console.error("Failed to fetch or render PO data:", error);
+    }
+}
+
+/**
+ * Renders the bar chart for PO Sales Value.
+ */
+function renderPOChart(data) {
+    const ctx = document.getElementById('poChart').getContext('2d');
+    
+    const sortValue = document.getElementById("poSortDropdown").value;
+    if (sortValue === 'sales_desc') {
+        data.sort((a, b) => (b.total_sales || 0) - (a.total_sales || 0));
+    } else if (sortValue === 'sales_asc') {
+        data.sort((a, b) => (a.total_sales || 0) - (b.total_sales || 0));
+    }
+
+    const labels = data.map(item => item.po_number || 'N/A');
+    const salesData = data.map(item => item.total_sales || 0);
+
+    if (poChart) {
+        poChart.destroy();
+    }
+
+    poChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Sales Value (₹)',
+                data: salesData,
+                backgroundColor: '#127285',
+                borderColor: '#127285',
+                borderWidth: 1,
+                maxBarThickness: 40,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'PO Number' },
+                    ticks: { maxRotation: 45, minRotation: 30, autoSkip: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    position: 'left',
+                    title: { display: true, text: 'PO Sales Value (₹)' }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Renders the detailed data table.
+ */
+function renderPOTable(records) {
+    const container = document.getElementById("detailsTableContainer");
+    if (!records || records.length === 0) {
+        container.innerHTML = "<p style='padding: 15px; text-align: center;'>No detailed records found for this selection.</p>";
+        if (container.querySelector('table')) container.querySelector('table').remove();
+        return;
+    }
+
+    const safe = (value) => value || '-';
+    const formatDate = (dateString) => {
+        if (!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+        } catch (e) { return '-'; }
+    };
+    const formatCurrency = (num) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(num || 0);
+
+    let tableHTML = `<table id="detailsTable" class="report-table"><thead><tr>
+                    <th>PO Number</th><th>PO Date</th><th>PO Expiry Date</th><th>Client</th>
+                    <th>Company</th><th>Project Name</th><th>Site</th><th>Division</th>
+                    <th>PO Amount</th><th>Status</th><th>Issued By</th>
+                    </tr></thead><tbody>`;
+
+    records.forEach(item => {
+        tableHTML += `<tr>
+            <td>${safe(item.po_number)}</td><td>${formatDate(item.po_date)}</td>
+            <td>${formatDate(item.po_expiry_date)}</td><td>${safe(item.client_name)}</td>
+            <td>${safe(item.company_name)}</td><td>${safe(item.project_name)}</td>
+            <td>${safe(item.site)}</td><td>${safe(item.division)}</td>
+            <td>${formatCurrency(item.po_amount)}</td><td>${safe(item.status)}</td>
+            <td>${safe(item.issued_by)}</td></tr>`;
+    });
+    tableHTML += `</tbody></table>`;
+    container.innerHTML = tableHTML;
+}
+
+
+async function createSupportTicket() {
+    try {
+        const response = await fetch('/api/generate-support-ticket');
+        const data = await response.json();
+
+        if (data.ticket_id) {
+            const recipient = 'dt@activusdesignbuild.in';
+            const subject = `Support Ticket: ${data.ticket_id}`;
+            
+            // This creates the mailto link and programmatically "clicks" it
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+        } else {
+            // Fallback in case of an error
+            alert('Could not generate a support ticket ID. Please email dt@activusdesignbuild.in directly.');
+        }
+    } catch (error) {
+        console.error("Failed to create support ticket:", error);
+        alert('An error occurred. Please email dt@activusdesignbuild.in directly.');
+    }
+}
+
+
+/**
+ * Gathers all filter values from the UI.
+ */
+function getPOFilterValues() {
+    const getDropdownValue = (id) => Array.from(document.querySelectorAll(`#${id}OptionsList input:checked:not(.select-all)`)).map(cb => cb.value);
+    return {
+        company_name: getDropdownValue('company'),
+        client_name: getDropdownValue('client'),
+        sub_contractor_name: getDropdownValue('subcontractor'),
+        site: getDropdownValue('site'),
+        division: getDropdownValue('division'),
+        from_date: document.getElementById("po-from-date").value || null,
+        to_date: document.getElementById("po-to-date").value || null,
+        sort: document.getElementById("poSortDropdown").value || "",
+    };
+}
+
+/**
+ * Fetches the initial, unfiltered options for all dropdowns.
+ */
+async function populatePOFilters() {
+    try {
+        const response = await fetch('/api/filter-options'); // Calls the corrected endpoint
+        const data = await response.json();
+        populateCustomDropdown('company', data.company_names || []);
+        populateCustomDropdown('client', data.client_names || []);
+        populateCustomDropdown('subcontractor', data.subcontractors || []);
+        populateCustomDropdown('site', data.sites || []);
+        populateCustomDropdown('division', data.divisions || []);
+    } catch (error) {
+        console.error("Failed to populate initial filters:", error);
+    }
+}
+
+/**
+ * Handles a click on a dropdown checkbox, triggering the dependent filter logic.
+ */
+async function handleOptionChange(changedDropdownId) {
+    updateSelectedLabel(changedDropdownId);
+    const currentFilters = getPOFilterValues();
+
+    try {
+        const response = await fetch('/api/po-filter-options-dependent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentFilters)
+        });
+        const dependentOptions = await response.json();
+        const allDropdowns = ['company', 'client', 'subcontractor', 'site', 'division'];
+
+        allDropdowns.forEach(id => {
+            if (id !== changedDropdownId) {
+                let optionsKey;
+                switch (id) {
+                    case 'company': optionsKey = 'company_names'; break;
+                    case 'client': optionsKey = 'client_names'; break;
+                    case 'division': optionsKey = 'divisions'; break;
+                    case 'site': optionsKey = 'sites'; break;
+                    case 'subcontractor': optionsKey = 'subcontractors'; break;
+                    default: optionsKey = '';
+                }
+                populateCustomDropdown(id, dependentOptions[optionsKey] || [], true);
+            }
+        });
+    } catch (error) {
+        console.error("Failed to fetch dependent options:", error);
+    }
+    
+    fetchAndRenderPOChart();
+}
+
+/**
+ * Builds the HTML for a multi-select dropdown, preserving selections if needed.
+ */
+function populateCustomDropdown(id, items, preserveSelection = false) {
+    const ul = document.getElementById(id + "OptionsList");
+    if (!ul) return;
+
+    let previouslySelected = new Set();
+    if (preserveSelection) {
+        ul.querySelectorAll('input:checked:not(.select-all)').forEach(cb => previouslySelected.add(cb.value));
+    }
+
+    ul.innerHTML = `<li class="select-all-li"><label><input type="checkbox" class="select-all" onchange="toggleSelectAll(this, '${id}')"> Select All</label></li>`;
+    items.forEach(item => {
+        const isChecked = previouslySelected.has(item) ? 'checked' : '';
+        const li = document.createElement("li");
+        li.innerHTML = `<label><input type="checkbox" value="${item}" onchange="handleOptionChange('${id}')" ${isChecked}> ${item}</label>`;
+        ul.appendChild(li);
+    });
+    updateSelectedLabel(id);
+}
+
+// --- FINAL, CORRECTED UI HELPER FUNCTIONS ---
+
+/**
+ * Toggles the "Select All" checkbox and updates the corresponding filter.
+ */
+function toggleSelectAll(checkbox, id) {
+    const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:not(.select-all)`);
+    checkboxes.forEach(cb => {
+        if (cb.parentElement.parentElement.style.display !== 'none') {
+            cb.checked = checkbox.checked;
+        }
+    });
+    handleOptionChange(id);
+}
+
+/**
+ * Updates the text on the dropdown button (e.g., "Company" -> "3 selected").
+ */
+function updateSelectedLabel(id) {
+    const checked = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:checked:not(.select-all)`);
+    const dropdown = document.getElementById(id + "Dropdown");
+    const labelSpan = dropdown.querySelector(".selected-value span");
+    const placeholder = capitalize(id.replace(/_/g, ' '));
+
+    if (checked.length > 0) {
+        labelSpan.textContent = checked.length === 1 ? checked[0].value : `${checked.length} selected`;
+        dropdown.classList.add("has-selection");
+    } else {
+        labelSpan.textContent = placeholder;
+        dropdown.classList.remove("has-selection");
+    }
+}
+
+/**
+ * Toggles the visibility of a dropdown list and HIGHLIGHTS the active button.
+ * @param {HTMLElement} element - The element that was clicked (the selected-value div).
+ * @param {string} id - The identifier for the dropdown (e.g., 'company').
+ */
+function toggleDropdown(element, id) {
+    const list = document.getElementById(`${id}DropdownList`);
+    const button = element; // The element passed from onclick="toggleDropdown(this, ...)"
+    const isActive = list.classList.contains("active");
+
+    // First, close all other dropdowns and remove their highlights
+    document.querySelectorAll(".dropdown-list.active").forEach(d => d.classList.remove("active"));
+    document.querySelectorAll(".selected-value.active").forEach(b => b.classList.remove("active"));
+
+    // If the clicked dropdown was not already active, open it and highlight its button
+    if (!isActive) {
+        list.classList.add("active");
+        if (button) {
+            button.classList.add("active");
+        }
+    }
+}
+
+/**
+ * Clears all selections in a specific dropdown.
+ */
+function clearDropdown(id) {
+    event.stopPropagation();
+    document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]`).forEach(cb => cb.checked = false);
+    handleOptionChange(id);
+}
+
+/**
+ * Filters the options within a dropdown list based on the search input.
+ */
+function filterDropdownOptions(input) {
+    const filter = input.value.toLowerCase();
+    const listItems = input.parentElement.querySelectorAll("li:not(.select-all-li)");
+    listItems.forEach(item => {
+        const text = item.textContent || item.innerText;
+        item.style.display = text.toLowerCase().includes(filter) ? "" : "none";
+    });
+}
+
+/**
+ * Capitalizes the first letter of a string.
+ */
+function capitalize(s) {
+    if (!s) return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// --- FINAL, INTEGRATED INITIALIZATION and EVENT LISTENERS ---
+
+// --- FINAL, INTEGRATED INITIALIZATION and EVENT LISTENERS ---
+
+document.addEventListener("DOMContentLoaded", async () => {
+    // --- 1. SET DEFAULT DATES ON PAGE LOAD ---
+    try {
+        const response = await fetch('/api/po-report-date-range');
+        const dates = await response.json();
+        if (dates.min_date && dates.max_date) {
+            document.getElementById("po-from-date").value = dates.min_date;
+            document.getElementById("po-to-date").value = dates.max_date;
+        }
+    } catch (error) {
+        console.error("Failed to fetch default date range:", error);
+    }
+
+    // --- 2. POPULATE FILTERS & RENDER INITIAL VIEW ---
+    await populatePOFilters();
+    await fetchAndRenderPOChart();
+
+    // --- 3. ATTACH ALL EVENT LISTENERS FOR INTERACTIVITY ---
+
+    // Listen for changes on the main sort dropdown
+    document.getElementById("poSortDropdown").addEventListener("change", fetchAndRenderPOChart);
+
+    // Listen for changes on the date pickers
+    document.getElementById("po-from-date").addEventListener("change", fetchAndRenderPOChart);
+    document.getElementById("po-to-date").addEventListener("change", fetchAndRenderPOChart);
+    
+    // Listen for a click on the Reset button
+    document.getElementById("poResetBtn").addEventListener("click", async () => {
+        // Reset all multi-select filter dropdowns
+        ['company', 'client', 'subcontractor', 'site', 'division'].forEach(id => {
+            document.querySelectorAll(`#${id}OptionsList input`).forEach(cb => cb.checked = false);
+            updateSelectedLabel(id);
+        });
+
+        // Remove the highlight from any active filter button
+        document.querySelectorAll(".selected-value.active").forEach(b => b.classList.remove("active"));
+        
+        // Reset the sort dropdown
+        document.getElementById("poSortDropdown").value = "";
+        
+        // Asynchronously fetch and set the default dates again
+        try {
+            const response = await fetch('/api/po-report-date-range');
+            const dates = await response.json();
+            if (dates.min_date && dates.max_date) {
+                document.getElementById("po-from-date").value = dates.min_date;
+                document.getElementById("po-to-date").value = dates.max_date;
+            }
+        } catch (error) {
+            console.error("Failed to reset date range:", error);
+            document.getElementById("po-from-date").value = "";
+            document.getElementById("po-to-date").value = "";
+        }
+        
+        // Repopulate all dropdowns with the full list of options and refresh the report
+        await populatePOFilters(); 
+        await fetchAndRenderPOChart();
+    });
+
+    // Listen for a click on the Download Report button
+    document.getElementById("downloadBtn").addEventListener("click", async function () {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+        let y = 10;
+
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(16);
+        pdf.text("PO Overview Report", 148, y, { align: "center" });
+        y += 10;
+
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(11);
+        const filters = getPOFilterValues();
+        if (filters.from_date && filters.to_date) {
+            pdf.text(`Timeline: ${filters.from_date} to ${filters.to_date}`, 14, y);
+            y += 7;
+        }
+
+        const getSelectedText = (id) => {
+            const values = filters[id];
+            return values.length > 0 ? values.join(", ") : "All";
+        };
+
+        const filterLines = [
+            `Company: ${getSelectedText('company_name')}`,
+            `Client: ${getSelectedText('client_name')}`,
+            `Subcontractor: ${getSelectedText('sub_contractor_name')}`,
+            `Site: ${getSelectedText('site')}`,
+            `Division: ${getSelectedText('division')}`
+        ];
+
+        filterLines.forEach(line => {
+            pdf.text(line, 14, y);
+            y += 6;
+        });
+        y += 5;
+
+        if (poChart) {
+            const chartImage = poChart.toBase64Image();
+            pdf.addImage(chartImage, "PNG", 14, y, 260, 90);
+            y += 90 + 10;
+        }
+
+        const tableEl = document.querySelector("#detailsTable");
+        if (tableEl) {
+            pdf.autoTable({
+                startY: y,
+                html: tableEl,
+                theme: "striped",
+                headStyles: { fillColor: [18, 114, 133] },
+                styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+                tableWidth: 'auto',
+                margin: { left: 14, right: 14 }
+            });
+        } else {
+            pdf.text("No detailed data to display in the table.", 14, y);
+        }
+
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+        pdf.save(`PO_Overview_Report_${timestamp}.pdf`);
+    });
+
+    // Global listener to close dropdowns when clicking outside of them
+    // Global listener to close dropdowns when clicking outside of them
+window.addEventListener("click", e => {
+    if (!e.target.closest(".custom-dropdown")) {
+        // Close all dropdown lists
+        document.querySelectorAll(".dropdown-list.active").forEach(list => list.classList.remove("active"));
+        // AND remove the highlight from all buttons
+        document.querySelectorAll(".selected-value.active").forEach(btn => btn.classList.remove("active"));
+    }
+});
+});
+</script>
+<script>
+      setInterval(() => {
+        fetch('/api/check-session')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.valid) {
+                    // If the session has expired, log the user out.
+                    window.location.href = '/logout';
+                }
+            })
+            .catch(err => console.error("Session check error:", err));
+    }, 1000);
+
+document.getElementById("fromDateFilter").addEventListener("change", triggerFilteredFetch);
+document.getElementById("toDateFilter").addEventListener("change", triggerFilteredFetch);
+
+function triggerFilteredFetch() {
+  const from = document.getElementById("fromDateFilter").value;
+  const to = document.getElementById("toDateFilter").value;
+
+  const filters = {
+    from_date: from,
+    to_date: to,
+    interval: document.getElementById("intervalDropdown").value,
+    context: "po", // very important if used in backend
+  };
+
+  fetchAndRenderPOData(filters); // existing function in your code
+}
+
+
+
+
+</script>
+
+
+
+  </body>
+  </html>

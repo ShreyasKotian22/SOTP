@@ -1,0 +1,2484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Performance Report</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+
+   select[multiple] {
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding-right: 32px; /* for arrow space */
+  background-color: var(--teal-light);
+  cursor: pointer;
+}
+ 
+    :root {
+      --teal: #127285;
+      --teal-light: #e0f6f8;
+    }
+
+    body {
+      margin: 0;
+      font-family: SF Pro Display, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+     * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: SF Pro Display, sans-serif;
+}
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background-color: #0A7386;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+
+    .sidebar .logo img {
+      width: 245px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
+
+    .nav-item i,
+    .logout i {
+      font-size: 18px;
+      margin-right: 8px;
+      vertical-align: middle;
+      width: 18px;
+      height: 22px;
+      display: inline-block;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
+
+    .logout {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    /* Sidebar text and icon color */
+    .sidebar nav ul li a,
+    .sidebar nav ul li a i,
+    .sidebar nav ul li a span,
+    .sidebar .logout a,
+    .sidebar .logout a i,
+    .sidebar .logout a span {
+      color: white;
+      text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar .logout a:hover {
+      color: white;
+    }
+    .main {
+      flex: 1;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      overflow-y: auto;
+      opacity: 0;
+      animation: fadeIn 1.2s ease-out forwards;
+    }
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: nowrap;        /* Keep all filters on a single line */
+  gap: 16px;                /* Smaller gap between filters */
+  margin-bottom: 24px;
+  justify-content: space-between;
+}
+
+.filter-group {
+  width: 19%;               /* Slightly smaller to fit 6 in one row */
+  min-width: 120px;         /* Prevents breaking on smaller screens */
+  position: relative;
+}
+
+/*Back button hovering effect*/
+.back-heading {
+  text-decoration: none;
+  color: inherit;
+ 
+}
+
+.back-heading h1 {
+  font-size: 24px;
+  margin: 5px;
+  margin-bottom: 10px;
+  transition: color 0.2s ease;
+}
+
+.back-heading:hover h1 {
+  color: #127285;
+  cursor: pointer;
+  transform: translateX(-2px);
+}
+
+.filter-group select,
+.filter-group input.flatpickr-input {
+  width: 100%;
+  height: 60px;
+  padding: 12px 36px 12px 16px;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  background-color: white;
+  color: var(--teal);
+  font-weight: 500;
+  font-size: 16px;
+  appearance: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Optional label above each select (if used later) */
+.filter-group label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Custom dropdown icon using Font Awesome */
+.filter-group::after {
+ 
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--teal);
+  font-size: 11px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+cursor: pointer;
+}
+
+/* Focus effect for inputs/selects */
+.filter-group select:focus,
+.filter-group input.flatpickr-input:focus {
+  background-color: var(--teal-light);
+  outline: none;
+  border-color: var(--teal);
+}
+
+    select, input.flatpickr-input {
+      padding: 8px 12px;
+      border: 1px solid var(--teal);
+      border-radius: 6px;
+      color: var(--teal);
+      font-weight: 500;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    select:focus, input.flatpickr-input:focus {
+      background-color: var(--teal-light);
+      outline: none;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .sort-btn {
+      padding: 6px 14px;
+      background-color: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .chart-container {
+      flex: 1;
+      min-height: 300px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    #growthdownloadBtn{
+      background-color: var(--teal);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* Flatpickr calendar styling */
+    .flatpickr-months {
+      background-color: #127285;
+      color: white;
+    }
+
+    .flatpickr-weekday {
+      background-color: #127285;
+      color: white;
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange {
+      background-color: #127285 !important;
+      color: white;
+    }
+
+    .flatpickr-day:hover {
+      background-color: #5ab3bd;
+      color: white;
+    }
+       .nav-item.active {
+  background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
+}
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.selected-value {
+  padding: 18px 12px !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+}
+.selected-value span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: calc(100% - 40px); /* Reserve space for arrow and clear icons */
+}
+
+
+.dropdown-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 260px;
+  border: 1px solid #ccc;
+  background: white;
+  z-index: 1000;
+  border-radius: 0 0 12px 12px;
+  overflow-y: auto;
+}
+
+.dropdown-list.active {
+  display: block;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.options-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options-list li:hover {
+  background-color: #f0f0f0;
+}
+
+
+#growthresetBtn {
+  background-color: white;
+  color: #ffffff;
+  border: 2px solid rgb(243, 243, 244);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#growthresetBtn:hover {
+  background-color: #127285;
+  color: #ffffff;
+  transform: translateY(-4px); /* Slight lift */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Deeper shadow */
+  transition: all 0.3s ease;
+}
+
+/* Ensure the clear icon is hidden by default */
+.clear-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  display: none; /* ⛔️ Hide by default */
+}
+
+/* Only show clear icon when dropdown has a selection */
+.custom-dropdown.has-selection .clear-icon {
+  display: block; /* ✅ Show only when .has-selection is present */
+}
+
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #127285;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+#floatingDatePanel {
+  position: fixed;
+  top: 100px;
+  left: -250px;
+  width: 250px;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  padding: 16px;
+  border-radius: 12px;
+  z-index: 999;
+  transition: left 0.3s ease;
+}
+
+#floatingDatePanel.show {
+  left: 20px; /* Slide into view */
+}
+
+.date-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toggle-filters-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  margin-left: -20px; /* 🔧 move to the left */
+}
+
+.toggle-filters-container span {
+  white-space: nowrap;
+}
+
+
+.date-filters {
+  display: flex;
+  gap: 8px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+}
+
+.date-filters.show {
+  max-width: 292px;
+  opacity: 1;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.has-submenu {
+  position: relative;
+}
+
+.has-submenu .submenu {
+  display: none;
+  list-style: none;
+  background-color: #0a6a7c;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 280px;
+  border-radius: 0 0 12px 12px;
+  z-index: 999;
+  padding: 8px 0;
+}
+
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 0px 30px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+   margin-bottom: -7px; /* ✅ Add spacing between items */
+}
+
+.submenu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.submenu-arrow {
+  margin-left: auto;
+}
+
+.selected-value {
+  padding: 18px 12px !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+}
+
+/* Divider to simulate dual button */
+.selected-value::after {
+  content: "";
+  position: absolute;
+  right: 42px; /* space before arrow */
+  top: 0%;
+  height: 100%;
+  width: 2px;
+  background-color: var(--teal);
+  opacity: 0.5;
+}
+
+/* Arrow on right like a fixed button */
+.selected-value .arrow-icon {
+  width: 30px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--teal);
+  pointer-events: none; /* Prevents hover or click effects */
+  user-select: none;
+  font-size: 14px;
+}
+
+
+/* Hover only on right arrow area */
+.selected-value .arrow-icon {
+  pointer-events: auto; /* ✅ Make it clickable again */
+  cursor: pointer;
+}
+.entity-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.entity-details-table th,
+.entity-details-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.entity-details-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+.scroll-table-container {
+  overflow-x: auto;
+  overflow-y: auto; /* ✅ vertical scroll */
+  max-height: 400px; /* ✅ limit vertical height */
+  max-width: 100%;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+
+/* Keep table header sticky */
+#detailsTable thead th {
+  position: sticky;
+  top: 0;
+  background-color: #127285;
+  color: white;
+  font-weight: 600;
+  z-index: 2;
+}
+
+/* Table structure and styling */
+#detailsTable {
+  width: 1600px; /* can be changed to auto for dynamic width */
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#detailsTable th,
+#detailsTable td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.chart-container {
+  position: relative; /* ✅ Needed for legendImage to anchor */
+  height: 360px; /* Or any fixed height */
+  max-height: 500px;
+}
+/* Hover effect */
+.filter-group:hover .selected-value {
+  background-color: #127285;
+  color: white;
+  border-radius: 9px;
+ 
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.filter-group:hover .arrow-icon {
+  color: white;
+}
+
+/* Divider turns white */
+.filter-group:hover .selected-value::after {
+  background-color: #ffffff;
+  opacity: 1;
+  border-radius: 9px;
+}
+
+/* On click: white background, teal text/icon */
+.filter-group .selected-value.active {
+  background-color: #127285;
+  color: white;
+  border-radius: 9px;
+  
+}
+
+.filter-group .selected-value.active .arrow-icon {
+  color: #ffffff;
+}
+
+.filter-group .selected-value.active::after {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+.chart-container {
+  height: 400px; /* Or any fixed height */
+  max-height: 500px;
+}
+  .submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .submenu-item:hover {
+    background-color: #117d91;
+  }
+
+  .submenu-item.active {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+  }
+
+  .submenu-item i {
+    width: 18px;
+  }
+</style>
+
+</head>
+<body>
+  
+  <!-- =================================================================== -->
+<!-- START: New & Improved Sidebar with Bottom-Aligned Support/Logout    -->
+<!-- =================================================================== -->
+<aside class="sidebar" style="display: flex; flex-direction: column; justify-content: space-between;">
+
+  <!-- Top Section: Logo and Main Navigation -->
+  <div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+    </div>
+
+    <nav>
+      <ul>
+        <li class="nav-item"><a href="{{ url_for('dashboard') }}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="/add-order"><i class="fas fa-plus-circle"></i> <span>Add New Order</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('clients') }}"><i class="fas fa-user"></i> <span>Clients</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('view_orders') }}"><i class="fas fa-file-alt"></i> <span>View Sales Order</span></a></li>
+
+        <li class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+          <div class="report-toggle" style="display: flex; align-items: center; width: 100%; color: white;">
+            <i class="fas fa-chart-bar"></i>
+            <span style="margin-left: 6px;">Report</span>
+            <i class="fas fa-chevron-down submenu-arrow" style="margin-left: auto;"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="window.location.href='/report'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Sales Order Overview</span>
+            </li>
+            <li onclick="window.location.href='/po-overview'" class="submenu-item ">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">PO’s Overview</span>
+            </li>
+            <li onclick="window.location.href='/growth-overview'" class="submenu-item active">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Growth Overview</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Bottom Section: Support and Logout are grouped here -->
+  <div style="display: flex; flex-direction: column;">
+    <li class="nav-item" style="list-style: none; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 26px; margin-bottom: 7px;">
+        <button onclick="createSupportTicket()" style="background: none; border: none; color: white; padding: 0; font: inherit; cursor: pointer; display: flex; align-items: center;">
+            <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+            <span>Support</span>
+        </button>
+        <span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+    </li>
+
+    <li class="nav-item logout">
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a>
+    </li>
+  </div>
+
+</aside>
+<!-- =================================================================== -->
+<!-- END: New & Improved Sidebar                                         -->
+<!-- =================================================================== -->
+
+  <div class="main">
+
+  <!-- ✅ Back Button -->
+<style>
+
+  .back-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #127285;
+    cursor: pointer;
+    transform: translateX(-2px);
+  }
+  
+</style>
+
+<div style="display: inline; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+  <!-- Left: Heading with link -->
+  <h1 style="margin: 0; font-size: x-large;">
+    <a href="{{ url_for('dashboard') }}" class="back-link" style="text-decoration: none; color: inherit;">
+      <i class="fas fa-th-large"></i> ‎Reports
+    </a>
+  </h1>
+
+  <!-- Right: Statement -->
+  <span style="font-size: 12px; color: #474747; max-width: 400px; text-align: right;">
+    Note: The sales values displayed in the graph represent the PO Base Value, not the total amount.
+  </span>
+</div>
+
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+  <h4 id="reportSubheading" style="color: black; font-weight: 700; margin: 0px 0 0px 2px;">
+    Growth Overview
+  </h4>
+  
+
+  <!-- ✅ New Sort Controls -->
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <label for="chartSortDropdown" style="font-weight: 600; color: #127285;">Sort:</label>
+    <select id="chartSortDropdown" onchange="handleGrowthSortChange()" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+      <option value="">None</option>
+      <option value="sales_desc">Sales Value (High to Low)</option>
+      <option value="sales_asc">Sales Value (Low to High)</option>
+      <option value="count_desc">Growth % (High to Low)</option>
+      <option value="count_asc">Growth %(Low to High)</option>
+    </select>
+  </div>
+</div>
+
+<!-- ✅ Filters -->
+<div class="filters">
+  <!-- Company Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="companyDropdown">
+      <div class="selected-value" onclick="handleLabelClick('company_name')">
+        <span>Company</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'company'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('company')">×</div>
+      <div class="dropdown-list" id="companyDropdownList">
+        <input type="text" class="search-input" placeholder="Search company..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="companyOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'company')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Client Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="clientDropdown">
+      <div class="selected-value" onclick="handleLabelClick('client_name')">
+        <span>Client</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'client'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('client')">×</div>
+      <div class="dropdown-list" id="clientDropdownList">
+        <input type="text" class="search-input" placeholder="Search client..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="clientOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'client')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subcontractor Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="subcontractorDropdown">
+      <div class="selected-value" onclick="handleLabelClick('sub_contractor_name')">
+        <span>Subcontractor</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'subcontractor'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('subcontractor')">×</div>
+      <div class="dropdown-list" id="subcontractorDropdownList">
+        <input type="text" class="search-input" placeholder="Search subcontractor..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="subcontractorOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'subcontractor')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="siteDropdown">
+      <div class="selected-value" onclick="handleLabelClick('site')">
+        <span>Site</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'site'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('site')">×</div>
+      <div class="dropdown-list" id="siteDropdownList">
+        <input type="text" class="search-input" placeholder="Search site..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="siteOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'site')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Division Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="divisionDropdown">
+      <div class="selected-value" onclick="handleLabelClick('division')">
+        <span>Division</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'division'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('division')">×</div>
+      <div class="dropdown-list" id="divisionDropdownList">
+        <input type="text" class="search-input" placeholder="Search division..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="divisionOptionsList">
+          <!-- FIX: Added the "Select All" item to match the other filters -->
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'division')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ✅ Chart Header Row -->
+<div class="header-row">
+  <h3>Performance Overview</h3>
+  
+
+  <div class="toggle-filters-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+
+    <!-- ✅ From-To filters (moved to left) -->
+    <div class="date-filters show" id="dateFilterContainer" style="display: flex; gap: 10px; align-items: center;">
+      <label style="font-size: 14px; font-weight: 500; color: #127285;">
+        From: <input type="date" id="growth-from-date" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+      </label>
+      <label style="font-size: 14px; font-weight: 500; color: #127285;">
+        To: <input type="date" id="growth-to-date" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+      </label>
+   <button class="sort-btn" onclick="updateGrowthChart(getGrowthFilterValues())">
+
+  Filter <i class="fas fa-filter"></i>
+</button>
+
+    </div>
+
+    <!-- ✅ Sort label and dropdown -->
+    <span class="sort-btn" style="background-color: transparent; color: #127285; cursor: default; padding: 0; font-weight: 600;">Interval:</span>
+   <select id="sortDropdown" style="padding: 6px 24px 6px 12px; border: 2px solid #127285; border-radius: 8px;">
+
+      <option value="Monthly" selected>Monthly</option>
+      <option value="Weekly">Weekly</option>
+      <option value="Quarterly">Quarterly</option>
+      <option value="Yearly">Yearly</option>
+      <option value="Financial Year">Financial Year</option>
+      <option value="Financial Half Year">Financial Half Year</option>
+      <option value="Financial Quarter">Financial Quarter</option>
+    </select>
+    
+    <!-- ✅ Reset Button -->
+    <button id="resetBtn" class="sort-btn" style="background-color: #127285;" onclick="location.reload();">
+  <i class="fas fa-undo"></i> Reset
+</button>
+    
+  </div>
+</div>
+
+ 
+
+  <!-- ✅ Chart --> 
+<!-- Report Tabs -->
+
+
+<div id="reportContent">
+  <div id="salesTab" class="report-tab">
+    
+  <div class="chart-container">
+   <canvas id="growthperformanceChart" height="400"></canvas>
+   
+   <!-- Image beside legend -->
+
+  </div>
+
+  <!-- ✅ MOVE THIS BELOW THE CANVAS -->
+  <div id="growthdetailsTableContainer" style="margin-top: 30px;"></div>
+</div>
+
+  <!-- ✅ Download Button -->
+  <div class="footer">
+    <button id="growthdownloadBtn"><i class="fas fa-download"></i> Download Report</button>
+  </div>
+
+</div> <!-- CLOSE .main here -->
+
+
+<script>
+
+let legendImage = null;
+
+async function loadLegendImage() {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    // Use the correct filename for your legend image.
+    img.src = "{{ url_for('static', filename='assets/legend2.png') }}"; 
+    img.onload = () => {
+      legendImage = img;
+      resolve(img);
+    };
+    img.onerror = reject;
+  });
+}
+
+let defaultFromDate = null;
+let defaultToDate = null;
+let isInitialLoad = true;
+
+
+let growthcurrentGroupBy = 'period';  // default
+
+let growthChart;
+
+
+
+const growthwhiteDotOnLinePlugin = {
+  id: 'GrowthwhiteDotOnLine',
+  afterDraw(chart) {
+    if (!legendImage) return; // Don't run if the image isn't loaded
+
+    const { ctx } = chart;
+    const legend = chart.legend;
+    if (!legend.legendHitBoxes || legend.legendHitBoxes.length === 0) return;
+
+    // Find the 'Sales (₹)' legend item to use as an anchor.
+    const salesLegendItemIndex = legend.legendItems.findIndex(item => item.text === 'Sales (₹)');
+
+    // If 'Sales (₹)' legend is not found, we can't draw the image.
+    if (salesLegendItemIndex === -1) return;
+
+    const salesLegendBox = legend.legendHitBoxes[salesLegendItemIndex];
+    if (!salesLegendBox) return;
+
+    // --- Position the image to the right of the "Sales (₹)" legend ---
+    const imageWidth = 40;
+    const imageHeight = 45;
+    const padding = 2; // Space between the sales legend and your image
+    
+    // Calculate position
+    const imageXPosition = salesLegendBox.left + salesLegendBox.width + padding;
+    const imageYPosition = salesLegendBox.top + (salesLegendBox.height - imageHeight) / 2; // Center vertically
+
+    // Draw the custom image
+    ctx.drawImage(legendImage, imageXPosition, imageYPosition, imageWidth, imageHeight);
+  }
+};
+
+
+const rainbowLegendPlugin = {
+  id: 'rainbowLegendPlugin',
+  afterDraw(chart) {
+    const ctx = chart.ctx;
+    const salesLegend = chart.legend.legendItems.find(item => item.text === "Sales (₹)");
+    if (!salesLegend) return;
+
+    const box = chart.legend.legendHitBoxes[salesLegend.datasetIndex];
+    if (!box) return;
+
+    const x = box.left + box.width - 66;
+    const y = box.top + 0;
+    const width = 12.5;
+    const height = box.height - 0;
+
+    ctx.save();
+    
+    const gradient = ctx.createLinearGradient(x, y, x, y + height);
+    gradient.addColorStop(0.0, "#ff0000");  // Red
+    gradient.addColorStop(0.17, "#ff7f00"); // Orange
+    gradient.addColorStop(0.34, "#ffff00"); // Yellow
+    gradient.addColorStop(0.51, "#00ff00"); // Green
+    gradient.addColorStop(0.68, "#0000ff"); // Blue
+    gradient.addColorStop(0.85, "#4b0082"); // Indigo
+    gradient.addColorStop(1.0, "#9400d3");  // Violet
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x, y, width, height);
+
+    ctx.restore();
+  }
+};
+
+
+  async function fetchGrowthChartData(filters) {
+    const res = await fetch("/api/growth-performance-data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(filters)
+    });
+    return await res.json();
+  }
+
+setInterval(() => {
+  fetch("/api/ping", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ page: window.location.pathname })
+  });
+}, 3000); // every 30 seconds 
+
+function fillMissingMonths(data) {
+  if (data.length === 0) return [];
+
+  const filled = [];
+  const formatDate = (date) => date.toLocaleString("default", { month: "short", year: "numeric" });
+
+  const parsePeriod = (p) => {
+    const parts = p.split(" ");
+    return new Date(parts[1], new Date(Date.parse(parts[0] + " 1")).getMonth());
+  };
+
+  const sorted = [...data].sort((a, b) => parsePeriod(a.period) - parsePeriod(b.period));
+  const start = parsePeriod(sorted[0].period);
+  const end = parsePeriod(sorted[sorted.length - 1].period);
+
+  const map = new Map(data.map(d => [d.period, d]));
+
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    const label = formatDate(cursor);
+    filled.push(
+      map.has(label)
+        ? map.get(label)
+        : {
+            period: label,
+            total_sales: 0,
+            sales_count: 0,
+            client_name: "-",
+            company_name: "-",
+            order_id: "-",
+            project_name: "-",
+            division: "-",
+            status: "-"
+          }
+    );
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  return filled;
+}
+
+// =================================================================================
+// START: REPLACEMENT fillGrowthMissingPeriods FUNCTION
+// =================================================================================
+function fillGrowthMissingPeriods(data, interval, fromDateStr, toDateStr) {
+  if (!data) return [];
+  const map = new Map(data.map(d => [d.period, d]));
+  const filled = [];
+  const defaultItem = {
+    total_sales: 0,
+    sales_count: 0,
+    client_name: "-", company_name: "-", order_id: "-",
+    project_name: "-", division: "-", status: "-"
+  };
+
+  const isFinancial = ["Financial Year", "Financial Half Year", "Financial Quarter"].includes(interval);
+
+  // --- Proactive timeline generation for FINANCIAL intervals ---
+  if (isFinancial) {
+      if (!fromDateStr || !toDateStr) return data; // Cannot generate timeline without date range
+
+      const timelineStart = new Date(fromDateStr);
+      const timelineEnd = new Date(toDateStr);
+      const generatedPeriods = new Set(); // Use a Set to avoid duplicate periods
+
+      let cursor = new Date(timelineStart);
+
+      // Loop through the entire date range day by day
+      while (cursor <= timelineEnd) {
+          const periodLabel = getFinancialPeriod(cursor, interval);
+          generatedPeriods.add(periodLabel);
+          cursor.setDate(cursor.getDate() + 1); // Move to the next day
+      }
+
+      // Sort the generated periods chronologically
+      const sortedPeriods = Array.from(generatedPeriods).sort((a, b) => {
+          const [fyA, qA] = a.replace('FY ', '').split(' ');
+          const [fyB, qB] = b.replace('FY ', '').split(' ');
+          if (fyA !== fyB) return fyA.localeCompare(fyB);
+          return (qA || '').localeCompare(qB || '');
+      });
+      
+      // Create the final filled array using the sorted list of periods
+      sortedPeriods.forEach(label => {
+          filled.push(map.has(label) ? map.get(label) : { ...defaultItem, period: label });
+      });
+
+      return filled;
+  }
+
+  // --- Logic for standard intervals (Monthly, Weekly, Quarterly) ---
+  // This part remains mostly the same as it depends on the data's own range
+  if (data.length === 0) return [];
+  
+  if (interval === "Monthly") {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const parse = p => { const [m, y] = p.split(" "); return new Date(parseInt(y), monthNames.indexOf(m), 1); };
+      const format = d => `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+      const sorted = [...data].sort((a, b) => parse(a.period) - parse(b.period));
+      const start = parse(sorted[0].period);
+      const end = parse(sorted[sorted.length - 1].period);
+      let cursor = new Date(start);
+      while (cursor <= end) {
+          const label = format(cursor);
+          filled.push(map.has(label) ? map.get(label) : { ...defaultItem, period: label });
+          cursor.setMonth(cursor.getMonth() + 1);
+      }
+      return filled;
+  }
+   if (interval === "Quarterly") {
+      const quarters = ["Q1", "Q2", "Q3", "Q4"];
+      const parse = p => { const [q, y] = p.split(" "); return new Date(parseInt(y), (quarters.indexOf(q)) * 3, 1); };
+      const format = d => `${quarters[Math.floor(d.getMonth() / 3)]} ${d.getFullYear()}`;
+      const sorted = [...data].sort((a, b) => parse(a.period) - parse(b.period));
+      const start = parse(sorted[0].period);
+      const end = parse(sorted[sorted.length - 1].period);
+      let cursor = new Date(start);
+      while (cursor <= end) {
+          const label = format(cursor);
+          filled.push(map.has(label) ? map.get(label) : { ...defaultItem, period: label });
+          cursor.setMonth(cursor.getMonth() + 3);
+      }
+      return filled;
+  }
+
+  // Fallback for "Yearly", "Weekly", or other intervals that don't need filling
+  return data;
+}
+// =================================================================================
+// END: REPLACEMENT FUNCTION
+// =================================================================================
+
+
+
+// =================================================================================
+// START: NEW HELPER FUNCTION FOR FINANCIAL PERIODS
+// =================================================================================
+function getFinancialPeriod(date, interval) {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "Invalid Date";
+
+    const year = d.getFullYear();
+    const month = d.getMonth(); // 0 = Jan, 3 = Apr
+
+    // Determine the start year of the financial year (e.g., 2023 for Apr 2023 - Mar 2024)
+    const financialYearStart = month >= 3 ? year : year - 1;
+    const financialYearEnd = financialYearStart + 1;
+    const fyLabel = `FY ${financialYearStart}-${String(financialYearEnd).slice(-2)}`;
+
+    if (interval === "Financial Year") {
+        return fyLabel;
+    }
+
+    if (interval === "Financial Half Year") {
+        // H1 is Apr-Sep, H2 is Oct-Mar
+        if (month >= 3 && month <= 8) {
+            return `${fyLabel} H1`;
+        } else {
+            return `${fyLabel} H2`;
+        }
+    }
+
+    if (interval === "Financial Quarter") {
+        if (month >= 3 && month <= 5) return `${fyLabel} Q1`;   // Apr-Jun
+        if (month >= 6 && month <= 8) return `${fyLabel} Q2`;   // Jul-Sep
+        if (month >= 9 && month <= 11) return `${fyLabel} Q3`;  // Oct-Dec
+        return `${fyLabel} Q4`; // Jan-Mar of the next calendar year
+    }
+    
+    // Fallback for other intervals (optional, as they are handled elsewhere)
+    return d.toISOString().split('T')[0];
+}
+// =================================================================================
+// END: NEW HELPER FUNCTION
+// =================================================================================
+
+
+// =================================================================================
+// START: MODIFIED updateGrowthChart FUNCTION
+// =================================================================================
+async function updateGrowthChart(filters) {
+  const res = await fetchGrowthChartData(filters);
+  if (isInitialLoad && res.default_from_date) {
+    const today = new Date().toISOString().split('T')[0];
+    defaultFromDate = res.default_from_date;
+    defaultToDate = today;
+    document.getElementById("growth-from-date").value = defaultFromDate;
+    document.getElementById("growth-to-date").value = defaultToDate;
+    isInitialLoad = false;
+  }
+
+  const data = Array.isArray(res.data) ? res.data : [];
+  const records = Array.isArray(res.records) ? res.records : [];
+
+  window.latestGrowthChartRawData = data;
+  renderDetailsTable(records);
+
+  let labels = [];
+  let datasets = [];
+  let groupByMode = filters.group_by || "period";
+  const isEntityGroup = ["company_name", "client_name", "division", "site", "sub_contractor_name"].includes(groupByMode);
+  const sortKey = filters.sort || "";
+  
+  // ✅ Variables for the dynamic Growth % axis
+  let y1AxisLimit = 100;
+  let y1StepSize = 25;
+
+  const palette = [
+    "#127285", "#D7263D", "#FFBA08", "#3A86FF", "#8338EC",
+    "#FF006E", "#00BBF9", "#F15BB5", "#9B5DE5", "#3A0CA3",
+    "#1D3557", "#2A9D8F", "#E76F51", "#E63946", "#8D99AE",
+    "#F6BD60", "#84A59D", "#F28482", "#F7A9A8", "#588157",
+    "#DDA15E", "#6B9080", "#B5838D", "#4A4E69", "#FFB4A2"
+  ];
+
+  if (isEntityGroup) {
+    // Logic for entity grouping (Company, Client, etc.)
+   let initialEntityLabels = [];
+
+if (["Financial Year", "Financial Half Year", "Financial Quarter"].includes(filters.interval)) {
+  const financialGroups = {};
+  data.forEach(item => {
+    const poDate = item.po_date;
+    const period = getFinancialPeriod(poDate, filters.interval);
+    item.period = period;
+    if (!financialGroups[period]) {
+      financialGroups[period] = 0;
+    }
+    financialGroups[period] += item.y || 0;
+  });
+  initialEntityLabels = Object.keys(financialGroups).sort();
+} else {
+  initialEntityLabels = [...new Set(data.map(item => item.period))].sort();
+}
+
+    const totalSalesByEntity = {};
+    data.forEach(item => {
+        const entity = item.period;
+        const sales = item.y || 0;
+        totalSalesByEntity[entity] = (totalSalesByEntity[entity] || 0) + sales;
+    });
+
+    const growthMap = new Map();
+    for (let i = 0; i < initialEntityLabels.length; i++) {
+        const currentEntity = initialEntityLabels[i];
+        let growth = 0;
+        if (i > 0) {
+            const previousEntity = initialEntityLabels[i - 1];
+            const currentSales = totalSalesByEntity[currentEntity] || 0;
+            const previousSales = totalSalesByEntity[previousEntity] || 0;
+            if (previousSales === 0) {
+                growth = currentSales > 0 ? 100 : 0;
+            } else {
+                // ✅ MODIFICATION: Capped negative growth at -100
+                const calculatedGrowth = ((currentSales - previousSales) / previousSales) * 100;
+                growth = Math.max(-100, calculatedGrowth);
+            }
+        }
+        growthMap.set(currentEntity, growth);
+    }
+    let entitiesToSort = initialEntityLabels.map(label => ({
+        label: label,
+        sales: totalSalesByEntity[label] || 0,
+        growth: growthMap.get(label) || 0
+    }));
+
+    if (sortKey === "sales_desc") {
+        entitiesToSort.sort((a, b) => b.sales - a.sales);
+    } else if (sortKey === "sales_asc") {
+        entitiesToSort.sort((a, b) => a.sales - b.sales);
+    } else if (sortKey === "count_desc") { 
+        entitiesToSort.sort((a, b) => b.growth - a.growth);
+    } else if (sortKey === "count_asc") {
+        entitiesToSort.sort((a, b) => a.growth - b.growth);
+    }
+
+    labels = entitiesToSort.map(e => e.label);
+    const finalGrowthValues = entitiesToSort.map(e => e.growth);
+    
+    // ✅ Calculate dynamic axis limits for Growth %
+    const maxAbsGrowthForEntity = Math.max(100, ...finalGrowthValues.map(g => Math.abs(g)));
+    y1AxisLimit = Math.ceil(maxAbsGrowthForEntity / 100) * 100;
+    y1StepSize = y1AxisLimit / 4;
+
+
+    const salesByPO = {};
+    data.forEach(item => {
+        const po = item.po || 'unknown';
+        if (!salesByPO[po]) {
+            salesByPO[po] = [];
+        }
+        salesByPO[po].push(item);
+    });
+
+    const sortedPOs = Object.keys(salesByPO).sort((a, b) => {
+        const totalA = salesByPO[a].reduce((sum, item) => sum + (item.y || 0), 0);
+        const totalB = salesByPO[b].reduce((sum, item) => sum + (item.y || 0), 0);
+        return totalA - totalB;
+    });
+
+    let colorIndex = 0;
+    datasets = [];
+    sortedPOs.forEach(po => {
+        const items = salesByPO[po];
+        const color = palette[colorIndex % palette.length];
+        colorIndex++;
+        datasets.push({
+            label: `Sales (₹) - ${po}`,
+            data: items.map(item => ({ x: item.period, y: item.y, project: item.project, po: item.po, entity_name: item.entity_name || "", company_name: item.company_name, po_date: item.po_date })),
+            backgroundColor: color, stack: 'sales', yAxisID: 'y', order: 2, barThickness: 18
+        });
+    });
+
+datasets.push({
+    label: "Growth %",
+    data: entitiesToSort.map(e => {
+        const originalItem = data.find(item => item.period === e.label);
+        return {
+            x: e.label,
+            y: e.growth,
+            entity_name: originalItem?.entity_name || "",  // ✅ Include full name
+        };
+    }),
+    type: "line",
+    yAxisID: "y1",
+    borderColor: "#28a745",
+    backgroundColor: "#28a745",
+    tension: 0.1,
+    fill: false,
+    pointRadius: 4,
+    pointHoverRadius: 6,
+    pointBorderWidth: 2,
+    pointBackgroundColor: entitiesToSort.map(e => e.growth < 0 ? 'red' : 'white'),
+    pointBorderColor: entitiesToSort.map(e => e.growth < 0 ? 'red' : '#28a745'),
+    segment: {
+        borderColor: ctx => ctx.p1?.parsed?.y < 0 ? "red" : "#28a745"
+    },
+    order: 1
+});
+
+
+} else {
+    // Default period-based behavior (non-stacked) with GROWTH %
+
+    const isFinancialInterval = ["Financial Year", "Financial Half Year", "Financial Quarter"].includes(filters.interval);
+    let processedData = [];
+
+    if (isFinancialInterval && Array.isArray(records)) {
+        const aggregated = {};
+        records.forEach(rec => {
+            const period = getFinancialPeriod(rec.po_date, filters.interval);
+            if (!aggregated[period]) {
+                aggregated[period] = {
+                    total_sales: 0,
+                    sales_count: 0,
+                    period: period
+                };
+            }
+            aggregated[period].total_sales += parseFloat(rec.po_amount || 0);
+            aggregated[period].sales_count += 1;
+        });
+        processedData = Object.values(aggregated);
+    } else {
+        processedData = Array.isArray(data) ? [...data] : [];
+    }
+
+    let sortedData = processedData;
+    
+    if (filters.interval && filters.interval !== "Yearly") {
+        sortedData = fillGrowthMissingPeriods(sortedData, filters.interval, filters.from_date, filters.to_date);
+    }
+    
+    const chronoSortedForGrowth = [...sortedData];
+    try {
+        chronoSortedForGrowth.sort((a, b) => new Date(a.period) - new Date(b.period));
+    } catch(e) { /* fallback if date parsing fails */ }
+
+    const growthDataMap = new Map();
+    for (let i = 0; i < chronoSortedForGrowth.length; i++) {
+        let growth = 0;
+        if (i > 0) {
+            const currentSales = parseFloat(chronoSortedForGrowth[i].total_sales || 0);
+            const previousSales = parseFloat(chronoSortedForGrowth[i - 1].total_sales || 0);
+            if (previousSales === 0) {
+                growth = currentSales > 0 ? 100 : 0;
+            } else {
+                // ✅ MODIFICATION: Capped negative growth at -100
+                const calculatedGrowth = ((currentSales - previousSales) / previousSales) * 100;
+                growth = Math.max(-100, calculatedGrowth);
+            }
+        }
+        growthDataMap.set(chronoSortedForGrowth[i].period, growth);
+    }
+
+    if (sortKey === "sales_desc") sortedData.sort((a, b) => parseFloat(b.total_sales || 0) - parseFloat(a.total_sales || 0));
+    else if (sortKey === "sales_asc") sortedData.sort((a, b) => parseFloat(a.total_sales || 0) - parseFloat(b.total_sales || 0));
+    else if (sortKey === "count_desc") {
+        sortedData.sort((a, b) => (growthDataMap.get(b.period) || -Infinity) - (growthDataMap.get(a.period) || -Infinity));
+    } else if (sortKey === "count_asc") {
+        sortedData.sort((a, b) => (growthDataMap.get(a.period) || Infinity) - (growthDataMap.get(b.period) || Infinity));
+    }
+    
+    labels = sortedData.map(item => item.period);
+    const growthData = labels.map(label => growthDataMap.get(label) || 0);
+    
+    // ✅ Calculate dynamic axis limits for Growth %
+    const maxAbsGrowthForPeriod = Math.max(100, ...growthData.map(g => Math.abs(g)));
+    y1AxisLimit = Math.ceil(maxAbsGrowthForPeriod / 100) * 100;
+    y1StepSize = y1AxisLimit / 4;
+
+
+    const salesWithMeta = sortedData.map(item => ({
+        x: item.period || "-",
+        y: parseFloat(item.total_sales || 0),
+        client: item.client_name || "-", company: item.company_name || "-",
+        order_id: item.order_id || "-", project: item.project_name || "-",
+        division: item.division || "-", status: item.status || "-"
+    }));
+
+    datasets = [{
+        label: "Sales (₹)",
+        data: salesWithMeta,
+        backgroundColor: "#127285", yAxisID: "y", order: 2, maxBarThickness: 30
+    }, {
+        label: "Growth %",
+        data: growthData,
+        type: "line",
+        yAxisID: "y1",
+        borderColor: "#28a745", backgroundColor: "#28a745", tension: 0.1, fill: false,
+        pointRadius: 4, pointHoverRadius: 6, pointBorderWidth: 2,
+        pointBackgroundColor: growthData.map(v => v < 0 ? 'red' : 'white'),
+        pointBorderColor: growthData.map(v => v < 0 ? 'red' : '#28a745'),
+        segment: { borderColor: ctx => ctx.p1?.parsed?.y < 0 ? "red" : "#28a745" },
+        order: 1
+    }];
+}
+
+if (growthChart) growthChart.destroy();
+
+Chart.register(growthwhiteDotOnLinePlugin, rainbowLegendPlugin);
+
+growthChart = new Chart(document.getElementById('growthperformanceChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'nearest',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          display: true,
+          onClick: (e, legendItem, legend) => {
+              const chart = legend.chart;
+              const clickedText = legendItem.text;
+              if (clickedText === 'Sales (₹)') {
+                  const salesDatasets = chart.data.datasets.map((ds, i) => ({...ds, index: i})).filter(ds => ds.label.startsWith('Sales (₹)'));
+                  const anyVisible = salesDatasets.some(ds => chart.isDatasetVisible(ds.index));
+                  salesDatasets.forEach(ds => chart.setDatasetVisibility(ds.index, !anyVisible));
+              } else {
+                  const index = legendItem.datasetIndex;
+                  const meta = chart.getDatasetMeta(index);
+                  meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
+              }
+              chart.update();
+          },
+              labels: {
+                usePointStyle: true,
+                padding: 20,
+                boxWidth: 18,
+                generateLabels: (chart) => {
+                  const all = chart.data.datasets;
+                  const seen = new Set();
+
+                  return all
+                    .filter(ds => {
+                      const baseLabel = ds.label.startsWith("Sales (₹)") ? "Sales (₹)" : ds.label;
+                      const key = baseLabel + (ds.type || "bar");
+                      if (seen.has(key)) return false;
+                      seen.add(key);
+                      return true;
+                    })
+                    .map(ds => {
+                      const isLine = ds.type === 'line';
+                      const labelText = ds.label.startsWith("Sales (₹)") ? "Sales (₹)" : ds.label;
+                      const datasetIndex = chart.data.datasets.findIndex(d => d.label === ds.label && d.type === ds.type);
+                      const isHidden = !chart.isDatasetVisible(datasetIndex);
+
+                      if (labelText === 'Growth %') {
+                        return {
+                          text: labelText,
+                          strokeStyle: 'rgba(0,0,0,0)', 
+                          fillStyle: 'rgba(0,0,0,0)',
+                          lineWidth: 0,
+                          pointStyle: 'rect',
+                          datasetIndex: datasetIndex,
+                          hidden: isHidden
+                        };
+                      } 
+                      else {
+                        return {
+                          text: labelText,
+                          strokeStyle: ds.borderColor || ds.backgroundColor,
+                          fillStyle: isLine ? 'transparent' : (ds.backgroundColor || ds.borderColor),
+                          lineWidth: isLine ? 2 : 0,
+                          pointStyle: isLine ? 'line' : 'rect',
+                          datasetIndex: datasetIndex,
+                          hidden: isHidden
+                        };
+                      }
+                    });
+                }
+              }
+        },
+        tooltip: {
+            mode: 'nearest',
+            intersect: false,
+            callbacks: {
+              title: function (tooltipItems) {
+                const raw = tooltipItems[0].raw || {};
+                const label = tooltipItems[0].label || "";
+                const fullEntity = raw.entity_name || "";
+                const labelParts = label.split(" - ");
+                const datePart = labelParts.length > 1 ? labelParts.slice(1).join(" - ") : "";
+
+                if (fullEntity) {
+                  return `${fullEntity}${datePart ? " - " + datePart : ""}`;
+                }
+
+                return label;
+              },
+
+              label: function (tooltipItem) {
+                const dataset = tooltipItem.dataset;
+                const rawValue = tooltipItem.raw;
+                const labelParts = [];
+
+                if (dataset.label === "Growth %") {
+                    const value = typeof rawValue === 'number' ? rawValue : (rawValue?.y || 0);
+                    return `Growth: ${value.toFixed(2)}%`;
+                }
+                
+                const raw = typeof rawValue === 'object' && rawValue !== null ? rawValue : {};
+                
+                if (raw.project && raw.po) {
+                  labelParts.push(`Project: ${raw.project}`);
+                  labelParts.push(`PO: ${raw.po}`);
+                }
+
+                if (typeof raw.y === "number") {
+                  labelParts.push(`Sales: ₹${raw.y.toLocaleString("en-IN")}`);
+                }
+
+                return labelParts;
+              }
+            }
+          }
+      },
+      scales: {
+        x: {
+          stacked: isEntityGroup, 
+          ticks: { maxRotation: 45, minRotation: 30, autoSkip: false }
+        },
+        y: {
+          display: true, 
+          stacked: isEntityGroup,
+          beginAtZero: true,
+          type: 'linear',
+          title: { display: true, text: "₹ (INR)" },
+          ticks: {
+              callback: function (value) {
+                  if (value === 0) return '₹0';
+                  if (value < 100000) return `₹${(value / 1000).toFixed(0)}K`;
+                  if (value < 10000000) return `₹${(value / 100000).toFixed(1)}L`;
+                  return `₹${(value / 10000000).toFixed(1)}Cr`;
+              }
+          }
+        },
+        // ✅ START: UPDATED DYNAMIC Y-AXIS FOR GROWTH %
+        y1: {
+          beginAtZero: false,
+          position: 'right',
+          title: { display: true, text: 'Growth %' },
+          grid: { drawOnChartArea: false },
+          min: -y1AxisLimit, // Set dynamic minimum
+          max: y1AxisLimit,  // Set dynamic maximum
+          ticks: {
+            stepSize: y1StepSize, // Set dynamic step size for 4 units
+            callback: value => `${value}%`
+          }
+        }
+        // ✅ END: UPDATED DYNAMIC Y-AXIS
+      }
+    }
+  }); 
+}
+// =================================================================================
+// END: MODIFIED updateGrowthChart FUNCTION
+// =================================================================================
+
+function getDateOfISOWeek(week, year) {
+  const simple = new Date(year, 0, 1 + (week - 1) * 7);
+  const dow = simple.getDay();
+  const ISOweekStart = simple;
+  if (dow <= 4)
+    ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else
+    ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  return ISOweekStart;
+}
+
+
+async function setDefaultDateRange() {
+  try {
+    const res = await fetch("/api/po-date-range");
+    const data = await res.json();
+    if (data.min_date) {
+      document.getElementById("growth-from-date").value = data.min_date;
+      
+      const today = new Date().toISOString().split("T")[0]; // ✅ today
+      document.getElementById("growth-to-date").value = today;
+
+      // Optional: Save globally
+      defaultFromDate = data.min_date;
+      defaultToDate = today;
+    }
+  } catch (err) {
+    console.error("Failed to fetch date range", err);
+  }
+}
+// Call this on load
+
+function getSmartYAxisMax(values) {
+  if (!values.length) return 1000000;
+
+  const cleaned = values.filter(v => typeof v === 'number' && v > 0);
+  const sorted = [...cleaned].sort((a, b) => a - b);
+
+  if (sorted.length < 3) return Math.ceil(Math.max(...sorted, 1) * 1.25);
+
+  const cutoff = Math.floor(sorted.length * 0.9);
+  const top90 = sorted.slice(0, cutoff);
+  const max90 = Math.max(...top90);
+  const buffer = max90 * 0.25;
+
+  return Math.ceil(max90 + buffer);
+}
+
+
+
+
+
+// Helper: Get all current filter values for dropdowns and dates
+function getCurrentFilterParams() {
+  const params = [];
+  const from = document.getElementById("growth-from-date").value;
+  const to = document.getElementById("growth-to-date").value;
+  if (from) params.push(`from_date=${encodeURIComponent(from)}`);
+  if (to) params.push(`to_date=${encodeURIComponent(to)}`);
+
+  // For each dropdown, get selected values (comma-separated)
+  ['company', 'client', 'division', 'subcontractor', 'site'].forEach(id => {
+    const vals = getGrowthDropdownValue(id);
+    if (vals.length > 0) params.push(`${id}=${encodeURIComponent(vals.join(','))}`);
+  });
+  return params;
+}
+
+
+async function populateGrowthFilters(from = null, to = null) {
+  let url = '/api/growth-filter-options';
+  const params = [];
+  if (from) params.push(`from_date=${encodeURIComponent(from)}`);
+  if (to) params.push(`to_date=${encodeURIComponent(to)}`);
+  if (params.length > 0) url += '?' + params.join('&');
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  populateGrowthDropdown('company', data.company_names);
+  populateGrowthDropdown('client', data.client_names);
+  populateGrowthDropdown('division', data.divisions);
+  populateGrowthDropdown('subcontractor', data.subcontractors || []);
+  populateGrowthDropdown('site', data.sites || []);
+}
+
+
+
+function populateSelect(id, items, placeholderText, preselectedValues = []) {
+  const select = document.getElementById(id);
+  select.innerHTML = ''; // Clear old options
+
+  const placeholder = document.createElement('option');
+  placeholder.disabled = true;
+  placeholder.textContent = placeholderText;
+  select.appendChild(placeholder);
+
+  items.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item;
+    opt.textContent = item;
+    if (preselectedValues.includes(item)) {
+      opt.selected = true;
+    }
+    select.appendChild(opt);
+  });
+}
+
+  function getMultiSelectValues(id) {
+  const select = document.getElementById(id);
+  return Array.from(select.selectedOptions).map(option => option.value);
+}
+
+function getGrowthDropdownValue(id) {
+  const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:checked:not(.select-all)`);
+  return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function getGrowthFilterValues(group_by = growthcurrentGroupBy || 'period') {
+  const from = document.getElementById('growth-from-date').value;
+  const to = document.getElementById('growth-to-date').value;
+
+  const filters = {
+    company_name: getGrowthDropdownValue('company'),
+    client_name: getGrowthDropdownValue('client'),
+    sub_contractor_name: getGrowthDropdownValue('subcontractor'),
+    project_name: getGrowthDropdownValue('project'),
+    division: getGrowthDropdownValue('division'),
+    site: getGrowthDropdownValue('site'),
+    interval: document.getElementById('sortDropdown')?.value || 'Monthly',
+    sort: document.getElementById('chartSortDropdown')?.value || '',
+    from_date: /^\d{4}-\d{2}-\d{2}$/.test(from) ? from : null,
+to_date: /^\d{4}-\d{2}-\d{2}$/.test(to) ? to : null,
+
+    group_by: group_by
+  };
+
+  return filters;
+}
+
+
+
+function getSelectValue(id) {
+  const val = document.getElementById(id).value;
+  return val && !val.includes("Name") && val !== "Order ID" ? val : null;
+}
+
+
+// =======================================================================================
+// === CONSOLIDATED SCRIPT LOADER FOR GROWTH CHART =======================================
+// =======================================================================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // --- 0. LOAD CUSTOM ASSETS ---
+  try {
+    await loadLegendImage();
+  } catch (error) {
+    console.error("Failed to load custom legend image.", error);
+  }
+
+  // --- 1. INITIALIZE THE EMPTY CHART ---
+  // Create the chart instance immediately so other functions can access it.
+  const ctx = document.getElementById('growthperformanceChart').getContext('2d');
+  growthChart = new Chart(ctx, {
+      type: "bar",
+      data: { labels: [], datasets: [] },
+      options: { responsive: true, plugins: { legend: { position: 'top' } } },
+      plugins: [growthwhiteDotOnLinePlugin, rainbowLegendPlugin]
+  });
+
+  // --- 2. SETUP AND DATA POPULATION ---
+  // Set the default date range and populate the filter dropdowns.
+  await setDefaultDateRange();
+  await populateGrowthFilters();
+
+  // --- 3. ATTACH ALL EVENT LISTENERS ---
+  // Now, set up all the listeners for user actions.
+
+  // Listen for date changes.
+  const fromInput = document.getElementById("growth-from-date");
+  const toInput = document.getElementById("growth-to-date");
+  [fromInput, toInput].forEach(input => {
+      input.addEventListener("change", () => {
+          updateGrowthChart(getGrowthFilterValues(growthcurrentGroupBy));
+      });
+  });
+
+  // Listen for interval changes (Monthly, Weekly, etc.).
+  document.getElementById("sortDropdown").addEventListener("change", () => {
+      updateGrowthChart(getGrowthFilterValues(growthcurrentGroupBy));
+  });
+  
+  // Listen for session validity checks.
+  setInterval(() => {
+      fetch('/api/check-session')
+          .then(res => res.json())
+          .then(data => {
+              if (!data.valid) { window.location.href = '/logout'; }
+          })
+          .catch(err => console.error("Session check error:", err));
+  }, 2000);
+
+  // --- 4. FINAL RENDER ---
+  // After everything is set up, get the initial filter values and update the chart ONCE.
+  // This prevents the flickering on load.
+  const initialFilters = getGrowthFilterValues();
+  await updateGrowthChart(initialFilters);
+});
+
+document.getElementById("growthresetBtn").addEventListener("click", async () => {
+  const dropdownIds = ['company', 'client', 'subcontractor', 'site', 'division'];
+
+  dropdownIds.forEach(id => {
+    const label = document.querySelector(`#${id}Dropdown .selected-value`);
+    const span = label.querySelector("span");
+    if (span) span.textContent = `Select ${capitalize(id)}`;
+
+    const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]`);
+    checkboxes.forEach(cb => cb.checked = false);
+
+    document.getElementById(`${id}Dropdown`).classList.remove('has-selection');
+  });
+
+  // Reset dropdowns
+  document.getElementById('chartSortDropdown').value = '';
+  document.getElementById('sortDropdown').value = 'Monthly';
+  document.getElementById("growthdetailsTableContainer").innerHTML = "";
+
+  // Reset group_by mode
+  growthcurrentGroupBy = 'period';
+
+  // ✅ Fetch default date range (min to today)
+  try {
+    const res = await fetch('/api/po-date-range');
+    const data = await res.json();
+    const today = new Date().toISOString().split("T")[0];
+
+    if (data.min_date) {
+      document.getElementById('growth-from-date').value = data.min_date;
+      document.getElementById('growth-to-date').value = today;
+    } else {
+      document.getElementById('growth-from-date').value = '';
+      document.getElementById('growth-to-date').value = '';
+    }
+  } catch (err) {
+    console.error('Failed to fetch default date range', err);
+  }
+
+  // ✅ Wait for dropdowns to populate before updating chart
+  await populateGrowthFilters();
+
+  const filters = getGrowthFilterValues(growthcurrentGroupBy); // currentGroupBy is now 'period'
+  await updateGrowthChart(filters);
+});
+
+// 🔁 Map dropdown ID to backend group_by field
+function getGrowthGroupKey(id) {
+  const map = {
+    company: 'company_name',
+    client: 'client_name',
+    division: 'division',
+    subcontractor: 'sub_contractor_name',
+    site: 'site'
+  };
+  return map[id] || 'period';
+}
+
+// Replace all toggleDropdown definitions with this version:
+function toggleDropdown(element, id) {
+  const dropdownList = document.getElementById(`${id}DropdownList`);
+
+  // Only show dropdown when arrow is clicked
+  if (element.classList.contains('arrow-icon')) {
+    dropdownList.classList.toggle("active");
+    return;
+  }
+
+  // If label clicked → update group_by and chart
+  const group_by = getGrowthGroupKey(id);
+  growthcurrentGroupBy = group_by;
+
+  // ✅ Always pass up-to-date filter values
+  const filters = getGrowthFilterValues(group_by);
+  updateGrowthChart(filters);
+}
+
+// Update reset button logic to default to period (month/year)
+document.getElementById('growthresetBtn').addEventListener('click', async () => {
+  const dropdownIds = ['company', 'client', 'subcontractor', 'site', 'division'];
+
+  dropdownIds.forEach(id => {
+    const label = document.querySelector(`#${id}Dropdown .selected-value`);
+    const span = label.querySelector("span");
+    if (span) span.textContent = ` ${capitalize(id)}`;
+
+    const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]`);
+    checkboxes.forEach(cb => cb.checked = false);
+
+    document.getElementById(`${id}Dropdown`).classList.remove('has-selection');
+  });
+  document.getElementById('chartSortDropdown').value = ''; 
+  document.getElementById('sortDropdown').value = 'Monthly';
+    // ✅ Clear the table below the chart
+  document.getElementById("growthdetailsTableContainer").innerHTML = "";
+
+  // ✅ Reset groupBy mode
+ growthcurrentGroupBy = 'period';
+
+  populateGrowthFilters();
+  
+  updateGrowthChart(getGrowthFilterValues(growthcurrentGroupBy));  // <-- uses 'period' now
+});
+
+function filterDropdownOptions(input) {
+  const filter = input.value.toLowerCase();
+  const items = input.parentElement.querySelectorAll("li");
+  items.forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(filter) ? "block" : "none";
+  });
+}
+
+function populateGrowthDropdown(id, items) {
+  const ul = document.getElementById(id + "OptionsList");
+  ul.innerHTML = "";
+
+  // 🔹 "Select All" at the top
+  const selectAllLi = document.createElement("li");
+  selectAllLi.innerHTML = `
+    <label><input type="checkbox" class="select-all" onchange="toggleSelectAll(this, '${id}')"> Select All</label>
+  `;
+  ul.appendChild(selectAllLi);
+
+  // 🔹 Individual options
+  items.forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <label><input type="checkbox" value="${item}" onchange="handleGrowthOptionChange('${id}')"> ${item}</label>
+    `;
+    ul.appendChild(li);
+  });
+}
+
+
+function toggleSelectAll(checkbox, id) {
+  const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:not(.select-all)`);
+  checkboxes.forEach(cb => cb.checked = checkbox.checked);
+  updateSelectedLabel(id);
+  updateGrowthChart(getGrowthFilterValues(getGrowthGroupKey(id))); 
+}
+
+
+async function handleGrowthOptionChange(id) {
+  const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:not(.select-all)`);
+  const selectAllCheckbox = document.querySelector(`#${id}OptionsList input.select-all`);
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  selectAllCheckbox.checked = allChecked;
+
+  updateSelectedLabel(id);
+
+  // ✅ Get current selected values for all 5 filters
+  const filters = {
+    company_name: getGrowthDropdownValue("company"),
+    client_name: getGrowthDropdownValue("client"),
+    division: getGrowthDropdownValue("division"),
+    sub_contractor_name: getGrowthDropdownValue("subcontractor"),
+    site: getGrowthDropdownValue("site"),
+    from_date: document.getElementById("growth-from-date").value,
+    to_date: document.getElementById("growth-to-date").value
+  };
+
+  // ✅ Fetch updated dependent options
+  const res = await fetch("/api/growth-filter-options-dependent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(filters)
+  });
+  const data = await res.json();
+
+  // ✅ Rebuild other dropdowns
+  if (id !== "company") populateGrowthDropdown("company", data.company_names || []);
+  if (id !== "client") populateGrowthDropdown("client", data.client_names || []);
+  if (id !== "division") populateGrowthDropdown("division", data.divisions || []);
+  if (id !== "subcontractor") populateGrowthDropdown("subcontractor", data.subcontractors || []);
+  if (id !== "site") populateGrowthDropdown("site", data.sites || []);
+
+  updateGrowthChart(getGrowthFilterValues(getGrowthGroupKey(id)));
+}
+function updateSelectedLabel(id) {
+  const checked = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:checked:not(.select-all)`);
+  const labelContainer = document.querySelector(`#${id}Dropdown .selected-value`);
+
+  // Remove existing text (but keep the arrow icon)
+  const span = labelContainer.querySelector("span");
+  if (!span) return;
+
+  if (checked.length === 0) {
+    span.textContent = `Select ${capitalize(id)}`;
+  } else if (checked.length === 1) {
+    span.textContent = checked[0].value;
+  } else {
+    span.textContent = `${checked.length} selected`;
+  }
+}
+// Close all dropdowns when clicking outside
+window.addEventListener("click", function(e) {
+  if (!e.target.closest(".custom-dropdown")) {
+    document.querySelectorAll(".dropdown-list").forEach(d => d.classList.remove("active"));
+  }
+});
+
+document.getElementById("growthdownloadBtn").addEventListener("click", async function () {
+  const { jsPDF } = window.jspdf;
+  const filters = getGrowthFilterValues(growthcurrentGroupBy);
+  const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" }); // ⬅️ Landscape mode
+  let y = 10;
+
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(16);
+  pdf.text("Performance Report", 148, y, { align: "center" });
+  y += 10;
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(11);
+  if (filters.from_date && filters.to_date) {
+    pdf.text(`Timeline: ${filters.from_date} to ${filters.to_date}`, 14, y);
+    y += 7;
+  }
+
+  const filterLines = [
+    `Interval: ${filters.interval || "Monthly"}`,
+    `Company: ${filters.company_name.length > 0 ? filters.company_name.join(", ") : "All"}`,
+    `Client: ${filters.client_name.length > 0 ? filters.client_name.join(", ") : "All"}`,
+    `Division: ${filters.division.length > 0 ? filters.division.join(", ") : "All"}`,
+    `Subcontractor: ${filters.sub_contractor_name.length > 0 ? filters.sub_contractor_name.join(", ") : "All"}`,
+    `Site: ${filters.site.length > 0 ? filters.site.join(", ") : "All"}`
+  ];
+  filterLines.forEach(line => {
+    pdf.text(line, 14, y);
+    y += 6;
+  });
+
+  y += 5;
+
+  // Add Chart Image
+ if (typeof growthChart !== "undefined" && growthChart.toBase64Image) {
+  const chartImage = growthChart.toBase64Image();
+
+    const chartHeight = 90;
+    const chartWidth = 260;
+    pdf.addImage(chartImage, "PNG", 14, y, chartWidth, chartHeight);
+    y += chartHeight + 10;
+  }
+
+  // Use visible table data if available
+  const tableEl = document.querySelector("#detailsTable");
+  if (tableEl) {
+    const headers = [
+  "Order ID", "PO Date", "PO Expiry", "Client", "Company", "Project", "Division",
+  "Subcontractor", "Start", "End", "Duration", "Site", "PO Number", "Sales (Rs.)",
+  "Status", "Issued By"
+];
+
+const body = Array.from(tableEl.querySelectorAll("tbody tr")).map(row => {
+  const cells = Array.from(row.querySelectorAll("td")).map(td => td.innerText.trim());
+  // Replace ₹ with Rs. in the Sales column (index 13)
+  if (cells[13]) {
+    cells[13] = cells[13].replace("₹", "Rs.");
+  }
+  return cells;
+});
+
+
+    pdf.autoTable({
+      startY: y,
+      head: [headers],
+      body: body,
+      styles: {
+        fontSize: 7,
+        cellPadding: 1.5,
+        overflow: 'linebreak'
+      },
+      headStyles: {
+        fillColor: [18, 114, 133],
+        textColor: 255
+      },
+      theme: "striped",
+      tableWidth: 'auto', // ⬅️ Allow horizontal space
+      margin: { left: 14, right: 14 }
+    });
+
+    y = pdf.lastAutoTable.finalY + 10;
+  } else {
+    pdf.text("No detailed table is currently visible.", 14, y);
+  }
+
+  const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  pdf.save(`Performance_Report_${timestamp}.pdf`);
+});
+
+
+
+
+let activeDropdown = null;
+
+function toggleDropdown(el, id) {
+  const isArrow = el.classList.contains("arrow-icon");
+  const dropdownList = document.getElementById(`${id}DropdownList`);
+  const parentDropdown = dropdownList.closest(".custom-dropdown");
+
+  // Close all other dropdowns
+  document.querySelectorAll(".dropdown-list").forEach(d => {
+    if (d !== dropdownList) d.classList.remove("active");
+  });
+
+  // Toggle this dropdown
+  if (isArrow) {
+    const isActive = dropdownList.classList.contains("active");
+    dropdownList.classList.toggle("active");
+
+    // Track which dropdown is open
+    activeDropdown = isActive ? null : parentDropdown;
+  } else {
+    // Label clicked → change group_by + update chart
+    handleLabelClick(getGrowthGroupKey(id));
+  }
+}
+
+// Close dropdown when clicking outside
+window.addEventListener("click", function (e) {
+  if (!e.target.closest(".custom-dropdown")) {
+    document.querySelectorAll(".dropdown-list").forEach(d => d.classList.remove("active"));
+    activeDropdown = null;
+  }
+});
+
+function clearDropdown(id) {
+  const dropdown = document.getElementById(id + "Dropdown");
+  const selectedValue = dropdown.querySelector(".selected-value");
+
+  selectedValue.textContent = "Select " + capitalize(id.replace(/([A-Z])/g, ' $1')).trim();
+  dropdown.classList.remove("has-selection");
+
+  updateGrowthChart(getGrowthFilterValues()); // Refresh chart without that filter
+}
+
+
+function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+// Flatpickr for date pickers
+flatpickr("#fromDate", { dateFormat: "Y-m-d" });
+flatpickr("#toDate", { dateFormat: "Y-m-d" });
+
+function switchReportTab(tab) {
+  document.querySelectorAll('.report-tab').forEach(div => div.style.display = 'none');
+
+  const subheading = document.getElementById('reportSubheading');
+
+  if (tab === 'sales') {
+    document.getElementById('salesTab').style.display = 'block';
+    if (subheading) subheading.textContent = "Sales Order Overview";
+    // ✅ Destroy previous chart if exists
+    if (window.chart) {
+      window.chart.destroy();
+      window.chart = null;
+    }
+    // ✅ Re-render the chart with current filters/grouping
+    updateGrowthChart(getGrowthFilterValues(growthcurrentGroupBy));
+  } else if (tab === 'po') {
+    document.getElementById('poTab').style.display = 'block';
+    if (subheading) subheading.textContent = "PO’s Overview";
+    // Optionally destroy chart if you want to free memory
+    if (window.chart) {
+      window.chart.destroy();
+      window.chart = null;
+    }
+  } else if (tab === 'growth') {
+    document.getElementById('growthTab').style.display = 'block';
+    if (subheading) subheading.textContent = "Growth Overview";
+    if (window.chart) {
+      window.chart.destroy();
+      window.chart = null;
+    }
+  }
+}
+
+// CORRECTED: This function now correctly triggers a chart update.
+function handleGrowthSortChange() {
+  // The getGrowthFilterValues function correctly reads the dropdown's current value.
+  // We just need to call the main update function to apply the new sort.
+  updateGrowthChart(getGrowthFilterValues(growthcurrentGroupBy));
+}
+
+
+function handleLabelClick(groupByField) {
+  growthcurrentGroupBy = groupByField;
+  updateGrowthChart(getGrowthFilterValues(groupByField));
+}
+
+function formatDate(input) {
+  if (!input) return "-";
+
+  const date = typeof input === "string" || typeof input === "number"
+    ? new Date(input)
+    : input instanceof Date
+      ? input
+      : new Date(String(input));
+
+  if (isNaN(date.getTime())) return "-";  // invalid date
+
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+
+function renderDetailsTable(data) {
+  const container = document.getElementById("growthdetailsTableContainer");
+  if (!container) return;
+
+  if (!data.length) {
+    container.innerHTML = "<p>No orders found for this selection.</p>";
+    return;
+  }
+
+  const sortValue = document.getElementById("chartSortDropdown")?.value || "";
+  const sortedData = [...data];
+
+  if (sortValue === "sales_desc") {
+    sortedData.sort((a, b) => parseFloat(b.po_amount || 0) - parseFloat(a.po_amount || 0));
+  } else if (sortValue === "sales_asc") {
+    sortedData.sort((a, b) => parseFloat(a.po_amount || 0) - parseFloat(b.po_amount || 0));
+  }
+
+  window.currentDetailsData = sortedData;
+
+  let tableHTML = `
+    <div class="scroll-table-container">
+      <table id="detailsTable">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>PO Date</th>
+            <th>PO Expiry</th>
+            <th>Client</th>
+            <th>Company</th>
+            <th>Project</th>
+            <th>Division</th>
+            <th>Subcontractor</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Duration</th>
+            <th>Site</th>
+            <th>PO Number</th>
+            <th>Sales (₹)</th>
+            <th>Status</th>
+            <th>Issued By</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  sortedData.forEach(row => {
+    function safe(val) {
+      if (val === null || val === undefined || val === "" || val.toLowerCase?.() === "null") return "-";
+      return val;
+    }
+
+    tableHTML += `
+      <tr>
+        <td>${safe(row.order_id || row.id)}</td>
+        <td>${formatDate(row.po_date)}</td>
+        <td>${formatDate(row.po_expiry_date)}</td>
+        <td>${safe(row.client_name)}</td>
+        <td>${safe(row.company_name)}</td>
+        <td>${safe(row.project_name)}</td>
+        <td>${safe(row.division)}</td>
+        <td>${safe(row.sub_contractor_name)}</td>
+        <td>${formatDate(row.start_date)}</td>
+        <td>${formatDate(row.end_date)}</td>
+        <td>${safe(row.project_duration)}</td>
+        <td>${safe(row.site)}</td>
+        <td>${safe(row.po_number)}</td>
+        <td>₹${parseFloat(row.po_amount || 0).toLocaleString("en-IN")}</td>
+        <td>${safe(row.status)}</td>
+        <td>${safe(row.issued_by)}</td>
+      </tr>
+    `;
+  });
+
+  tableHTML += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  container.innerHTML = tableHTML;
+}
+
+
+function handleHashTabSwitch() {
+  const hash = window.location.hash.replace('#', '') || 'sales';
+  switchReportTab(hash);
+}
+
+// On page load, show the correct tab based on hash
+
+
+// Also handle hash changes (user clicks back/forward or changes hash)
+window.addEventListener("hashchange", handleHashTabSwitch);
+
+async function fetchDependentOptions(company_name, from_date, to_date) {
+  const res = await fetch("/api/growth-filter-options-dependent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ company_name, from_date, to_date })
+  });
+
+  return await res.json();
+}
+
+function toggleSubmenu(el) {
+  // Optional: visually mark which submenu is open (for styling later)
+  document.querySelectorAll('.has-submenu').forEach(item => {
+    if (item !== el) item.classList.remove('open');
+  });
+  el.classList.toggle('open');
+}
+ document.addEventListener('DOMContentLoaded', () => {
+    // The initial call is now handled by the main DOMContentLoaded loader
+  });
+
+
+</script>
+<script>  
+  document.querySelectorAll('.filter-group .selected-value').forEach(el => {
+  el.addEventListener('click', function () {
+    // Remove 'active' from all others
+    document.querySelectorAll('.filter-group .selected-value').forEach(item => {
+      item.classList.remove('active');
+    });
+
+    // Add 'active' to the one clicked
+    this.classList.add('active');
+  });
+});
+
+
+</script>
+</body>
+</html>
+

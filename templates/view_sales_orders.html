@@ -3,60 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <title>View Sales Order</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    html, body {
-      height: 100%;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-    }
-    * {
+html, body {
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'SF Pro Display', sans-serif;
+  overflow: hidden; /* Prevent page scroll */
+}
+body {
+  background-color: #f5f6f8;
+}
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-body {
-  display: flex;
-  background-color: #f5f6f8;
-  height: 100vh;
-  overflow: hidden;
+  font-family: 'SF Pro Display', sans-serif;
 }
 
 /* Container Layout */
 .container {
   display: flex;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  /* overflow: hidden; removed to allow sticky heading */
 }
 
 /* Sidebar */
 .sidebar {
   width: 280px;
-  background-color: #006D7D;
+  background-color: #0A7386;
   color: white;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
 }
-
 .sidebar .logo img {
   width: 245px;
   margin: 0 auto 20px;
   display: block;
 }
-
 .sidebar nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .sidebar nav ul li {
   padding: 12px 30px;
   cursor: pointer;
@@ -66,18 +60,19 @@ body {
   gap: 10px;
   transition: background 0.3s;
 }
-
-    .nav-item i,
+.nav-item i,  
 .logout i {
   font-size: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  width: 18px;
+  height: 22px;
+  display: inline-block;
 }
-
 .nav-item:hover {
   background-color: rgba(255, 255, 255, 0.25);
   cursor: pointer;
 }
-
-
 .logout {
   padding: 12px 30px;
   cursor: pointer;
@@ -88,17 +83,6 @@ body {
   margin-top: auto;
 }
 
-.nav-item i,
-.logout i {
-  font-size: 18px;
-  margin-right: 8px; /* spacing between icon and text */
-  vertical-align: middle;
-  width: 18px;        /* uniform width */
-  height: 22px;       /* uniform height */
-  display: inline-block;
-}
-
-
 /* Main content */
 .main-content {
   flex: 1;
@@ -106,276 +90,1339 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  opacity: 0;
+  animation: fadeIn 1.2s ease-out forwards;
+  /* overflow: hidden; removed to allow sticky heading */
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+.main-content h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 25px;
+}
+.custom-filter-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.custom-dropdown { position: relative; }
+.dropdown-btn,
+.dropdown-refresh-btn,
+.dropdown-toggle-btn {
+  background-color: #006D7D;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  height: 35px;
+  margin-right: 5px;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 220px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  padding: 10px;
+}
+.dropdown-content input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.dropdown-list li {
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
 }
 
-    .main-content h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #111;
-      margin-bottom: 25px;
-    }
-
-    .custom-filter-group {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .custom-dropdown {
-      position: relative;
-    }
-
-    .dropdown-btn {
-      background-color: #006D7D;
-      color: white;
-      padding: 8px 16px;
-      border: none;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background-color: white;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      width: 220px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      z-index: 10;
-      padding: 10px;
-    }
-
-    .dropdown-content input {
-      width: 100%;
-      padding: 6px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 8px;
-    }
-
-    .dropdown-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-
-    .dropdown-list li {
-      padding: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dropdown-list li:hover {
-      background-color: #f0f0f0;
-    }
-
-    .table-wrapper {
-      background-color: #E0F1F5;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 12px;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    thead {
-      background-color: #006D7D;
-      color: white;
-    }
-
-    tbody tr:nth-child(odd) {
-      background-color: #CDE6EA;
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: #E0F1F5;
-    }
-
-    .edit-icon {
-      color: #007bff;
-      cursor: pointer;
-    }
-
-    .delete-icon {
-      color: #dc3545;
-      cursor: pointer;
-    }
-
-    .view-order-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 20px;
-    }
-
-    .btn-download {
-      background-color: #007980;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-download i {
-      font-size: 14px;
-    }
-    .action-icons {
+/* Table: ONLY table area scrolls */
+.table-scroll-container {
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  margin-bottom: 2px;
+  overflow: hidden;
+  flex: 1 1 auto;
   display: flex;
-  gap: 12px; /* adjust spacing as needed */
+  flex-direction: column;
+  min-height: 0;
+}
+.table-scroll-inner {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 500px;
+  width: 100%;
+  border-radius: 8px;
+  min-height: 0;
+}
+.table-wrapper {
+  min-width: 100%;
+}
+#sales-table, table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  white-space: nowrap; 
+  overflow: hidden;
+  padding: 12px;
+  font-size: 14px;
+  text-align: center;
+  text-overflow: ellipsis; 
+}
+thead {
+  background-color: #006D7D;
+  color: white;
+}
+tbody tr:nth-child(odd) { background-color: #CDE6EA; }
+tbody tr:nth-child(even) { background-color: #E0F1F5; }
+.edit-icon { color: #007bff; cursor: pointer; }
+.delete-icon { color: #dc3545; cursor: pointer; }
+.view-order-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+.btn-download {
+  background-color: #007980;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-download i { font-size: 14px; }
+.action-icons {
+  display: flex;
+  gap: 12px;
   justify-content: center;
   align-items: center;
 }
-.nav-item.active {
-  background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
-}
-.back-heading {
-  text-decoration: none;
-  color: inherit;
-}
-
+.nav-item.active { background-color: rgba(255, 255, 255, 0.25); }
+.back-heading { text-decoration: none; color: inherit; }
 .back-heading h1 {
   margin: 0;
   transition: color 0.2s ease;
 }
 
-.back-heading:hover h1 {
+.back-heading:hover {
   color: #127285;
-  cursor: pointer;
   transform: translateX(-2px);
 }
+
+
+/* ...keep your modal and other styles as is... */
+.modal-overlay {
+position: fixed;
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+   background: #fff;
+  width: 400px;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+
+.modal-icon {
+  
+  color: #ffffff;
+  
+}
+
+.modal-body p {
+  margin: 10px 0;
+}
+
+.cancel-btn, .delete-btn {
+  padding: 8px 20px;
+  margin: 10px 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #eee;
+  color: #333;
+}
+.cancel-btn:hover {
+  background: #eee;
+  color: #333;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.delete-btn {
+  background: #ff5c5c;
+  color: white;
+}
+.delete-btn:hover {
+  background: #ff5c5c;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+}
+#editModal.modall-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+
+
+#editModal .modal-body h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  color: #000;
+}
+#editModal .modal-body {
+  overflow-y: auto;
+  max-height: 65vh;
+  padding: 0 20px;
+  padding-bottom: 24px;
+}
+
+#editModal .modal-body label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+#editModal .modal-body input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f9f9f9;
+}
+
+#editModal .modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 28px;
+}
+select {
+  height: 38px;           /* Match the height of input boxes */
+  padding: 8px 12px;      /* Optional: adjust internal spacing */
+  border-radius: 8px;     /* Match input field corner rounding */
+  border: 1px solid #ccc; /* Match border */
+  font-size: 16px;        /* Match font */
+  width: 100%;            /* Optional: make it full width like inputs */
+  box-sizing: border-box; /* Ensure padding doesn’t affect total width */
+   background: #f9f9f9
+}
+#editModal .save-btn,
+#editModal .cancel-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  height: 38px;
+}
+
+#editModal .save-btn {
+  background-color: #127285;
+  color: white;
+  height: 38px;
+  border-radius: 8px;
+}
+
+#editModal .save-btn:hover {
+  background-color: #0d5e72;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    
+}
+
+#editModal .cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+  position: relative;
+  top: -9px;
+  height: 38px;
+}
+
+#editModal .cancel-btn:hover {
+  background-color: #ccc;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+/* Pen Icon Circle Above Modal */
+#editModal .modal-header {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #127285;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* make sure it's on top */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+#editModal .modal-icon {
+  color: #fff;
+  font-size: 24px;
+}
+
+#editModal .form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+#editModal .form-group {
+  flex: 1;
+}
+
+#editModal .form-group label {
+  margin-top: 0;
+}
+
+.filter-header {
+  position: relative;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.back-heading:hover,
+.back-heading:hover h1,
+.back-heading:hover i {
+  color: #127285 !important;
+  
+  transition: color 0.2s;
+}
+
+.column-filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%; /* Ensures dropdown appears below the header */
+  left: 0;
+  background-color: white;
+  z-index: 9999;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 200px;
+  max-height: 300px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.column-filter-dropdown input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.column-filter-dropdown label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.global-column-dropdown {
+  position: absolute;
+  z-index: 9999;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+/* Update this block for the edit modal */
+#editModal .modal-content {
+  position: relative;
+  width: 480px;
+  max-height: 90vh;
+  /* overflow: hidden; */   /* REMOVE or comment this line */
+  overflow: visible;        /* ADD this line */
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;        /* INCREASE this value to 60px or more */
+}
+
+/* Make the .modal-body scrollable */
+#editModal .modal-body {
+  overflow-y: auto;
+  max-height: 65vh;
+  padding-right: 10px;
+}
+#editModal .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+#editModal .modal-body::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+#editmodall-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.filter-active {
+  background-color: #ffe082 !important; /* yellow highlight, adjust as needed */
+  color: #333 !important;
+}
+
+
+/* Floating pen icon for edit modal */
+#editModal .floating-pen-header {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #127285;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  font-size: 24px;
+  border: 4px solid #fff;
+}
+#editModal .floating-pen-header .modal-icon {
+  color: #fff;
+  font-size: 24px;
+}
+
+.has-submenu {
+  position: relative;
+}
+
+.has-submenu .submenu {
+  display: none;
+  list-style: none;
+  background-color: #0a6a7c;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 280px;
+  border-radius: 0 0 12px 12px;
+  z-index: 999;
+  padding: 8px 0;
+}
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 10px 30px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+   margin-bottom: -7px; /* ✅ Add spacing between items */
+}
+
+.submenu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.submenu-arrow {
+  margin-left: auto;
+}
+
+/* Fixed table heading and close button */
+.table-header-fixed {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.table-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+.table-heading-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #127285;
+  margin-left: 24px;
+}
+.table-heading-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #888;
+  cursor: pointer;
+  margin-right: 24px;
+  transition: color 0.2s;
+}
+.table-heading-close:hover {
+  color: #ff5c5c;
+}
+
+
+#customSortDropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+  min-width: 160px;
+  max-height: 250px;       /* ✅ enables scroll limit */
+  overflow-y: auto;        /* ✅ enables scroll */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  border-radius: 6px;
+  padding: 4px 0;
+}
+
 
   </style>
 </head>
 <body>
  <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
-      </div>
-      <nav>
-        <ul>
-          <li class="nav-item">
-  <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-th-large"></i> <span> Dashboard</span>
-  </a>
-</li>
-          <li class="nav-item">
-  <a href="/add-order" style="color: white; text-decoration: none;">
-    <i class="fas fa-plus-circle"></i> Add New Order
-  </a>
-</li>
+   <!-- =================================================================== -->
+<!-- START: New & Improved Sidebar with Bottom-Aligned Support/Logout    -->
+<!-- =================================================================== -->
+<aside class="sidebar" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <!-- Top Navigation Links -->
+  <div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+    </div>
 
-          <li class="nav-item">
-  <a href="{{ url_for('clients') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-user"></i> Clients</a>
-</li>
+    <nav>
+      <ul>
+        <li class="nav-item">
+          <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
+            <i class="fas fa-th-large"></i> <span> Dashboard</span>
+          </a>
+        </li>
 
-<li class="nav-item active">
-  <a href="{{ url_for('view_orders') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-file-alt"></i> View Sales Order</a>
-</li>
+        <li class="nav-item">
+          <a href="/add-order" style="color: white; text-decoration: none;">
+            <i class="fas fa-plus-circle"></i> <span> Add New Order</span>
+          </a>
+        </li>
 
-          <li class="nav-item">
-  <a href="javascript:void(0);" onclick="showComingSoon(this)" style="color: white; text-decoration: none;">
-    <i class="fas fa-receipt"></i> <span> Sales Invoice</span>
-  </a>
-</li>
+        <li class="nav-item">
+          <a href="{{ url_for('clients') }}" style="color: white; text-decoration: none;">
+            <i class="fas fa-user"></i> <span> Clients</span>
+          </a>
+        </li>
 
-<li class="nav-item">
-  <a href="javascript:void(0);" onclick="showReportSection(this)" style="color: white; text-decoration: none;">
-    <i class="fas fa-chart-bar"></i> <span> Report</span>
-  </a>
-</li>
+        <li class="nav-item">
+          <a href="{{ url_for('view_orders') }}" style="color: white; text-decoration: none;">
+            <i class="fas fa-file-alt"></i> <span> View Sales Order</span>
+          </a>
+        </li>
 
-        </ul>
-</nav>
-<li class="nav-item logout">
-  <a href="/" style="color: white; text-decoration: none;">
-    <i class="fas fa-sign-out-alt"></i> <span> Log Out</span>
-  </a>
-</li>
+        <li class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+          <div class="report-toggle" style="display: flex; align-items: center; width: 100%; color: white;">
+            <i class="fas fa-chart-bar"></i>
+            <span style="margin-left: 6px;">Report</span>
+            <i class="fas fa-chevron-down submenu-arrow" style="margin-left: auto;"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="window.location.href='/report'" class="submenu-item active">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Sales Order Overview</span>
+            </li>
+            <li onclick="window.location.href='/po-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">PO’s Overview</span>
+            </li>
+            <li onclick="window.location.href='/growth-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Growth Overview</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Bottom Section: Support + Logout -->
+  <div style="display: flex; flex-direction: column;">
+    <li class="nav-item" style="list-style: none; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 26px; margin-bottom: 7px;">
+      <a href="mailto:dt@activusdesignbuild.in?subject=Support%20Request"
+         style="display: flex; align-items: center; color: white; text-decoration: none;">
+        <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+        <span>Support</span>
+      </a>
+      <span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+    </li>
+
+    <li class="nav-item logout">
+      <a href="/logout" style="color: white; text-decoration: none;">
+        <i class="fas fa-sign-out-alt"></i> <span> Log Out</span>
+      </a>
+    </li>
+  </div>
 </aside>
+
+<!-- =================================================================== -->
+<!-- END: New & Improved Sidebar                                         -->
+<!-- =================================================================== -->
+
 
   <!-- Main Content -->
   <main class="main-content">
-    <a href="{{ url_for('dashboard') }}" class="back-heading">
-  <h1>◀ View Sales Order</h1>
-</a>
+   <a href="{{ url_for('dashboard') }}" class="back-heading" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+      <h1><i class="fas fa-th-large"> </i>‎ ‎ View Sales Order</h1>
+    </a>
 
     <div class="custom-filter-group">
       <div class="custom-dropdown">
-        <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('order-dropdown')">Order ID <i class="fas fa-chevron-down"></i></button>
-        <div class="dropdown-content" id="order-dropdown" onclick="event.stopPropagation()">
-  <input type="text" placeholder="Search Order ID..." oninput="filterTableByInput(this.value, 'orderId')">
-</div>
-      </div>
-      <div class="custom-dropdown">
-        <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('company-dropdown')">Company <i class="fas fa-chevron-down"></i></button>
+      
+      <button class="dropdown-refresh-btn" onclick="location.reload()">🗘 ‎ Reset Filters</button>
+      <div style="position: relative; display: inline-block; top: -1px;">
+  <button id="customSortBtn" class="dropdown-refresh-btn" type="button" onclick="toggleCustomSortOrder(event)">
+    <span id="customSortIcon">A to Z</span> (<span id="customSortFieldLabel">Order ID</span>)
+    <span style="margin-left:8px;"><i class="fa fa-chevron-down"></i></span>
+  </button>
+  <div id="customSortDropdown" >
+    <div class="sort-field-option" data-value="0" style="padding:8px 16px; cursor:pointer;">Order ID</div>
+    <div class="sort-field-option" data-value="1" style="padding:8px 16px; cursor:pointer;">Personal Name</div>
+    <div class="sort-field-option" data-value="2" style="padding:8px 16px; cursor:pointer;">Division</div>
+    <div class="sort-field-option" data-value="3" style="padding:8px 16px; cursor:pointer;">Company</div>
+    <div class="sort-field-option" data-value="4" style="padding:8px 16px; cursor:pointer;">Project</div>
+    <div class="sort-field-option" data-value="6" style="padding:8px 16px; cursor:pointer;">PO Date</div>
+    <div class="sort-field-option" data-value="7" style="padding:8px 16px; cursor:pointer;">PO Expiry Date</div>
+    <div class="sort-field-option" data-value="8" style="padding:8px 16px; cursor:pointer;">No of days left</div>
+    <div class="sort-field-option" data-value="9" style="padding:8px 16px; cursor:pointer;">Start Date</div>
+    <div class="sort-field-option" data-value="10" style="padding:8px 16px; cursor:pointer;">End Date</div>
+    <div class="sort-field-option" data-value="11" style="padding:8px 16px; cursor:pointer;">Site</div>
+    <div class="sort-field-option" data-value="12" style="padding:8px 16px; cursor:pointer;">PO Amount</div>
+    <div class="sort-field-option" data-value="14" style="padding:8px 16px; cursor:pointer;">Issued By</div>
+    <div class="sort-field-option" data-value="21" style="padding:8px 16px; cursor:pointer;">GST %</div>
+    <div class="sort-field-option" data-value="22" style="padding:8px 16px; cursor:pointer;">IGST</div>
+    <div class="sort-field-option" data-value="23" style="padding:8px 16px; cursor:pointer;">CGST</div>
+    <div class="sort-field-option" data-value="24" style="padding:8px 16px; cursor:pointer;">SGST</div>
+    <div class="sort-field-option" data-value="25" style="padding:8px 16px; cursor:pointer;">TDS %</div>
+    <div class="sort-field-option" data-value="26" style="padding:8px 16px; cursor:pointer;">TDS Amount</div>
 
-        <div class="dropdown-content" id="company-dropdown" onclick="event.stopPropagation()">
-  <input type="text" placeholder="Search Company..." oninput="filterTableByInput(this.value, 'company')">
+  </div>
 </div>
-
-      </div>
+    </div>
+    
     </div>
 
+    <div class="table-scroll-container">
+      
+  <div class="table-scroll-inner">
     <div class="table-wrapper">
       <table id="sales-table">
-        <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Client name</th>
-          <th>Company</th>
-          <th>Project</th>
-          <th>PO Base Value</th>
-          <th>Profit</th>
-          <th>Action</th>
-        </tr>
-        </thead>
+<thead>
+  <tr>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 0)">
+        Order ID <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="0">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 1)">
+        Personal Name <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="1">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 2)">
+        Division <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="2">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 3)">
+        Company <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="3">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 4)">
+        Project <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="4">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 5)">
+        PO Number <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="5">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 6)">
+        PO Date <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="6">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 7)">
+        PO Expiry Date <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="7">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+  <div class="filter-header" onclick="toggleColumnFilter(this, 14)">
+    No of days left <span> ‎ <i class="fa fa-chevron-down"></i></span>
+    <div class="column-filter-dropdown" data-column="14">
+      <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+      <div class="checkbox-list"></div>
+    </div>
+  </div>
+</th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 8)">
+        Start Date <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="8">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 9)">
+        End Date <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="9">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 10)">
+        Site <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="10">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 11)">
+        PO Base Amount <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="11">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 13)">
+        GST % <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="13">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div></div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 14)">
+        IGST <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="14">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div></div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 15)">
+        CGST <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="15">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div></div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 16)">
+        SGST <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="16">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div></div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 17)">
+        TDS % <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="17">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div></div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 18)">
+        TDS Amount <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="18">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div></div>
+    </th>
+
+     <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 19)">
+        Cess % <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="19">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 20)">
+        Cess Amount <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="20">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+  <div class="filter-header" onclick="toggleColumnFilter(this, 21)">
+    P&F Amount <span> ‎ <i class="fa fa-chevron-down"></i></span>
+    <div class="column-filter-dropdown" data-column="21">
+      <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+      <div class="checkbox-list"></div>
+    </div>
+  </div>
+</th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 21)">
+        PO Amount <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="21">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 19)">
+        Status <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="19">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>
+      <div class="filter-header" onclick="toggleColumnFilter(this, 20)">
+        Issued By <span> ‎ <i class="fa fa-chevron-down"></i></span>
+        <div class="column-filter-dropdown" data-column="20">
+          <input type="text" placeholder="🔍︎ Search..." onkeyup="filterDropdownOptions(this)">
+          <div class="checkbox-list"></div>
+        </div>
+      </div>
+    </th>
+    <th>Actions</th>
+  </tr>
+</thead>
+
+
+
+
+
         <tbody id="sales-table-body">
   <!-- Dynamic rows will be inserted here -->
 </tbody>
 
-      </table>
-    </div>
 
-    <div class="view-order-actions">
-      <button class="btn-download" onclick="downloadTableCSV('sales-table')">
-        <i class="fas fa-download"></i> Download
-      </button>
+
+
+      </table>
+      
     </div>
-  </main>
+   
+  </div>
+   
+    </div>
+    <div id="total-po-amount-block" style="text-align:right; font-weight:600; font-size:16px; margin: 12px 8px 0 0;">
+  Total PO Amount: ₹<span id="total-po-amount">0</span>
 </div>
 
+    <div class="view-order-actions" style="margin-bottom: 20px;">
+      
+<button class="btn-download" onclick="downloadFilteredFullData('sales-table')">
+  <i class="fas fa-download"></i> Download
+</button>
+</div>
+
+  </main>
+</div>
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <i class="fas fa-trash-alt modal-icon"></i>
+    </div>
+    <div class="modal-body">
+  <p><strong>Are you sure you want to delete this Order?</strong></p>
+  <p>Order ID : <span id="modalOrderId"></span></p>
+  <p>Company Name : <span id="modalCompanyName"></span></p>
+  <p>Personal Name : <span id="modalClientName"></span></p>
+           <!-- ✅ Add this -->
+</div>
+
+    <div class="modal-footer">
+      <button onclick="closeDeleteModal()" class="cancel-btn">Cancel</button>
+      <button onclick="confirmDelete()" class="delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+ 
+
+<div id="editModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+
+    <!-- FLOATING ICON -->
+    <div class="modal-header ">
+      <i class="fas fa-edit modal-icon"></i>
+    </div>
+    
+    <!-- SCROLLABLE FORM AREA -->
+    <div class="modal-body">
+    
+      <h3>Update the order as needed, then save your changes.</h3>
+      <input type="hidden" id="editOrderId" />
+      
+    
+
+      <!-- Row 1: Company Name | Client Name | Issued By -->
+      <div class="form-row" style="display: flex; gap: 20px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Company Name</label>
+          <input type="text" id="editCompany" list="companyNameList" autocomplete="off" />
+          <datalist id="companyNameList"></datalist>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Personal Name</label>
+          <input type="text" id="editClient" autocomplete="on" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Issued By</label>
+          <input type="text" id="editIssuedBy" />
+        </div>
+      </div>
+        
+    
+
+      <!-- Row 2: Project | Status -->
+      <div class="form-row" style="display: flex; gap: 20px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Project</label>
+          <input type="text" id="editProject" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Status</label>
+          <select id="editStatus">
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Delayed">Delayed</option>
+            <option value="Closed">Closed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 3: Division | PO Number -->
+      <div class="form-row" style="display: flex; gap: 20px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Division</label>
+          <select id="editDivision" required>
+      <option value="" disabled>Select Division</option>
+      <option value="A&E">A&E</option>
+      <option value="PMC">PMC</option>
+      <option value="Industrial Land">Industrial Land</option>
+      <option value="Equipment Division">Equipment Division</option>
+      <option value="OEM Master Franchise">OEM Master Franchise</option>
+      <option value="Co-Packing">Co-Packing</option>
+      <option value="Design & Build">Design & Build</option>
+    </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>PO Number</label>
+          <input type="text" id="editPONumber" />
+        </div>
+      </div>
+
+      <!-- Row 4: PO Date | PO Expiry Date -->
+      <div class="form-row" style="display: flex; gap: 20px;">
+        <div class="form-group" style="flex: 1;">
+          <label>PO Date</label>
+          <input type="date" id="editPODate" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>PO Expiry Date</label>
+          <input type="date" id="editPOExpiryDate" />
+        </div>
+      </div>
+
+      <!-- Row 5: Start Date | End Date -->
+      <div class="form-row" style="display: flex; gap: 20px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Start Date</label>
+          <input type="date" id="editStartDate" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>End Date</label>
+          <input type="date" id="editEndDate" />
+        </div>
+      </div>
+
+      <!-- Row 6: Site (full width) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Site</label>
+          <input type="text" id="editSite" style="width: 100%;" />
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="modal-footer">
+        <button onclick="closeEditModal()" class="cancel-btn">Cancel</button>
+        <button onclick="submitEdit()" class="save-btn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
+
+  // sort filter toggle
+
+  let customSortFieldIndex = 0; // Default: Order ID
+let customSortAZ = true; // true: A-Z/Low-High/Closest, false: Z-A/High-Low/Farthest
+
+const customSortFieldNames = [
+  "Order ID", "Client Name", "Division", "Company", "Project", "PO Number",
+  "PO Date", "PO Expiry Date", "No of days left", "Start Date", "End Date", "Site", "PO Amount", "Status", "Issued By",  "GST %", "IGST", "CGST", "SGST", "TDS %", "TDS Amount"
+
+];
+
+
+
+// Update the custom sort button label
+function updateCustomSortButtonLabel() {
+  const icon = document.getElementById("customSortIcon");
+  const label = document.getElementById("customSortFieldLabel");
+  // Decide icon/label based on field type
+  if ([0, 5, 8, 11].includes(customSortFieldIndex)) { // <-- add 8 for "No of days left"
+    icon.innerText = customSortAZ ? "Lowest to Highest" : "Highest to Lowest";
+  } else if ([6, 7, 9, 10].includes(customSortFieldIndex)) {
+    icon.innerText = customSortAZ ? "Closest Date" : "Farthest Date";
+  } else {
+    icon.innerText = customSortAZ ? "A to Z" : "Z to A";
+  }
+  label.innerText = customSortFieldNames[customSortFieldIndex];
+}
+
+function calculateAndFillPOAmounts() {
+  // Column indices (0-based):
+  // PO Base Amount: 12, IGST: 14, CGST: 15, SGST: 16, TDS Amount: 18, 
+  // Cess Amount: 20, P&F Amount: 21, PO Amount: 22
+  document.querySelectorAll("#sales-table tbody tr").forEach(row => {
+    const cells = row.querySelectorAll("td");
+    if (cells.length < 23) return; // Now we expect at least 23 cells
+
+    const poBase = parseFloat(cells[12]?.textContent.replace(/[₹,]/g, "")) || 0;
+    const igst = parseFloat(cells[14]?.textContent.replace(/[₹,]/g, "")) || 0;
+    const cgst = parseFloat(cells[15]?.textContent.replace(/[₹,]/g, "")) || 0;
+    const sgst = parseFloat(cells[16]?.textContent.replace(/[₹,]/g, "")) || 0;
+    const tds = parseFloat(cells[18]?.textContent.replace(/[₹,]/g, "")) || 0;
+    const cess = parseFloat(cells[20]?.textContent.replace(/[₹,]/g, "")) || 0;
+    const pf = parseFloat(cells[21]?.textContent.replace(/[₹,]/g, "")) || 0; // Read the new P&F amount
+
+    const gst = igst > 0 ? igst : (cgst + sgst);
+    
+    // --- THIS IS THE FIX ---
+    // The final PO Amount is the sum of all components, including P&F
+    const poAmount = poBase + gst + tds + cess + pf; 
+    
+    // The PO Amount is now in the 23rd column (index 22)
+    cells[22].textContent = poAmount ? `₹${poAmount.toLocaleString("en-IN", {maximumFractionDigits:2})}` : "₹0";
+  });
+}
+
+function updateTotalPOAmount() {
+  // Always recalculate PO Amounts before summing
+  calculateAndFillPOAmounts();
+  
+  // --- THIS IS THE FIX ---
+  // The PO Amount column index is now 22
+  const poAmountColIndex = 22; 
+  
+  let total = 0;
+  document.querySelectorAll("#sales-table tbody tr").forEach(row => {
+    if (row.style.display !== "none") {
+      const cell = row.querySelectorAll("td")[poAmountColIndex];
+      if (cell) {
+        const val = parseFloat(cell.textContent.replace(/[₹,]/g, "")) || 0;
+        total += val;
+      }
+    }
+  });
+  document.getElementById("total-po-amount").textContent = total.toLocaleString("en-IN");
+}
+
+// Toggle sort order or open dropdown
+function toggleCustomSortOrder(event) {
+  // If arrow or chevron is clicked, open dropdown
+  if (event.target.closest('.fa-chevron-down')) {
+    const dropdown = document.getElementById("customSortDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    event.stopPropagation();
+    return;
+  }
+  // Otherwise, toggle sort order
+  customSortAZ = !customSortAZ;
+  updateCustomSortButtonLabel();
+  sortTableByCustomField();
+}
+
+// Handle dropdown option click
+document.querySelectorAll("#customSortDropdown .sort-field-option").forEach(opt => {
+  opt.addEventListener("click", function() {
+    customSortFieldIndex = parseInt(this.getAttribute("data-value"));
+    updateCustomSortButtonLabel();
+    sortTableByCustomField();
+    document.getElementById("customSortDropdown").style.display = "none";
+  });
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener("click", function(e) {
+  const dropdown = document.getElementById("customSortDropdown");
+  if (dropdown && !dropdown.contains(e.target) && !document.getElementById("customSortBtn").contains(e.target)) {
+    dropdown.style.display = "none";
+  }
+});
+
+// Sorting logic for custom sort
+function sortTableByCustomField() {
+  const tbody = document.getElementById('sales-table-body');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  rows.sort((a, b) => {
+    let valA = a.querySelectorAll('td')[customSortFieldIndex]?.textContent.trim() || "";
+    let valB = b.querySelectorAll('td')[customSortFieldIndex]?.textContent.trim() || "";
+
+    // Numeric sort for Order ID, PO Number, PO Amount, No of days left
+    if ([0, 5, 8, 11].includes(customSortFieldIndex)) { // <-- 8 is "No of days left"
+      valA = parseFloat(valA.replace(/[₹,]/g, "")) || 0;
+      valB = parseFloat(valB.replace(/[₹,]/g, "")) || 0;
+      return customSortAZ ? valA - valB : valB - valA;
+    }
+    // Date sort for date columns
+    if ([6, 7, 9, 10].includes(customSortFieldIndex)) {
+      function parseDate(str) {
+        if (!str) return new Date('2100-01-01');
+        if (/^\d{2}-\d{2}-\d{4}$/.test(str)) {
+          const [d, m, y] = str.split('-');
+          return new Date(`${y}-${m}-${d}`);
+        }
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+          return new Date(str);
+        }
+        return new Date(str);
+      }
+      const dateA = parseDate(valA);
+      const dateB = parseDate(valB);
+      return customSortAZ ? dateA - dateB : dateB - dateA;
+    }
+    // String sort for others
+    return customSortAZ
+      ? valA.localeCompare(valB)
+      : valB.localeCompare(valA);
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+  updateTotalPOAmount();
+}
+  
+
+// Initialize label on page load
+updateCustomSortButtonLabel();
+   let headerFilterEnabled = false;
+  const activeHeaderFilters = {};  // key: colIndex, value: searchTerm
+
+const originalHeaderLabels = [
+  "Order ID", "Client Name", "Company", "Project",
+  "PO Amount", "PO Number", "Issued By"
+];
+
   const ordersData = [];
+  const activeFilters = {
+  orderId: '',
+  company: ''
+};
+
+
+
+function handleFilterInput(key, value) {
+  activeFilters[key] = value.toLowerCase().trim();
+  applyAllFilters();
+}
+
+function applyAllFilters() {
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+
+  rows.forEach(row => {
+    const orderIdText = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+    const companyText = row.querySelector("td:nth-child(3)").textContent.toLowerCase();
+
+    const matchesOrderId = orderIdText.includes(activeFilters.orderId);
+    const matchesCompany = companyText.includes(activeFilters.company);
+
+    row.style.display = (matchesOrderId && matchesCompany) ? "" : "none";
+  });
+}
+
+function filterByHeader(colIndex, text) {
+  const filter = text.toLowerCase().trim();
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+
+  rows.forEach(row => {
+    const cell = row.querySelectorAll("td")[colIndex];
+    const cellText = cell ? cell.textContent.toLowerCase() : "";
+    row.style.display = cellText.includes(filter) ? "" : "none";
+  });
+}
+
+
+
+function resetFilters() {
+  // Clear dropdown filters
+  activeFilters.orderId = '';
+  activeFilters.company = '';
+
+  // Reset dropdown input values
+  const orderInput = document.querySelector("#order-dropdown input");
+  const companyInput = document.querySelector("#company-dropdown input");
+  if (orderInput) orderInput.value = '';
+  if (companyInput) companyInput.value = '';
+
+  // Clear header filters
+  Object.keys(activeHeaderFilters).forEach(colIndex => {
+    const th = document.querySelector(`#sales-table thead th:nth-child(${parseInt(colIndex) + 1})`);
+    if (th && th.getAttribute("data-original")) {
+      th.textContent = th.getAttribute("data-original");
+    }
+  });
+  // Clear the filter object
+  for (let key in activeHeaderFilters) delete activeHeaderFilters[key];
+
+  // Show all rows
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+  rows.forEach(row => {
+    row.style.display = "";
+  });
+}
+
 
   // Toggle dropdown visibility
   function toggleDropdown(id) {
@@ -387,12 +1434,18 @@ body {
   }
 
   // Close dropdowns when clicking outside
-  window.addEventListener("click", () => {
-    document.querySelectorAll(".dropdown-content").forEach(d => d.style.display = "none");
-  });
+  // ✅ Improved version
+document.addEventListener("click", (e) => {
+  // Check if the click is outside any filter-header or dropdown
+  const isInsideFilter = e.target.closest(".filter-header") || e.target.closest(".column-filter-dropdown");
+  if (!isInsideFilter) {
+    document.querySelectorAll(".column-filter-dropdown").forEach(dd => dd.style.display = "none");
+  }
+});
+
+
 
   // Populate dropdown lists dynamically
-  
   function filterTableByInput(searchText, columnKey) {
   const rows = document.querySelectorAll("#sales-table tbody tr");
   searchText = searchText.toLowerCase();
@@ -406,6 +1459,16 @@ body {
   });
 }
 
+function filterByColumn(colIndex, filterValue) {
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+  const filter = filterValue.toLowerCase();
+
+  rows.forEach(row => {
+    const cell = row.querySelectorAll("td")[colIndex];
+    const text = cell ? cell.textContent.toLowerCase() : "";
+    row.style.display = text.includes(filter) ? "" : "none";
+  });
+}
 
   // Filter dropdown list items
   function filterDropdown(input, listId) {
@@ -422,6 +1485,45 @@ body {
   filterTablePartial(columnKey, filter);
 }
 
+  function toggleHeaderFilters() {
+  headerFilterEnabled = !headerFilterEnabled;
+
+  const button = document.getElementById("filterToggleBtn");
+  button.textContent = headerFilterEnabled ? "☰ ‎ Filter: On" : "☰ ‎ Filter: Off";
+
+  const headers = document.querySelectorAll("#sales-table thead th");
+
+  headers.forEach((th, index) => {
+    if (index >= 0 && index < originalHeaderLabels.length) {
+      if (headerFilterEnabled) {
+        th.classList.add("header-editable");
+        th.addEventListener("click", onHeaderClick);
+      } else {
+        th.classList.remove("header-editable");
+        th.removeEventListener("click", onHeaderClick);
+        th.removeAttribute("contenteditable");
+        th.textContent = originalHeaderLabels[index]; // restore label
+        delete activeHeaderFilters[index]; // clear filter
+      }
+    }
+  });
+
+  applyCombinedHeaderFilters();  // reapply to show all
+}
+
+function onHeaderClick(e) {
+  const th = e.target;
+  const colIndex = Array.from(th.parentElement.children).indexOf(th);
+  makeHeaderEditable(th, colIndex);
+}
+
+
+  function makeHeaderClickEditable(e) {
+    const th = e.target;
+    const colIndex = Array.from(th.parentElement.children).indexOf(th);
+    makeHeaderEditable(th, colIndex);
+  }
+
 function filterTablePartial(columnKey, value) {
   const rows = document.querySelectorAll("#sales-table tbody tr");
 
@@ -434,6 +1536,29 @@ function filterTablePartial(columnKey, value) {
   });
 }
 
+function toggleEdit(icon) {
+  const row = icon.closest('tr');
+  const isEditing = icon.getAttribute('data-editing') === 'true';
+
+  // Toggle icon color
+  if (isEditing) {
+    icon.style.color = '#007bff';
+    icon.setAttribute('data-editing', 'false');
+  } else {
+    icon.style.color = '#4CBB17';
+    icon.setAttribute('data-editing', 'true');
+  }
+
+  // Enable or disable editing for each cell except the last action cell
+  const editableCells = row.querySelectorAll('td');
+  editableCells.forEach((cell, index) => {
+    if (index < editableCells.length - 1) {
+      cell.contentEditable = !isEditing ? 'true' : 'false';
+    }
+  });
+}
+
+
   // Filter table rows by orderId or company
   function filterTable(columnKey, value) {
     const rows = document.querySelectorAll("#sales-table tbody tr");
@@ -444,6 +1569,7 @@ function filterTablePartial(columnKey, value) {
 
       row.style.display = colText === value ? "" : "none";
     });
+      updateFilterHighlights(); // <-- add this line
   }
 
   // Download Excel file for specific order
@@ -451,98 +1577,820 @@ function filterTablePartial(columnKey, value) {
     window.location.href = `/api/download/order/${orderId}`;
   }
 
+function downloadAllOrdersCSV() {
+  fetch('/api/orders/export')
+    .then(response => response.blob())
+    .then(blob => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "all_sales_orders.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+}
+
+function formatDateForExport(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (!isNaN(d)) {
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+  // fallback for yyyy-mm-dd string
+  const parts = dateStr.split('-');
+  if (parts.length === 3 && parts[0].length === 4) {
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  return dateStr;
+}
+
+
+
   // Download entire table as CSV
   function downloadTableCSV(tableId) {
-    const table = document.getElementById(tableId);
-    let csv = [];
-    const rows = table.querySelectorAll("tr");
-    rows.forEach(row => {
-      const cols = row.querySelectorAll("th, td");
-      const rowData = Array.from(cols).map(col => `"${col.innerText.trim()}"`);
-      csv.push(rowData.join(","));
+  const table = document.getElementById(tableId);
+  let csv = [];
+  const rows = table.querySelectorAll("tr");
+
+  rows.forEach((row, rowIndex) => {
+    // Get all columns except the last one (Actions)
+    const cols = Array.from(row.querySelectorAll("th, td")).slice(0, -1);
+
+    const rowData = cols.map((col, colIndex) => {
+  let text = col.innerText.trim();
+
+  // ✅ Format dates in columns 6 (PO Date), 7 (PO Expiry), 8 (Start), 9 (End)
+  if (rowIndex > 0 && [6, 7, 8, 9].includes(colIndex)) {
+    text = formatDateForExport(text);
+  }
+
+  // ✅ Remove dropdown chevron from header cells
+  if (rowIndex === 0) {
+    // Remove everything after the first line (removes chevron and filter icon)
+    text = text.split('\n')[0]
+      .replace(/[\u25BC\u25B2\u25BE\u25B4]+/g, '')
+      .replace(/[\u2193\u2191]+/g, '')
+      .replace(/[\u2304]+/g, '')
+      .replace(/[\u25BC]+/g, '')
+      .replace(/[\u25B2]+/g, '')
+      .replace(/[\u25BE]+/g, '')
+      .replace(/[\u25B4]+/g, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/[\u200E\u200F]+/g, '')
+      .replace(/[\uFE0F]+/g, '')
+      .replace(/[\u25BC]+/g, '')
+      .replace(/[\u25B2]+/g, '')
+      .replace(/[\u25BE]+/g, '')
+      .replace(/[\u25B4]+/g, '')
+      .replace(/[\u25BC]+/g, '')
+      .replace(/[\u25B2]+/g, '')
+      .replace(/[\u25BE]+/g, '')
+      .replace(/[\u25B4]+/g, '')
+      .replace(/[\u25BC]+/g, '')
+      .replace(/[\u25B2]+/g, '')
+      .replace(/[\u25BE]+/g, '')
+      .replace(/[\u25B4]+/g, '');
+    // Remove any remaining chevron or arrow symbols
+    text = text.replace(/[\u25BC\u25B2\u25BE\u25B4]+/g, '').replace(/▼/g, '').replace(/[\u200E\u200F]+/g, '');
+  }
+
+  // ✅ Remove rupee symbol and commas from PO Amount column (assume it's column 12, 0-based)
+  if (rowIndex > 0 && colIndex === 11) {
+    text = text.replace(/[₹,]/g, '').trim();
+  }
+
+  return `"${text}"`;
+});
+
+
+    csv.push(rowData.join(","));
+  });
+
+  const blob = new Blob([csv.join("\n")], { type: "text/csv" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Sales_Orders_Exported.csv";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+
+const columnFilters = {};
+
+let activeGlobalDropdown = null;
+
+function toggleColumnFilter(headerDiv, colIndex) {
+  // Close existing dropdown
+  if (activeGlobalDropdown) {
+    document.body.removeChild(activeGlobalDropdown);
+    activeGlobalDropdown = null;
+  }
+
+  const dropdownContent = document.createElement('div');
+  dropdownContent.className = 'global-column-dropdown';
+
+  // Populate dropdown checkboxes
+  const container = document.createElement('div');
+  container.classList.add('checkbox-list');
+  populateColumnDropdown(colIndex, container);
+  dropdownContent.appendChild(container);
+
+  // Positioning
+  const rect = headerDiv.getBoundingClientRect();
+  dropdownContent.style.top = `${rect.bottom + window.scrollY}px`;
+  dropdownContent.style.left = `${rect.left + window.scrollX}px`;
+
+  // Add live filter input
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '🔍︎ Search...';
+  input.style.marginBottom = '8px';
+  input.onkeyup = () => filterDropdownOptions(input);
+  dropdownContent.insertBefore(input, container);
+
+  // Append to body
+  document.body.appendChild(dropdownContent);
+  activeGlobalDropdown = dropdownContent;
+
+  // Close on outside click
+  const outsideClickListener = (e) => {
+    if (!dropdownContent.contains(e.target)) {
+      document.body.removeChild(dropdownContent);
+      document.removeEventListener('click', outsideClickListener);
+      activeGlobalDropdown = null;
+    }
+  };
+
+  setTimeout(() => {
+    document.addEventListener('click', outsideClickListener);
+  }, 0);
+}
+
+function populateColumnDropdown(colIndex, container) {
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+  const values = new Set();
+
+  // Collect unique values from the current column
+  rows.forEach(row => {
+    const cell = row.querySelectorAll("td")[colIndex];
+    if (cell) values.add(cell.textContent.trim());
+  });
+
+  container.innerHTML = ""; // Clear existing content
+
+  if (values.size === 0) {
+    container.innerHTML = `<div style="padding: 0.5rem; font-size: 12px; color: gray;">No data</div>`;
+    return;
+  }
+
+  // --- Add Select All checkbox ---
+  const selectAllId = `selectAll_col_${colIndex}`;
+  const selectAllLabel = document.createElement("label");
+  selectAllLabel.style.display = "block";
+  selectAllLabel.style.fontWeight = "600";
+  selectAllLabel.style.marginBottom = "6px";
+  selectAllLabel.innerHTML = `
+    <input type="checkbox" id="${selectAllId}"> Select All
+  `;
+  container.appendChild(selectAllLabel);
+
+  // Add value checkboxes
+  Array.from(values).sort().forEach(value => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = value;
+    checkbox.checked = (columnFilters[colIndex] || []).includes(value);
+
+    checkbox.addEventListener("change", () => {
+      const selected = Array.from(container.querySelectorAll("input[type='checkbox']:not(#" + selectAllId + "):checked")).map(cb => cb.value);
+      columnFilters[colIndex] = selected;
+      updateSelectAllCheckbox(colIndex, container, selectAllId);
+      applyColumnFilters();
     });
 
-    const blob = new Blob([csv.join("\n")], { type: "text/csv" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "sales_orders.csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const label = document.createElement("label");
+    label.style.display = "block";
+    label.style.marginBottom = "4px";
+    label.appendChild(checkbox);
+    label.append(" " + value);
+    container.appendChild(label);
+  });
+
+  // Select All logic
+  const selectAllBox = container.querySelector(`#${selectAllId}`);
+  selectAllBox.addEventListener("change", function () {
+    const allBoxes = container.querySelectorAll("input[type='checkbox']:not(#" + selectAllId + ")");
+    allBoxes.forEach(cb => cb.checked = selectAllBox.checked);
+    columnFilters[colIndex] = selectAllBox.checked ? Array.from(values) : [];
+    applyColumnFilters();
+    updateSelectAllCheckbox(colIndex, container, selectAllId);
+  });
+
+  // Set Select All state initially
+  updateSelectAllCheckbox(colIndex, container, selectAllId);
+}
+
+function updateSelectAllCheckbox(colIndex, container, selectAllId) {
+  const allBoxes = container.querySelectorAll("input[type='checkbox']:not(#" + selectAllId + ")");
+  const selectAllBox = container.querySelector("#" + selectAllId);
+  const checkedCount = Array.from(allBoxes).filter(cb => cb.checked).length;
+  selectAllBox.checked = checkedCount === allBoxes.length && allBoxes.length > 0;
+  selectAllBox.indeterminate = checkedCount > 0 && checkedCount < allBoxes.length;
+}
+
+
+function downloadFilteredFullData(tableId) {
+  const table = document.getElementById(tableId);
+  const rows = table.querySelectorAll("tbody tr");
+  const orderIds = [];
+
+  rows.forEach(row => {
+    if (row.style.display !== "none") {
+      orderIds.push(row.children[0].textContent.trim());
+    }
+  });
+
+  if (orderIds.length === 0) {
+    alert("No rows to download.");
+    return;
   }
+
+  fetch('/api/orders/export_filtered', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ order_ids: orderIds })
+  })
+    .then(response => response.blob())
+    .then(blob => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "sales_orders.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+}
+
+
+function applyColumnFilters() {
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+
+  rows.forEach(row => {
+    let visible = true;
+
+    for (const col in columnFilters) {
+      const colIndex = parseInt(col);
+      const cellValue = row.querySelectorAll('td')[colIndex]?.textContent.trim() || "";
+      const selectedValues = columnFilters[colIndex];
+
+      // ✅ If checkboxes exist but none are selected, treat as "no filtering for this column"
+      if (selectedValues.length > 0 && !selectedValues.includes(cellValue)) {
+        visible = false;
+        break;
+      }
+    }
+
+    row.style.display = visible ? "" : "none";
+  });
+  updateFilterHighlights();
+   updateTotalPOAmount();
+}
+
+function updateFilterHighlights() {
+  // Loop through all columns
+  const ths = document.querySelectorAll("#sales-table thead th");
+  ths.forEach((th, colIndex) => {
+    // Check if filter is active for this column
+    const filter = columnFilters[colIndex];
+    if (filter && filter.length > 0 && filter.length !== th.closest('tr').querySelectorAll('input[type="checkbox"]').length) {
+      th.classList.add('filter-active');
+    } else {
+      th.classList.remove('filter-active');
+    }
+  });
+}
+
+
+function filterDropdownOptions(input) {
+  const filter = input.value.toLowerCase();
+  const checkboxes = input.parentElement.querySelectorAll('label');
+
+  checkboxes.forEach(label => {
+    const text = label.textContent.toLowerCase();
+    label.style.display = text.includes(filter) ? "block" : "none";
+  });
+}
+
+// Hide dropdowns when clicking outside
+window.addEventListener("click", (e) => {
+  const isInsideDropdown = e.target.closest('.column-filter-dropdown');
+  const isInsideFilterHeader = e.target.closest('.filter-header');
+
+  if (!isInsideDropdown && !isInsideFilterHeader) {
+    document.querySelectorAll('.column-filter-dropdown').forEach(dd => {
+      dd.style.display = 'none';
+    });
+  }
+});
+  async function updateOrder(orderId, column, newValue) {
+  try {
+    const response = await fetch(`/api/update_order`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        order_id: orderId,
+        column: column,
+        value: newValue.trim()
+      })
+    });
+    if (!response.ok) {
+      console.error("Failed to update:", await response.text());
+    }
+  } catch (err) {
+    console.error("Error while updating order:", err);
+  }
+}
+  //Edit order function 
 
   // Delete order from backend and frontend
-  async function deleteOrder(orderId, iconElement) {
-    if (!confirm("Are you sure you want to delete this order?")) return;
+  let deleteTargetOrderId = null;
+let deleteRowElement = null;
 
-    try {
-      const response = await fetch(`/api/delete_order/${orderId}`, {
-        method: "DELETE"
-      });
+function openDeleteModal(orderId, company, client, poNumber, issuedBy, rowElement) {
+  deleteTargetOrderId = orderId;
+  deleteRowElement = rowElement;
 
-      if (response.ok) {
-        const row = iconElement.closest("tr");
-        row.remove();
-        alert("Order deleted successfully.");
+  document.getElementById('modalOrderId').textContent = orderId;
+  document.getElementById('modalCompanyName').textContent = company;
+  document.getElementById('modalClientName').textContent = client;  
+
+  document.getElementById('deleteModal').style.display = 'flex';
+}
+function handleDeleteClick(el) {
+  const orderId = el.dataset.orderId;
+  const company = el.dataset.company;
+  const client = el.dataset.clientName;
+  const poNumber = el.dataset.poNumber;
+  const issuedBy = el.dataset.issuedBy;
+
+  openDeleteModal(orderId, company, client, poNumber, issuedBy, el.closest('tr'));
+}
+function closeDeleteModal() {
+  deleteTargetOrderId = null;
+  deleteRowElement = null;
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+
+function makeHeaderEditable(th, colIndex) {
+  if (!headerFilterEnabled) return; // 🔒 prevent editing if filter is off
+
+  if (th.isContentEditable) return;
+
+  const original = originalHeaderLabels[colIndex];
+  th.setAttribute("data-original", original);
+  th.contentEditable = true;
+  th.textContent = "";
+  th.focus();
+
+  function finishEditing(restoreText = true) {
+    th.contentEditable = false;
+    if (restoreText) th.textContent = original;
+    document.removeEventListener("click", outsideClickListener);
+    th.removeEventListener("keydown", handleKey);
+  }
+
+  function handleKey(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const searchTerm = th.textContent.toLowerCase().trim();
+
+      if (searchTerm) {
+        activeHeaderFilters[colIndex] = searchTerm;
       } else {
-        alert("Failed to delete the order.");
+        delete activeHeaderFilters[colIndex];
       }
-    } catch (error) {
-      console.error("Error deleting order:", error);
-      alert("An error occurred while deleting the order.");
+
+      applyCombinedHeaderFilters();
+      finishEditing(true);
+    } else if (e.key === "Escape") {
+      finishEditing(true);
     }
   }
 
-  // Load sales order data and populate table
+  function outsideClickListener(e) {
+    if (e.target !== th) {
+      const searchTerm = th.textContent.toLowerCase().trim();
+
+      if (searchTerm) {
+        activeHeaderFilters[colIndex] = searchTerm;
+      } else {
+        delete activeHeaderFilters[colIndex];
+      }
+
+      applyCombinedHeaderFilters();
+      finishEditing(true);
+    }
+  }
+
+  th.addEventListener("keydown", handleKey);
+  document.addEventListener("click", outsideClickListener);
+}
+
+function formatDateOnly(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d)) {
+    const fallback = dateStr.split(' ')[0];
+    const parts = fallback.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`; // fallback for yyyy-mm-dd to dd-mm-yyyy
+    }
+    return fallback;
+  }
+
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
+
+function toInputDate(val) {
+  if (!val) return '';
+  // If already yyyy-mm-dd
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  // If dd-mm-yyyy
+  if (/^\d{2}-\d{2}-\d{4}$/.test(val)) {
+    const [d, m, y] = val.split('-');
+    return `${y}-${m}-${d}`;
+  }
+  // If ISO string
+  if (val.includes('T')) return val.split('T')[0];
+  // fallback: try Date parse
+  const d = new Date(val);
+  if (!isNaN(d)) {
+    return d.toISOString().split('T')[0];
+  }
+  return '';
+}
+
+
+function openEditModal(orderId, client, division, company, project, status, issuedBy, poNumber, poDate, poExpiryDate, startDate, endDate, site, poAmount) {
+  document.getElementById('editOrderId').value = orderId;
+  document.getElementById('editClient').value = client || '';
+  document.getElementById('editDivision').value = division || '';
+  document.getElementById('editCompany').value = company || '';
+  document.getElementById('editProject').value = project || '';
+  document.getElementById('editStatus').value = status || 'Open';
+  document.getElementById('editIssuedBy').value = issuedBy || '';
+  document.getElementById('editPONumber').value = poNumber || '';
+  document.getElementById('editPODate').value = toInputDate(poDate);
+  document.getElementById('editPOExpiryDate').value = toInputDate(poExpiryDate);
+  document.getElementById('editStartDate').value = toInputDate(startDate);
+  document.getElementById('editEndDate').value = toInputDate(endDate);
+  document.getElementById('editSite').value = site || '';
+  document.getElementById('editModal').style.display = 'flex';
+}
+
+
+
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+async function submitEdit() {
+  // Get order ID from hidden input in modal
+  const orderId = document.getElementById('editOrderId').value;
+
+  // Collect form values from modal
+  const payload = {
+    order_id: orderId,
+    client_name: document.getElementById('editClient').value.trim(),
+    company_name: document.getElementById('editCompany').value.trim(),
+    project_name: document.getElementById('editProject').value.trim(),
+    status: document.getElementById('editStatus').value.trim(),
+    issued_by: document.getElementById('editIssuedBy').value.trim(),
+    division: document.getElementById('editDivision').value.trim(),
+    site: document.getElementById('editSite').value.trim(),
+    po_date: document.getElementById('editPODate').value.trim(),
+    po_expiry_date: document.getElementById('editPOExpiryDate').value.trim(),
+    start_date: document.getElementById('editStartDate').value.trim(),
+    end_date: document.getElementById('editEndDate').value.trim() // <-- ADD THIS LINE
+  };
+
+  // Optional: basic validation
+  if (!payload.client_name || !payload.project_name || !payload.status) {
+  alert("Please fill all required fields.");
+  return;
+}
+
+  try {
+    const response = await fetch('/api/update_order', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      // Close the modal
+      closeEditModal();
+
+      // Reload updated orders list
+      await loadSalesOrders();
+      updateTotalPOAmount();
+
+
+      // Optional: show success message      
+    } else {
+      // Server returned an error
+      const errorText = await response.text();
+      console.error('Update failed:', errorText);
+      alert("Failed to update order. Please try again.");
+    }
+  } catch (err) {
+    // Network or other unexpected errors
+    console.error('Error updating:', err);
+    alert("An unexpected error occurred.");
+  }
+}
+
+
+let sortDescending = true;  // Default: Latest First
+
+
+
+function applyCombinedHeaderFilters() {
+  const rows = document.querySelectorAll("#sales-table tbody tr");
+
+  rows.forEach(row => {
+    let show = true;
+
+    Object.keys(activeHeaderFilters).forEach(colIndex => {
+      const cellText = row.querySelectorAll("td")[colIndex].textContent.toLowerCase().trim();
+      if (!cellText.includes(activeHeaderFilters[colIndex])) {
+        show = false;
+      }
+    });
+
+    row.style.display = show ? "" : "none";
+  });
+}
+
+
+
+async function confirmDelete() {
+  try {
+    const response = await fetch(`/api/delete_order/${deleteTargetOrderId}`, {
+      method: 'DELETE'
+    });
+
+    if (response.ok) {
+      deleteRowElement.remove();
+      closeDeleteModal();
+    } else {
+    }
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+
+document.querySelectorAll('.filter-header').forEach((header, index) => {
+  header.addEventListener('click', (e) => {
+    // 🛑 Prevent toggle if inside input or dropdown
+    if (e.target.tagName.toLowerCase() === 'input' || e.target.closest('.column-filter-dropdown')) {
+      return;
+    }
+    toggleColumnFilter(header, index);
+  });
+});
+
+
   async function loadSalesOrders() {
     try {
-      const response = await fetch('/api/orders');
-      const data = await response.json();
-      const tbody = document.getElementById('sales-table-body');
-      tbody.innerHTML = '';
+        const response = await fetch('/api/orders');
+        if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+        
+        const data = await response.json();
+        const tbody = document.getElementById('sales-table-body');
+        tbody.innerHTML = ''; // Clear existing rows
 
-      ordersData.length = 0; // Clear previous dummy data
+        // --- THIS IS THE FIX ---
+        // We no longer rewrite the thead HTML. We will let the original HTML stand.
+        // This preserves your filter dropdowns perfectly.
 
-      data.forEach(row => {
-        const {
-          order_id,
-          client_name,
-          company,
-          project,
-          po_amount,
-          profit
-        } = row;
+        data.forEach(row => {
+            const {
+                order_id, client_name, division, company, project, po_number, po_date, 
+                po_expiry_date, start_date, end_date, site, po_amount, status, issued_by,
+                gst_percent, igst, cgst, sgst, tds_percent, tds_amount,
+                cess_percent, cess_amount, p_f 
+            } = row;
 
-        // Push live data to ordersData array
-        ordersData.push({ orderId: order_id, company });
+            const daysLeft = calculateDaysLeft(po_expiry_date);
+            const tr = document.createElement('tr');
+            
+            // Set data attributes for the edit modal
+            tr.setAttribute('data-po_date', po_date || '');
+            tr.setAttribute('data-po_expiry_date', po_expiry_date || '');
+            tr.setAttribute('data-start_date', start_date || '');
+            tr.setAttribute('data-end_date', end_date || '');
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${order_id}</td>
-          <td>${client_name}</td>
-          <td>${company}</td>
-          <td>${project}</td>
-          <td>₹${parseFloat(po_amount || 0).toLocaleString()}</td>
-          <td>₹${parseFloat(profit || 0).toLocaleString()}</td>
-          <td>
-            <div class="action-icons">
-              
-              <i class="fas fa-trash delete-icon" title="Delete" onclick="deleteOrder(${order_id}, this)"></i>
-              <i class="fas fa-download download-icon" title="Download" onclick="downloadOrderExcel(${order_id})"></i>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
+            // This new innerHTML has the correct number of <td> cells (26) to match your 26 <th> headers.
+            tr.innerHTML = `
+                <td>${order_id}</td>
+                <td>${client_name || ''}</td>
+                <td>${division || ''}</td>
+                <td>${company || ''}</td>
+                <td>${project || ''}</td>
+                <td>${po_number || ''}</td>
+                <td>${formatDateOnly(po_date)}</td>
+                <td>${formatDateOnly(po_expiry_date)}</td>
+                <td>${daysLeft}</td>
+                <td>${formatDateOnly(start_date)}</td>
+                <td>${formatDateOnly(end_date)}</td>
+                <td>${site || ''}</td>
+                <td>₹${parseFloat(po_amount || 0).toLocaleString('en-IN')}</td>
+                <td>${gst_percent !== null ? gst_percent : ''}</td>
+                <td>${igst !== null ? igst : ''}</td>
+                <td>${cgst !== null ? cgst : ''}</td>
+                <td>${sgst !== null ? sgst : ''}</td>
+                <td>${tds_percent !== null ? tds_percent : ''}</td>
+                <td>${tds_amount !== null ? tds_amount : ''}</td>
+                <td>${cess_percent !== null ? cess_percent : ''}</td>
+                <td>${cess_amount !== null ? cess_amount : ''}</td>
+                <td>₹${parseFloat(p_f || 0).toLocaleString('en-IN')}</td>
+                <td></td> <!-- Placeholder for Total PO Amount -->
+                <td>${status || ''}</td>
+                <td>${issued_by || ''}</td>
+                <td>
+                    <div class="action-icons">
+                         <i class="fas fa-pen edit-icon" title="Edit"
+                           onclick="openEditModal(
+                            '${order_id}', '${client_name || ''}', '${division || ''}', '${company || ''}', 
+                            '${project || ''}', '${status || ''}', '${issued_by || ''}', '${po_number || ''}', 
+                            '${po_date || ''}', '${po_expiry_date || ''}', '${start_date || ''}', '${end_date || ''}', 
+                            '${site || ''}', '${po_amount || ''}'
+                           )"></i>
+                        <i class="fas fa-trash delete-icon" title="Delete"
+                           data-order-id="${order_id}" data-company="${company || ''}" data-client-name="${client_name || ''}"
+                           onclick="handleDeleteClick(this)"></i>
+                        <i class="fas fa-download download-icon" title="Download" style="cursor: pointer;"
+                           onclick="downloadOrderExcel(${order_id})"></i>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // Recalculate totals and apply any existing sorts/filters
+        updateTotalPOAmount();
+        applyColumnFilters();
+        sortTableByCustomField();
 
-      populateDropdowns(); // Now will populate using actual live orders
     } catch (error) {
-      console.error("Failed to load sales orders:", error);
+        console.error("Failed to load sales orders:", error);
+        document.getElementById('sales-table-body').innerHTML = `<tr><td colspan="26" style="text-align:center; color:red;">Error loading data.</td></tr>`;
     }
-  }
+}
 
-  // Load orders on page load
-  window.onload = loadSalesOrders;
+
+let clientCompanyMap = {};
+let allCompanyNames = [];
+
+async function fetchClientsData() {
+  try {
+    const res = await fetch('/api/clients');
+    const clientsList = await res.json();  // ✅ This is now a list of objects
+    clientCompanyMap = {};
+    const companySet = new Set();
+
+    // ✅ Paste this block here
+    clientsList.forEach(data => {
+      const client = data.clientName?.trim().toLowerCase();
+      const company = data.companyName?.trim();
+      if (client && company) {
+        if (!clientCompanyMap[client]) {
+          clientCompanyMap[client] = [];
+        }
+        if (!clientCompanyMap[client].includes(company)) {
+          clientCompanyMap[client].push(company);
+        }
+        companySet.add(company); // ✅ Also add to global company list
+      }
+    });
+
+    allCompanyNames = Array.from(companySet).sort();
+    populateCompanyDatalist(allCompanyNames); // ✅ Populate initial company list
+  } catch (e) {
+    console.error('Failed to fetch clients:', e);
+  }
+}
+
+function calculateDaysLeft(expiryDate) {
+  if (!expiryDate) return '';
+  const today = new Date();
+  const exp = new Date(toInputDate(expiryDate));
+  const diff = Math.ceil((exp - today) / (1000 * 60 * 60 * 24));
+  return diff >= 0 ? diff : 0;
+}
+
+
+// Helper: populate datalist with given array
+function populateCompanyDatalist(companyList) {
+  const datalist = document.getElementById("companyNameList");
+  if (datalist) {
+    datalist.innerHTML = ""; // clear old options
+    companyList.forEach((name) => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      datalist.appendChild(opt);
+    });
+  }
+}
+
+
+
+// Attach auto-fill behavior based on client input
+function setupClientAutoFill() {
+  const clientInput = document.getElementById("editClient");
+  const companyInput = document.getElementById("editCompany");
+
+  if (clientInput && companyInput) {
+    clientInput.addEventListener("input", function () {
+      const clientVal = this.value.trim().toLowerCase();
+      const matchedCompanies = clientCompanyMap[clientVal];
+
+      if (matchedCompanies && matchedCompanies.length > 0) {
+        // Show only companies for that client
+        populateCompanyDatalist(matchedCompanies);
+        companyInput.value = ""; // clear current selection
+      } else {
+        // Show all companies if client not matched
+        populateCompanyDatalist(allCompanyNames);
+        companyInput.value = "";
+      }
+    });
+  }
+}
+
+setInterval(() => {
+  fetch('/api/auto_update_status', {
+    method: 'POST'
+  })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error('Fetch error:', err));
+}, 10000); // 5000 milliseconds = 1 second
+
+
+setInterval(() => {
+  fetch("/api/ping", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ page: window.location.pathname })
+  });
+}, 3000); // every 30 seconds
+
+setInterval(() => {
+  fetch('/api/check-session')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.valid) {
+        window.location.href = '/logout'; // ⬅️ Triggers Flask logout
+      }
+    })
+    .catch(err => {
+      console.error("Session check error:", err);
+    });
+}, 2000);  // every 2 seconds
+
+// Initialize on page load
+window.onload = async function () {
+  await fetchClientsData();
+  setupClientAutoFill();
+  await loadSalesOrders();
+  updateTotalPOAmount();
+};
+
+function toggleSubmenu(el) {
+  document.querySelectorAll('.has-submenu').forEach(item => {
+    if (item !== el) item.classList.remove('open');
+  });
+  el.classList.toggle('open');
+}
+
   
 </script>
 

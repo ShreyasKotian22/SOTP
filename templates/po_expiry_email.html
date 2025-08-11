@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+     <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <title>PO Expiry Notification</title>
+  </head>
+  <body style="
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: SF Pro Display, sans-serif;
+    ">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 30px 0;">
+      <tr>
+        <td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            
+            <!-- Header with Logo -->
+            <tr>
+              <td style="background-color: #127285; padding: 10px; text-align: center;">
+                <!-- 🔷 LOGO: update src to your logo URL or static file -->
+                <img src="cid:logo" alt="Company Logo" width="300" style="margin-bottom: 4px;" />
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding: 24px; color: #333;">
+                <p style="font-size: 18px;margin-top: 0;font-weight: 550;">Hello!</p>
+                <p style="font-size: 14px;">
+                  We want to remind you that the following purchase order is set to expire in <strong>7 days. </strong>Please take the necessary actions before the expiry date to avoid disruptions.
+                </p>
+
+                <table cellspacing="0" width="100%" style="
+    margin: 16px auto;
+    font-size: 15px;
+    border: 2px solid #127285;
+    border-radius: 8px;
+    border-collapse: collapse;
+    text-align: center;
+">
+  <tr>
+    <td style="padding: 8px 12px;"><strong>PO Number:</strong></td>
+    <td style="padding: 8px 12px;">{{ po_number }}</td>
+  </tr>
+  <tr style="background-color: #f9f9f9;">
+    <td style="padding: 8px 12px;"><strong>Client Name:</strong></td>
+    <td style="padding: 8px 12px;">{{ client_name }}</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 12px;"><strong>Project:</strong></td>
+    <td style="padding: 8px 12px;">{{ project_name }}</td>
+  </tr>
+  <tr style="background-color: #f9f9f9;">
+    <td style="padding: 8px 12px;"><strong>Expiry Date:</strong></td>
+    <td style="padding: 8px 12px;">{{ po_expiry_date }}</td>
+  </tr>
+</table>
+
+<p style="text-align: center; margin: 24px 0;">
+  <a href="https://your-url.com/po-details/{{ po_number }}" target="_blank" style="
+      background-color: #127285;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: SF Pro Display, sans-serif;
+      display: inline-block;
+  ">
+    Let's Go 🚀
+  </a>
+</p>
+
+
+
+                <p style="font-size: 13px; margin: 8px 0 4px 0;">
+  If you face any problems, feel free to reach us at:
+</p>
+<p style="font-size: 13px; margin: 0;">
+  <a href="mailto:dt@activusdesignbuild.in" style="color: #127285; text-decoration: none; font-weight: 500;">
+    dt@activusdesignbuild.in
+  </a>
+</p>
+
+
+                <p style="font-size: 13px; color: #999;">Thank You!</p>
+              </td>
+            </tr>
+
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

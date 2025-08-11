@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Activity Log</title>
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'SF Pro Display', sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .container {
+  max-width: 100%;
+  padding: 10px;
+  overflow-x: hidden;
+}
+
+    h1 {
+      font-size: 29px;
+      font-weight: 600;
+      margin: 10px 0 16px;
+      
+      color:#000000;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      margin-left: -12px;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .filters select,
+.filters button {
+  background: #127285;
+  border: 1px solid #127285;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  min-width: 160px;
+  cursor: pointer;
+}
+
+
+    .calendar-button {
+      background: #1a8b9c;
+      border: 1px solid #ffffff22;
+      border-radius: 3px;
+      color: #fff;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .calendar-button i {
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: visible;
+      
+    }
+
+    thead {
+      background: #ffffff;
+
+    }
+
+    thead tr {
+      border-bottom: 1px solid #ccc;
+    }
+
+    th, td {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 13.5px;
+  color: #000;
+  white-space: nowrap;
+}
+
+
+    tbody tr {
+      border-bottom: 1px solid #eee;
+    }
+
+    tbody tr:hover {
+      background: #f9f9f9;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .role-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      text-transform: capitalize;
+    }
+
+    .Superadmin {
+      background: #cce5ff;
+      color: #ff0000;
+    }
+
+    .Admin {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .User {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .Login     { background: #c6f6d5; color: #22543d; }
+    .Logout    { background: #fed7d7; color: #822727; }
+    .Add       { background: #bee3f8; color: #2c5282; }
+    .Delete    { background: #feb2b2; color: #742a2a; }
+    .Edit      { background: #fbd38d; color: #744210; }
+    .Download  { background: #e0f7fa; color: #234e52; }
+    .Enable    { background: #9ae6b4; color: #276749; }
+    .Disable   { background: #f6ad55; color: #7b341e; }
+    .Other     { background: #e2e8f0; color: #2d3748; }
+
+    .refresh-note {
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .back-button {
+      margin-top: 20px;
+      display: inline-block;
+      background-color: #127285;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+/* ✅ Column 7: Description — force single line with ellipsis */
+
+
+
+    .calendar-button {
+  background: #ffffff;
+  border: 1px solid #127285;
+  color: #127285;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-width: unset !important;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+th.filterable {
+  position: relative;
+  cursor: pointer;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #127285;
+  border-radius: 6px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  display: none;
+  min-width: 150px;
+}
+
+.filter-dropdown label {
+  display: block;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.filter-dropdown input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+th.filterable.open .filter-dropdown {
+  display: block;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+.date-input {
+  padding: 6px;
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+th.filterable i {
+  margin-left: 6px;
+  font-size: 12px;
+  color: #666;
+}
+/* ❌ Remove nowrap from these columns */
+td:nth-child(7), th:nth-child(7),
+td:nth-child(8), th:nth-child(8),
+td:nth-child(9), th:nth-child(9) {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 220px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 29px;
+  font-weight: 600;
+  color: #000;
+  margin-left: 12px;
+}
+
+.admin-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #127285;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.admin-back:hover {
+  color: #000000;
+  transform: translateX(-3px);
+}
+
+.admin-back i {
+  font-size: 18px;
+}
+/* ✅ Force single-line for the first 6 columns (Name to Action) */
+td:nth-child(-n+6),
+th:nth-child(-n+6) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+.download-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 8px;
+  background: #127285;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+  transition: background 0.3s ease;
+}
+
+.download-btn:hover {
+  background: #0e5a66;
+}
+
+.refresh-btn {
+  position: fixed;
+  bottom: 65px; /* slightly above the download button */
+  right: 8px;
+  background: #127285;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+  transition: background 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: #0e5a66;
+}
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 8px rgba(18, 114, 133, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(18, 114, 133, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(18, 114, 133, 0.3);
+  }
+}
+
+/* Optional: apply minimal continuous glow */
+.download-btn,
+.refresh-btn {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+.back-button {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #127285;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+}
+
+.back-button .dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgb(255, 0, 0);
+  border-radius: 50%;
+  animation: blinkDot 1s infinite;
+}
+
+/* Blinking animation */
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+  .blinking-icon {
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-row">
+  <h1 class="page-title">
+  <span class="admin-back" onclick="location.href='/admin'" title="Back to Admin Panel">
+    <i class="fas fa-user-cog"></i>
+    Activity Logs
+  </span>
+</h1>
+
+  <a class="back-button" onclick="showLiveUsers()">
+  <span class="dot"></span>
+  Current Live Users
+</a>
+
+
+
+</div>
+
+    <!-- Filters -->
+    
+
+    <!-- Table -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+  <tr>
+  <th>Name</th>
+  <th>User</th>
+  <th>Role</th>
+  <th>Date</th>
+  <th>Time</th>
+  <th>Action</th>
+  <th>Description</th>
+  <th>Old Value</th>
+  <th>New Value</th>
+
+</tr>
+
+</thead>
+
+
+        <tbody id="log-table">
+          <tr><td colspan="8" style="text-align:center;">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    
+  </div>
+
+ <script>
+
+
+
+function getBadgeClass(action) {
+  const a = action.toLowerCase();
+  if (a.includes("login")) return "Login";
+  if (a.includes("logout")) return "Logout";
+  if (a.includes("add")) return "Add";
+  if (a.includes("edit")) return "Edit";
+  if (a.includes("delete")) return "Delete";
+  if (a.includes("download")) return "Download";
+  if (a.includes("enable")) return "Enable";
+  if (a.includes("disable")) return "Disable";
+  return "Other";
+}
+
+function loadLogs() {
+  fetch("/api/activity-log")
+    .then((res) => res.json())
+    .then((data) => {
+      const adjusted = data.map((d) => ({ ...d, name: d.name || d.role }));
+      fullData = adjusted;
+      renderTable(adjusted);
+      renderFilterControls();
+      flatpickr("#fromDate", { dateFormat: "Y-m-d" });
+      flatpickr("#toDate", { dateFormat: "Y-m-d" });
+      renderSortControls();
+
+    });
+}
+
+
+
+
+function formatActionLabel(entry) {
+  const a = (entry.action || "").toLowerCase().trim();
+  const details = (entry.details || "").toLowerCase();
+
+  if (a === "edit" && details.includes("role")) return "Edited Role";
+
+  if (a === "login") return "Portal Login";
+
+  if (a === "logout") {
+    if (details.includes("admin")) return "Admin Panel Logout";
+    return "Portal Logout";
+  }
+
+  if (a === "enable") {
+    if (details.includes("admin")) return "Enabled Admin";
+    if (details.includes("user")) return "Enabled User";
+    if (details.includes("client")) return "Enabled Client";
+    return "Enabled Entity";
+  }
+
+  if (a === "disable") {
+    if (details.includes("admin")) return "Disabled Admin";
+    if (details.includes("user")) return "Disabled User";
+    if (details.includes("client")) return "Disabled Client";
+    return "Disabled Entity";
+  }
+
+  if (a === "add") {
+    if (details.includes("admin")) return "Added Admin";
+    if (details.includes("user")) return "Added User";
+    if (details.includes("client")) return "Added Client";
+    if (details.includes("order")) return "Added Order";
+    return "Added Entity";
+  }
+
+  if (a === "edit") {
+    if (details.includes("admin")) return "Edited Admin";
+    if (details.includes("user")) return "Edited User";
+    if (details.includes("client")) return "Edited Client";
+    if (details.includes("order")) return "Edited Order";
+    return "Edited Entity";
+  }
+
+  if (a === "delete") {
+  if (details.includes("admin")) return "Deleted Admin";
+  if (details.includes("user")) return "Deleted User";
+  if (details.includes("client")) return "Deleted Client";
+  if (details.includes("order")) return "Deleted Order";
+  return "Deleted Entity";
+}
+
+  if (a === "download users table") return "Downloaded User Data";
+  if (a === "download order") return "Downloaded Order Data";
+  if (a === "download selected order") return "Downloaded Selected Orders Data";
+
+  return entry.action;
+}
+
+
+setInterval(() => {
+  const deviceInfo = navigator.userAgent;
+
+  fetch("/api/ping", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      page: window.location.pathname,
+      device: deviceInfo
+    })
+  });
+}, 3000);  // every 3 seconds
+
+
+
+
+function renderTable(data) {
+  const table = document.getElementById("log-table");
+  table.innerHTML = "";
+
+  if (!data.length) {
+    table.innerHTML = `<tr><td colspan="9" style="text-align:center;">No activity yet</td></tr>`;
+    return;
+  }
+
+  data.forEach((entry) => {
+    const badgeClass = getBadgeClass(entry.action);
+    const dt = new Date(entry.timestamp);
+    const date = dt.toLocaleDateString();
+    const time = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${entry.name || "Deleted User"}</td>
+      <td>${entry.email}</td>
+      <td><span class="role-badge ${entry.real_role}">${entry.real_role || ""}</span></td>
+      <td>${date}</td>
+      <td>${time}</td>
+      <td><span class="badge ${badgeClass}">${formatActionLabel(entry)}</span></td>
+      <td>${entry.details || "-"}</td>
+      <td>${
+        entry.changes
+          ? entry.changes
+              .split(";")
+              .map(change => {
+                const match = change.match(/(.*?):\s*'(.*?)'\s*→/);
+                return match ? `${match[1]}: ${match[2]}` : "";
+              })
+              .join("<br>")
+          : "NA"
+      }</td>
+      <td>${
+        entry.changes
+          ? entry.changes
+              .split(";")
+              .map(change => {
+                const match = change.match(/→\s*'(.*?)'$/);
+                return match ? match[1] : "";
+              })
+              .join("<br>")
+          : "NA"
+      }</td>
+    `;
+    table.appendChild(row);
+  });
+}
+
+
+function downloadVisibleCSV() {
+  let csv = [];
+  const headers = [
+    "Name", "User", "Role", "Date", "Time", "Action", "Description", "Old Value", "New Value"
+  ];
+  csv.push(headers.join(","));
+
+  const visibleRows = document.querySelectorAll("#log-table tr");
+  visibleRows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+    if (cells.length === 9) {
+      const rowData = [...cells].map(td => {
+        const text = td.innerText.replace(/\n/g, " | ").replace(/"/g, '""');
+        return `"${text}"`;
+      });
+      csv.push(rowData.join(","));
+    }
+  });
+
+  // Determine filename based on filters
+  let filename = "activity_logs";
+  const filterKeys = ['name', 'email', 'real_role', 'action'];
+
+  let active = [];
+filterKeys.forEach(key => {
+  const selected = [...document.querySelectorAll(`input[name="${key}"]:checked`)].map(cb => cb.value);
+  if (selected.length) {
+    // ✅ Show "role" instead of "real_role" in filename
+    const label = key === "real_role" ? "role" : key;
+    active.push(`${label}-${selected.join('-')}`);
+  }
+});
+const from = document.getElementById("fromDate").value;
+const to = document.getElementById("toDate").value;
+if (from || to) {
+  active.push(`date-${from || 'any'}-to-${to || 'any'}`);
+}
+if (active.length) {
+  filename += "_filtered_" + active.join('_');
+} else {
+  filename += "_all";
+}
+filename += ".csv";
+
+  const blob = new Blob([csv.join("\n")], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+function showOverlay() {
+  fetch("/api/live-users")
+    .then(res => res.json())
+    .then(data => {
+      const list = data.map(user =>
+        `<div><strong>${user.name}</strong> (${user.email})<br><small>🧭 ${user.page}</small></div><hr>`
+      ).join('') || "No active users.";
+      document.getElementById("liveUserList").innerHTML = list;
+      document.getElementById("liveOverlay").style.display = "flex";
+    });
+}
+
+function closeOverlay() {
+  document.getElementById("liveOverlay").style.display = "none";
+  clearInterval(liveUsersInterval);
+  liveUsersInterval = null;
+}
+
+let sortState = {};
+
+function toggleSortOverlay() {
+  const overlay = document.getElementById("sortOverlay");
+  overlay.style.display = (overlay.style.display === "flex") ? "none" : "flex";
+}
+
+
+function onSortChange(select) {
+  const key = select.getAttribute("data-key");
+  const direction = select.value;
+  const allSelects = document.querySelectorAll("#sortOptions select");
+
+  if (direction) {
+    sortState = { key, direction };
+    // Disable all other selects
+    allSelects.forEach(s => {
+      if (s !== select) {
+        s.disabled = true;
+        s.style.background = "#eee";
+        s.style.color = "#888";
+      }
+    });
+  } else {
+    sortState = {};
+    // Enable all selects
+    allSelects.forEach(s => {
+      s.disabled = false;
+      s.style.background = "";
+      s.style.color = "";
+    });
+  }
+}
+
+function applySort() {
+  if (!sortState.key) {
+    renderTable(fullData); // reset to default
+    toggleSortOverlay();
+    return;
+  }
+
+  const sorted = [...document.querySelectorAll("#log-table tr")].map(row => {
+    const cells = row.querySelectorAll("td");
+    return [...cells].map(td => td.innerText);
+  });
+
+  const indexMap = {
+    "name": 0,
+    "email": 1,
+    "real_role": 2,
+    "timestamp": 3, // assuming this is the Date column
+    "action": 5
+  };
+
+  const index = indexMap[sortState.key];
+
+  const sortedRows = [...document.querySelectorAll("#log-table tr")].sort((a, b) => {
+    const aVal = a.children[index]?.innerText.toLowerCase() || "";
+    const bVal = b.children[index]?.innerText.toLowerCase() || "";
+
+    return sortState.direction === "asc"
+      ? aVal.localeCompare(bVal)
+      : bVal.localeCompare(aVal);
+  });
+
+  const tbody = document.getElementById("log-table");
+  tbody.innerHTML = "";
+  sortedRows.forEach(row => tbody.appendChild(row));
+
+  toggleSortOverlay();
+}
+function renderSortControls() {
+  const fields = ["name", "email", "real_role", "action", "timestamp"];
+  const labels = {
+    name: "Name",
+    email: "Email",
+    real_role: "Role",
+    action: "Action",
+    timestamp: "Date"
+  };
+
+  const container = document.getElementById("sortOptions");
+  container.innerHTML = fields.map(field => `
+    <div>
+      <label style="font-weight: 600; font-size: 14px; margin-bottom: 4px; display:block;">
+        ${labels[field]}
+      </label>
+      <select onchange="onSortChange(this)" data-key="${field}" style="
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 13px;
+      ">
+        <option value="">None</option>
+        <option value="asc">A → Z / Old → New</option>
+        <option value="desc">Z → A / New → Old</option>
+      </select>
+    </div>
+  `).join('');
+}
+
+
+function updateLiveUsers() {
+  fetch("/api/live-users")
+    .then(res => res.json())
+    .then(users => {
+      const userList = document.getElementById("userList");
+      userList.innerHTML = "";
+
+      if (!users.length) {
+        userList.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#666;">No active users</td></tr>`;
+        return;
+      }
+
+      const now = Date.now();
+
+      users
+        .sort((a, b) => {
+          const aOnline = now - new Date(a.last_seen).getTime() < 15000;
+          const bOnline = now - new Date(b.last_seen).getTime() < 15000;
+          return (bOnline ? 1 : 0) - (aOnline ? 1 : 0); // Online first
+        })
+        .forEach(u => {
+          const lastSeen = new Date(u.last_seen);
+          const isOnline = (now - lastSeen.getTime()) < 15000;
+          const isKicked = u.kicked;
+          const canKick = isOnline && !isKicked;
+
+          const lastSeenStr = `${lastSeen.getDate().toString().padStart(2, '0')}-${lastSeen.toLocaleString('default', { month: 'short' })}-${lastSeen.getFullYear()} ${lastSeen.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+          const formattedPage = (u.page || '')
+            .replace(/^\//, '')
+            .split(/[\/\-_]/)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ') || '-';
+
+          userList.innerHTML += `
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 12px;">${u.name}</td>
+              <td style="padding: 12px;">${u.email}</td>
+              <td style="padding: 12px;">
+                <span style="display:inline-flex; align-items:center; gap:6px;">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: ${isOnline ? '#28a745' : '#dc3545'};"></span>
+                  ${isOnline ? 'Online' : 'Offline'}
+                </span>
+              </td>
+              <td style="padding: 12px;">
+                <div>${formattedPage}</div>
+                ${!isOnline ? `<div style="font-size: 12px; color: #777; margin-top: 4px;">Last seen: ${lastSeenStr}</div>` : ""}
+              </td>
+              <td style="padding: 12px;">${u.device || 'Unknown'}</td> <!-- ✅ Device column -->
+              <td style="padding: 12px; text-align: center;">
+                <button 
+                  title="${isKicked ? 'Already kicked' : (canKick ? 'Kick User' : 'Offline')}"
+                  ${canKick ? `onclick="kickUser('${u.email}')"` : "disabled"}
+                  style="background: none; border: none; cursor: ${canKick ? 'pointer' : 'not-allowed'};"
+                >
+                  <i class="fas fa-person-running" style="color: ${canKick ? '#dc3545' : '#aaa'}; font-size: 18px;"></i>
+                </button>
+              
+
+          
+
+
+            </tr>
+          `;
+        });
+    });
+}
+
+
+function triggerSpectate(email) {
+  console.log("🔍 Spectating user:", email);
+  document.getElementById("spectate-overlay").style.display = "flex";
+  // Later: use email to attach to specific WebRTC stream
+}
+
+
+ function kickUser(email) {
+    if (!confirm(`Are you sure you want to kick ${email}?`)) return;
+
+    fetch("/api/kick-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("User kicked successfully");
+          updateLiveUsers(); // Refresh table
+        } else {
+          alert("Failed to kick user: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Kick error:", err);
+        alert("An error occurred while kicking the user.");
+      });
+  }
+
+
+
+
+let liveUsersInterval = null; // Global variable to track the refresh
+
+function showLiveUsers() {
+  document.getElementById("liveOverlay").style.display = "flex";
+
+  updateLiveUsers(); // Initial fetch immediately
+
+  if (!liveUsersInterval) {
+    liveUsersInterval = setInterval(updateLiveUsers, 1000); // Refresh every 5 seconds
+  }
+}
+let fullData = [];  // Make sure this is globally accessible
+let activeFilters = { name: [], email: [], real_role: [], action: [] };
+
+function toggleFilterOverlay() {
+  document.getElementById("filterOverlay").style.display =
+    document.getElementById("filterOverlay").style.display === "flex" ? "none" : "flex";
+}
+
+function createCheckboxList(data, key) {
+  const uniqueValues = [...new Set(data.map(d => d[key]).filter(Boolean))].sort();
+  const sectionId = `filter-section-${key}`;
+
+  // Fix label for "real_role"
+  const displayLabel = key === "real_role" ? "ROLE" : key.replace('_', ' ').toUpperCase();
+
+  return `
+    <div style="border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+      <div onclick="toggleFilterSection('${sectionId}')" style="
+        background: #f7f7f7;
+        padding: 12px 14px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      ">
+        ${displayLabel}
+        <i id="${sectionId}-chevron" class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+      <div id="${sectionId}" class="filter-section" style="display: none; padding: 12px; background: #fff; font-size: 13px;">
+        <button onclick="toggleSelectAll('${key}', this)" style="
+          background: #127285;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 12px;
+          margin-bottom: 10px;
+          cursor: pointer;
+        ">Select All</button><br/>
+        ${uniqueValues.map(val => `
+          <label style="display:block; margin-bottom:6px;">
+            <input type="checkbox" name="${key}" value="${val}" onchange="onFilterChange(this)"> ${val}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+
+function renderFilterControls() {
+  const container = document.getElementById("filterControls");
+  container.innerHTML =
+    createCheckboxList(fullData, "name") +
+    createCheckboxList(fullData, "email") +
+    createCheckboxList(fullData, "real_role") +
+    createCheckboxList(fullData, "action");
+}
+
+function onFilterChange(checkbox) {
+  const key = checkbox.name;
+  if (checkbox.checked) {
+    if (!activeFilters[key].includes(checkbox.value)) activeFilters[key].push(checkbox.value);
+  } else {
+    activeFilters[key] = activeFilters[key].filter(v => v !== checkbox.value);
+  }
+}
+
+function applyFilters() {
+  let filtered = [...fullData];
+
+  // Filter by checkboxes
+  ['name', 'email', 'real_role', 'action'].forEach(key => {
+    const selected = [...document.querySelectorAll(`input[name="${key}"]:checked`)].map(cb => cb.value);
+    if (selected.length) {
+      filtered = filtered.filter(row => selected.includes(row[key]));
+    }
+  });
+
+  // Filter by Date Range
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+
+  if (from) {
+    const fromDate = new Date(from);
+    filtered = filtered.filter(row => new Date(row.timestamp) >= fromDate);
+  }
+
+  if (to) {
+    const toDate = new Date(to);
+    filtered = filtered.filter(row => new Date(row.timestamp) <= toDate);
+  }
+
+  renderTable(filtered);
+  toggleFilterOverlay();
+}
+
+
+function clearFilters() {
+  document.querySelectorAll('#filterControls input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+  renderTable(fullData);
+  toggleFilterOverlay();
+}
+
+
+function toggleFilterSection(id) {
+  const section = document.getElementById(id);
+  const icon = document.getElementById(`${id}-chevron`);
+  const isOpen = section.style.display === 'block';
+  section.style.display = isOpen ? 'none' : 'block';
+  icon.className = isOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+}
+
+function toggleSelectAll(key, btn) {
+  const checkboxes = document.querySelectorAll(`input[name="${key}"]`);
+  const allChecked = [...checkboxes].every(cb => cb.checked);
+  checkboxes.forEach(cb => {
+    cb.checked = !allChecked;
+    cb.dispatchEvent(new Event("change"));  // Trigger filter update
+  });
+  btn.innerText = allChecked ? "Select All" : "Deselect All";
+}
+
+loadLogs();
+
+
+</script>
+
+<!-- Floating Download Button -->
+<div class="download-btn" onclick="downloadVisibleCSV()" title="Download CSV">
+  <i class="fas fa-download"></i>
+</div>
+<!-- Floating Refresh Button -->
+<div class="refresh-btn" onclick="location.reload()" title="Refresh Table">
+  <i class="fas fa-sync-alt"></i>
+</div>
+
+<!-- Floating Filter Button -->
+<div class="refresh-btn" style="bottom: 110px;" onclick="toggleFilterOverlay()" title="Filter Table">
+  <i class="fas fa-filter"></i>
+</div>
+
+<!-- Floating Sort Button -->
+<div class="refresh-btn" style="bottom: 155px;" onclick="toggleSortOverlay()" title="Sort Table">
+  <i class="fas fa-sort-alpha-down-alt"></i>
+</div>
+
+
+<!-- Sort Overlay Modal -->
+<div id="sortOverlay" style="
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'SF Pro Display', sans-serif;
+">
+  <div style="
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    padding: 28px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s ease;
+    position: relative;
+  ">
+    <button onclick="toggleSortOverlay()" style="
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #aaa;
+      cursor: pointer;
+    " title="Close">&times;</button>
+
+    <h2 style="
+      margin: 0 0 20px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #222;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 12px;
+    ">Sort Activity Logs</h2>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;" id="sortOptions">
+      ${["name", "email", "real_role", "action", "timestamp"].map(field => `
+        <div>
+          <label style="font-weight: 600; font-size: 14px; margin-bottom: 4px; display:block;">
+            ${field === "real_role" ? "Role" : field === "timestamp" ? "Date" : field.charAt(0).toUpperCase() + field.slice(1)}
+          </label>
+          <select onchange="onSortChange(this)" data-key="${field}" style="
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 13px;
+          ">
+            <option value="">None</option>
+            <option value="asc">A → Z / Old → New</option>
+            <option value="desc">Z → A / New → Old</option>
+          </select>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="text-align: right; margin-top: 24px;">
+      <button onclick="applySort()" style="
+        background: #127285;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 14px;
+      ">Apply Sort</button>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Overlay Modal -->
+<!-- 🌟 Modern Filter Overlay Modal -->
+<div id="filterOverlay" style="
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'SF Pro Display', sans-serif;
+">
+  <div style="
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    padding: 28px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s ease;
+    position: relative;
+  ">
+    <!-- ❌ Close Button -->
+    <button onclick="toggleFilterOverlay()" style="
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    " onmouseover="this.style.color='#127285'" onmouseout="this.style.color='#aaa'" title="Close">&times;</button>
+
+    <!-- 📝 Title -->
+    <h2 style="
+      margin: 0 0 20px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #222;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 12px;
+    ">Filter Activity Logs</h2>
+
+    <!-- 🔽 Dynamic Filter Dropdowns (Name, Email, Role, Action) -->
+    <div id="filterControls" style="display: flex; flex-direction: column; gap: 16px;">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- 📅 Date Range Filter -->
+    <!-- 📅 Date Range Filter -->
+<div style="border: 1px solid #ddd; border-radius: 10px; overflow: hidden; margin-top: 16px;">
+
+      <div onclick="toggleFilterSection('date-section')" style="
+        background: #f7f7f7;
+        padding: 12px 14px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      ">
+        DATE RANGE
+        <i id="date-section-chevron" class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+
+      <div id="date-section" class="filter-section" style="display: none; padding: 12px; background: #fff; font-size: 13px;">
+        <label style="display:block; margin-bottom: 6px;">From:</label>
+<input id="fromDate" class="date-input" type="text" placeholder="Select start date" readonly>
+
+<label style="display:block; margin-top: 10px; margin-bottom: 6px;">To:</label>
+<input id="toDate" class="date-input" type="text" placeholder="Select end date" readonly>
+
+      </div>
+    </div>
+
+    <!-- ✅ Action Buttons -->
+    <div style="text-align: right; margin-top: 28px;">
+      <button onclick="applyFilters()" style="
+        background: #127285;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s ease;
+      " onmouseover="this.style.background='#0e5a66'" onmouseout="this.style.background='#127285'">
+        Apply Filters
+      </button>
+      <button onclick="clearFilters()" style="
+        background: #eee;
+        color: #333;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        margin-left: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      " onmouseover="this.style.background='#ddd'" onmouseout="this.style.background='#eee'">
+        Reset
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- 🔵 Overlay Modal for Live Users -->
+<!-- Somewhere in your body -->
+<!-- Modern Live Users Modal -->
+<div id="liveOverlay" style="
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+">
+  <div style="
+  background: #fff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 800px;
+  padding: 30px;
+  max-height: 63.75vh; /* reduced by 25% */
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+">
+
+
+    <button onclick="document.getElementById('liveOverlay').style.display='none'" style="
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #888;
+      cursor: pointer;
+    " title="Close">&times;</button>
+
+    <h2 style="margin-top: 0; font-size: 22px; font-weight: 600; color: #222;">
+  <i class="fas fa-broadcast-tower blinking-icon" style="margin-right: 8px; color: #e53935;"></i>
+  Current Live Users
+</h2>
+
+
+
+<table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+  <thead>
+    <tr style="border-bottom: 1px solid #ccc; text-align: left;">
+      <th style="padding: 12px;">Name</th>
+      <th style="padding: 12px;">Email</th>
+      <th style="padding: 12px;">Status</th>
+      <th style="padding: 12px;">Current Page</th>
+      <th style="padding: 12px;">Device</th>
+      <th style="padding: 12px;">Kick</th>
+      
+
+
+      
+    </tr>
+  </thead>
+  <tbody id="userList">
+    <!-- Will be populated dynamically -->
+  </tbody>
+</table>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+
+
+
+
+</body>
+</html>

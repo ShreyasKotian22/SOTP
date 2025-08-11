@@ -1,68 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sales Order Tracker Portal</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+
+
+
   <style>
     
-    html, body {
+    :root {
+      --teal: #127285;
+      --bg: #f5f6f8;
+      --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+     html, body {
       height: 100%;
     }
-    body {
+
+  
+   
+
+    * {
+      font-family: SF Pro Display, sans-serif;
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Inter', sans-serif;
     }
-    * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
 
-body {
-  display: flex;
-  background-color: #ffffff;
-  height: 100vh;
-  overflow: hidden;
-}
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
 
-/* Container Layout */
-.container {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-}
+    /* Sidebar */
 
-/* Sidebar */
-.sidebar {
+  .sidebar {
   width: 280px;
-  background-color: #127285;
+  background-color: #0A7386;
   color: white;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
 }
 
-.sidebar .logo img {
-  width: 245px;
-  margin: 0 auto 20px;
-  display: block;
-}
+    .sidebar .logo img {
+      width: 245px;
+      margin: 0 auto 20px;
+      display: block;
+    }
 
-.sidebar nav ul {
+    .sidebar nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
-.sidebar nav ul li {
+    .sidebar nav ul li {
   padding: 12px 30px;
   cursor: pointer;
   font-size: 15px;
@@ -72,253 +76,10 @@ body {
   transition: background 0.3s;
 }
 
-    .nav-item i,
+        .nav-item i,
 .logout i {
   font-size: 18px;
 }
-
-.nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  cursor: pointer;
-}
-
-
-.logout {
-  padding: 12px 30px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: auto;
-}
-
-/* Main content */
-.main-content {
-  flex: 1;
-  padding: 30px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow: hidden;
-}
-
-.main-content h1 {
-  font-size: 24px;
-  font-family: 'SF Pro Display', sans-serif;
-  font-weight: 700;
-  margin-bottom: 25px;
-  text-align: left;
-}
-
-/* Greeting section */
-.greeting {
-  margin-bottom: 25px;
-}
-
-.greeting h1 {
-  font-size: 26px;
-  color: #000000;
-  margin-bottom: 4px;
-}
-
-.greeting p {
-  font-size: 15px;
-  color: #666;
-  margin-bottom: 30px;
-}
-
-/* Dashboard stat cards */
-.cards-dashboard {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: -39px; /* ⬅️ Moves cards closer to greeting */
-  margin-bottom: 20px;
-}
-
-.card-dashboard {
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
-  border-radius: 12px;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  max-width: 220px;
-  height: 80px;
-}
-
-.card-icon {
-  background-color: #127285;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-}
-
-.card-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-}
-
-.card-value {
-  font-size: 18px;
-  font-weight: bold;
-  color: #111;
-}
-
-/* Dashboard stat cards */
-.cards-dashboard {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: -39px;
-  margin-bottom: 20px;
-}
-
-.card-dashboard {
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
-  border-radius: 12px;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  max-width: 220px;
-  height: 80px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-dashboard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Icon */
-.card-icon {
-  background-color: #127285;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-}
-
-/* Text */
-.card-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-}
-
-.card-value {
-  font-size: 18px;
-  font-weight: bold;
-  color: #111;
-}
-
-
-/* Chart section */
-.chart-section {
-  background-color: white;
-  padding: 24px;
-  border-radius: 15px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.23);
-  width: 88%;
-  max-width: 100%;
-  margin: 0 0 20px 30px; /* Moved left */
-  box-sizing: border-box;
-}
-
-.chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.chart-header h2 {
-  font-size: 20px;
-  font-family: 'SF Pro Display', sans-serif;
-  font-weight: 700;
-}
-
-/* Filters */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  color: #000;
-  
-  
-}
-
-.filters h6 {
-  margin: 0;          /* remove default margin */
-  padding: 0 2px 0 0; /* optional slight right padding */
-  font-size: 14px;
-  margin-top: 5px;    /* smaller font size if needed */
-}
-
-.filters button {
-  background-color: #127285;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-.filters select {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: #127285;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.chart-placeholder {
-  margin-top: 20px;
-  height: 198px;
-  display: flex;
-  justify-content: flex-start; /* Align left */
-  align-items: center;
-  color: #888;
-  font-style: italic;
-  border: 1px dashed #ccc;
-  border-radius: 10px;
-  padding-left: 20px; /* Optional spacing */
-}
-
-#performanceChart {
-  margin-top: 10px;
-  max-height: 350px;
-}
-
-
-/* Icon styles */
 .nav-item i,
 .logout i {
   font-size: 18px;
@@ -327,2165 +88,1634 @@ body {
   width: 18px;        /* uniform width */
   height: 22px;       /* uniform height */
   display: inline-block;
+  margin-bottom: 1  0px;
 }
 
-/* ====== Add New Order Form Styling ====== */
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
 
+    .logout {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
 
-#form-container {
-  padding: 40px;
-  font-family: 'Inter', sans-serif;
-  background-color: #f5f6f8;
+    /* Sidebar text and icon color */
+
+    .sidebar nav ul li a,
+    .sidebar nav ul li a i,
+    .sidebar nav ul li a span,
+    .sidebar .logout a,
+    .sidebar .logout a i,
+    .sidebar .logout a span {
+      color: white;
+      text-decoration: none;
+      
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar .logout a:hover {
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      padding: 21px;
+      background: white;
+      overflow-y: hidden;
+       opacity: 0;
+  animation: fadeIn 1.2s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
-#form-container .card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 30px;
-  max-width: 900px;
-  margin: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-#form-container h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #111;
-  margin-bottom: 24px;
-}
+    .metrics {
+      
+      display: flex;
+      gap: 42px;
+      margin-top: 9px;
+      
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
 
-#form-container .tabs {
-  display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 24px;
-}
+    .metric-box {
+      flex: 1;
+      min-width: 180px;
+      padding: 14px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-#form-container .tab {
-  flex: 1;
-  text-align: center;
-  padding: 10px 0;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 15px;
-  color: #666;
-  border-bottom: 3px solid transparent;
+    .metric-box i {
+      background: var(--teal);
+      color: white;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .metric-box:hover {
+  transform: translateY(-4px); /* Slight lift */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Deeper shadow */
   transition: all 0.3s ease;
-}
-
-#form-container .tab.active {
-  border-bottom: 3px solid #006D7D;
-  color: #006D7D;
-  font-weight: 600;
-}
-
-#form-container .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-#form-container .form-grid.full {
-  grid-template-columns: 1fr;
-}
-
-#form-container label {
-  font-size: 14px;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 6px;
-  color: #333;
-}
-
-#form-container .input-field,
-#form-container textarea,
-#form-container select {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #fff;
-  box-sizing: border-box;
-}
-
-#form-container textarea.input-field {
-  min-height: 80px;
-  resize: vertical;
-}
-
-#form-container .button-group {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-#form-container button {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-#form-container .btn-secondary {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #333;
-}
-
-#form-container .btn-primary {
-  background-color: #007980;
-  color: white;
-}
-
-#form-container .btn-secondary:hover {
-  background-color: #f2f2f2;
-}
-
-#form-container .btn-primary:hover {
-  background-color: #005f66;
-}
-
-#form-container .client-item {
-  padding: 10px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  border: 1px solid transparent;
-}
-
-#form-container .client-item:hover,
-#form-container .client-item.selected {
-  background-color: #eaeaea;
-  border-color: #999;
-}
-
-#form-container .search-input {
-  margin-bottom: 14px;
-}
-
-#form-container .summary-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  margin-top: 1rem;
-}
-
-#form-container .summary-table th,
-#form-container .summary-table td {
-  padding: 12px;
-  border: 1px solid #ccc;
-  text-align: left;
-  background: none;
-  color: #111;
-}
-
-#form-container .summary-table th {
-  font-weight: 600;
-}
-
-#form-container .confirmation-table {
-  width: 100%;
-  font-size: 14px;
-  margin-top: 1rem;
-  border-spacing: 0 12px;
-}
-
-#form-container .confirmation-table td {
-  padding: 6px 10px;
-  vertical-align: top;
-  color: #111;
-}
-
-#form-container .confirmation-table td:first-child {
-  font-weight: 600;
-  width: 200px;
-}
-
-#form-container .success-box {
-  margin-top: 24px;
-  padding: 16px;
-  background-color: #f2fdf5;
-  border: 1px solid #d5ebdd;
-  border-radius: 8px;
-  color: #1b4e2a;
-  font-weight: 600;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-
-
-#form-container .summary-table,
-#form-container .confirmation-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  margin-top: 1rem;
-}
-
-#form-container .summary-table th,
-#form-container .summary-table td,
-#form-container .confirmation-table td {
-  border: 1px solid #ccc;
-  padding: 8px 12px;
-  text-align: left;
-  background: none;
-  color: #111;
-}
-
-#form-container .confirmation-table td:first-child {
-  font-weight: 600;
-  width: 200px;
-}
-
-#form-container .success-box {
-  margin-top: 24px;
-  padding: 16px;
-  background-color: #f2fdf5;
-  border: 1px solid #d5ebdd;
-  border-radius: 8px;
-  color: #1b4e2a;
-  font-weight: 600;
-  font-size: 15px;
-}
-textarea.input-field {
-  min-height: 80px;
-  resize: vertical;
-}
-#client-list {
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.client-item {
-  padding: 12px 14px;
-  cursor: pointer;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #fff;
-  transition: background-color 0.2s ease;
-}
-
-.client-item.selected {
-  background-color: #cde4e8;
-  font-weight: 500;
-}
-
-.client-item:hover {
-  background-color: #f3f3f3;
-}
-.card {
-  min-height: 400px;
-}
-
-#client-list {
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.client-item {
-  padding: 12px 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #fff;
-  transition: background-color 0.2s ease;
-}
-
-.client-item.selected {
-  background-color: #cde4e8;
-  font-weight: 500;
-}
-
-.client-item:hover {
-  background-color: #f3f3f3;
-}
-
-.summary-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-.summary-table tr:nth-child(even) td {
-  background-color: #f9f9f9;
-}
-
-.summary-table tr td:first-child {
-  font-weight: 500;
-  width: 30%;
-}
-
-.card {
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-}
-
-.button-group {
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  padding-top: 10px;
-  border-top: 1px solid #eee;
-}
-
-
-
-/* =======================
-   View Sales Order Styles
-======================= */
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #111;
-  font-family: 'SF Pro Display', sans-serif;
-}
-
-.filter-btn {
-  background-color: #006D7D;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  font-size: 4px;
-  cursor: pointer;
-}
-
-.filter-panel {
-  margin-top: 20px;
-}
-
-.filters label {
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  color: #000000;
-  width: 140px;
-  margin-top: 2px;
-}
-
-
-.filter-panel input {
-  padding: 6px 10px;
-  margin-left: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-/* Table styling */
-.table-container {
-  margin-top: 20px;
-  border-radius: 15px;
-  overflow: hidden;
-  background-color: #E0F1F5;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead {
-  background-color: #006D7D;
-  color: white;
-}
-
-th, td {
-  padding: 12px;
-  text-align: center;
-  font-size: 14px;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #E0F1F5;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #CDE6EA;
-}
-
-.edit-icon,
-.delete-icon {
-  cursor: pointer;
-  margin: 0 5px;
-  font-size: 14px;
-}
-
-.edit-icon {
-  color: #007bff;
-}
-
-.delete-icon {
-  color: #dc3545;
-}
-
-.buttons {
-  margin-top: 20px;
-}
-
-.buttons button {
-  background-color: #006D7D;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  margin-right: 10px;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-
-.view-orders-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.view-orders-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  color: #111;
-  font-family: 'SF Pro Display', sans-serif;
-}
-
-.view-order-filters {
-  display: flex;
-  gap: 12px;
-}
-
-.view-order-filters select {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  background-color: #006D7D;   /* teal background */
-  color: white;                /* white text */
-  font-weight: 500;
-  cursor: pointer;
-  appearance: none;            /* remove default arrow (optional) */
-}
-
-.view-order-filters select:focus {
-  outline: none;
-  border-color: #004f5a;       /* slightly darker border on focus */
-}
-
-
-.view-order-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn-download,
-.btn-share {
-  background-color: #007980;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.arrow-icon {
-  width: 14px;
-  height: 14px;
-  margin-left: 8px;
-  transition: transform 0.2s ease;
-  vertical-align: middle;
-}
-
-
-
-
-
-
-
-/*======================
-  ====Pending Orders========*/
-.custom-filter-group {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin: 10px 0 20px;
-}
-
-.custom-dropdown {
-  position: relative;
-}
-
-.dropdown-btn {
-  background-color: #127285;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  width: 220px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  padding: 10px;
-}
-
-.dropdown-content input {
-  width: 100%;
-  padding: 6px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 8px;
-}
-
-.dropdown-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.dropdown-list li {
-  padding: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.dropdown-list li:hover {
-  background-color: #f0f0f0;
-}
-
-.back-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.back-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #127285;
-  padding-left: 0;
-}
-
-.dropdown-btn i {
-  margin-left: 5px;
-  transition: transform 0.2s;
-}
-
-.back-header {
-  font-size: 20px;
-  font-weight: 600;
-  color: #111; /* black default */
-  cursor: pointer;
-  transition: color 0.3s ease;
-  margin-bottom: 15px;
-  display: inline-block;
-}
-
-.back-header:hover {
-  color: #007980; /* teal on hover */
-  transform: translateX(-3px);
-}
-
-
-
-
-
-/*======================================
-========reports section==============*/
-
-
-/* === Report Layout Container === */
-.report-section {
-  display: flex;
-  justify-content: flex-start;
-  gap: 30px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-/* === Report Card Boxes === */
-.report-card {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 460px;
-  flex: 1 1 45%;
-  box-sizing: border-box;
-}
-
-/* === Card Headers === */
-.report-card h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #222;
-}
-
-/* === Dropdown Styling === */
-.report-card select {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-
-/* === Timeline === */
-.timeline {
-  position: relative;
-  padding-left: 18px;
-  border-left: 2px solid #ddd;
-}
-
-.timeline-entry {
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.timeline-entry::before {
-  content: "";
-  width: 12px;
-  height: 12px;
-  background-color: #ccc;
-  border-radius: 50%;
-  position: absolute;
-  left: -7px;
-  top: 4px;
-}
-
-.timeline-entry.pending::before {
-  background-color: #f28e8e;
-}
-
-.timeline-entry.processing::before {
-  background-color: #f5d97d;
-}
-
-.timeline-entry.shipped::before {
-  background-color: #7edc94;
-}
-
-.timeline-entry h4 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #333;
-}
-
-.timeline-entry p {
-  font-size: 13px;
-  color: #666;
-  margin: 2px 0;
-}
-
-/* === Donut Chart Styling === */
-.status-chart-container {
-  text-align: center;
-}
-
-.status-chart-container canvas {
-  margin: 20px auto;
-  max-width: 260px;
-  height: auto;
-}
-
-/* === Legend below chart === */
-.status-legend {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.status-legend span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #444;
-  border: 1px solid #ccc;
-  padding: 4px 10px;
-  border-radius: 8px;
-}
-
-/* === Dots for Legend === */
-.status-legend .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.dot-pending {
-  background-color: #f28e8e;
-}
-
-.dot-processing {
-  background-color: #f5d97d;
-}
-
-.dot-shipped {
-  background-color: #7edc94;
-}
-
-/* === Bottom Buttons === */
-.report-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 30px;
-}
-
-.report-actions button {
-  font-size: 14px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.report-actions .btn-download {
-  background-color: #007980;
-  color: white;
-}
-
-.report-actions .btn-share {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #333;
-}
-.nav-item.active {
+  
+}
+
+    h3 {
+      margin: 20px 0 0px;
+      font-size: 1.2rem;
+    }
+
+    .job-status-panel {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 15px;
+      background: #fff;
+      box-shadow: var(--card-shadow);
+    }
+
+    .job-status {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .status-cards {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .status-box {
+      padding: 5px;
+      border-radius: 12px;
+      background: rgb(255, 255, 255);
+      position: relative;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s ease; 
+    }
+    .status-box:hover {
+  transform: scale(1.03); /* Slight Zoom */
+}
+
+    .status-box h4,
+    .status-box span {
+      color: #000 !important;
+    }
+
+    .status-box h4 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .status-box span {
+      font-size: 1.6rem;
+      font-weight: bold;
+      align-self: flex-end;
+    }
+
+    .status-box img.status-icon {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .open { border: 1px solid #c0e6c0; box-shadow: 0 2px 8px rgba(99, 176, 124, 0.2); }
+    .in-progress { border: 1px solid #b0d8f5; box-shadow: 0 2px 8px rgba(109, 174, 248, 0.2); }
+    .on-hold { border: 1px solid #ffe0c5; box-shadow: 0 2px 8px rgba(250, 178, 139, 0.2); }
+    .delayed { border: 1px solid #f8e0a5; box-shadow: 0 2px 8px rgba(241, 199, 113, 0.2); }
+    .closed { border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(184, 184, 184, 0.2); }
+    .cancelled { border: 1px solid #f5c1c6; box-shadow: 0 2px 8px rgba(238, 162, 168, 0.2); }
+
+    .chart-container {
+      width: 320px;
+      text-align: center;
+      margin-left: auto;
+    }
+    /* Download Button */
+
+    .download-btn {
+      margin-top: 12px;
+      padding: 10px 16px;
+      background-color: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Sort Button */
+
+    .sort-btn {
+      color: #fff;
+      background-color: var(--teal);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .nav-item.active {
   background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
 }
+
+.sort-strip-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color:#000000;
+}
+
+.date-strip {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-right: 12px;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  color:#000000;
+}
+
+.date-strip.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  color:#000000;
+}
+
+.date-strip label {
+  font-size: 14px;
+  color: #000000;
+}
+
+.date-strip input[type="date"] {
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid #000000;
+  font-size: 13px;
+  color:#000000;
+}
+
+.sort-btn {
+  background-color: #127285;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.highlight-card {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  box-shadow: 0 0 6px 2px var(--run-color, #63b07c); /* 🔆 GLOW EFFECT */
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.highlight-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--run-color, #63b07c),
+    transparent
+  );
+  background-size: 200% auto;
+  animation: runBorder 2s linear infinite;
+  border-radius: 14px;
+}
+@keyframes runBorder {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+#card-open.highlight-card {
+  --run-color: #bbf4cd; /* green */
+}
+
+#card-in_progress.highlight-card {
+  --run-color: #adcff6; /* blue */
+}
+
+#card-on_hold.highlight-card {
+  --run-color: #f8c7ad; /* orange */
+}
+
+#card-delayed.highlight-card {
+  --run-color: #f7e9cb; /* yellow */
+}
+
+#card-closed.highlight-card {
+  --run-color: #cecccc; /* grey */
+}
+
+#card-cancelled.highlight-card {
+  --run-color: #f4c1c5; /* red-pink */
+}
+
+
+
+.highlight-card {
+  transform: scale(1.05);
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+.sort-strip-wrapper .sort-btn {
+  margin-left: 380px; 
+  margin-top: -10px;/* Adjust this value as needed */
+}
+.expired-po-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+
+/* Responsive for laptops/desktops only (min-width: 900px) */
+
+@media (max-width: 1600px) {
+  .container {
+    max-width: 100vw;
+  }
+  .main {
+    padding: 16px;
+  }
+  .metrics {
+    gap: 24px;
+  }
+  .status-cards {
+    gap: 14px;
+  }
+  .chart-container {
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 200px;
+  }
+  .sidebar .logo img {
+    width: 140px;
+  }
+  .main {
+    padding: 10px;
+  }
+  .metrics {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .metric-box {
+    min-width: 140px;
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+  .status-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .chart-container {
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+  .sidebar {
+    flex-direction: row;
+    width: 100vw;
+    min-width: 0;
+    padding: 10px 0;
+    height: auto;
+  }
+  .main {
+    padding: 8px 2vw;
+  }
+  .metrics {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .status-cards {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .chart-container {
+    max-width: 100vw;
+    margin: 0 auto;
+  }
+}
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 10px 15px;
+  }
+
+  .sidebar .logo img {
+    width: 120px;
+  }
+
+  .sidebar nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar nav ul li {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .main {
+    padding: 10px 5vw;
+  }
+
+  .metrics {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .metric-box {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .status-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .chart-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .filter-section select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .logout {
+    font-size: 0.9rem;
+  }
+}
+
+.has-submenu {
+  position: relative;
+}
+
+.has-submenu .submenu {
+  display: none;
+  list-style: none;
+  background-color: #0a6a7c;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 280px;
+  border-radius: 0 0 12px 12px;
+  z-index: 999;
+  padding: 8px 0;
+}
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 10px 30px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+   margin-bottom: -7px; /* ✅ Add spacing between items */
+}
+
+.submenu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.submenu-arrow {
+  margin-left: auto;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* SIDEBAR AND OVERALL DASHBOARD WITH METRIC CARDS , CHARTS  */
+  /* Expired PO Modal sticky header and scrollable table */
+  .expired-po-modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 24px 12px 24px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #eee;
+  }
+  #expired-po-table-container {
+    overflow-y: auto;
+    max-height: calc(80vh - 70px);
+    padding: 0 24px 24px 24px;
+  }
+  /* Expired PO Modal sticky header and scrollable table */
+  .expired-po-modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 24px 12px 24px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #eee;
+  }
+  #expired-po-table-container {
+    overflow-y: auto;
+    max-height: calc(80vh - 70px);
+    padding: 0 24px 24px 24px;
+  }
+
+
+  /* ===== START: New styles for the email dropdown ===== */
+#email-dropdown-list {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 360px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 10001; /* Must be higher than the modal's z-index */
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#email-dropdown-list div {
+  color: black;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+#email-dropdown-list div:hover {
+  background-color: #f1f1f1;
+}
+/* ===== END: New styles for the email dropdown ===== */
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
-      </div>
-      <nav>
-        <ul>
-          <li class="nav-item active">
-  <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-th-large"></i> <span> Dashboard</span>
-  </a>
-</li>
-          <li class="nav-item">
-  <a href="/add-order" style="color: white; text-decoration: none;">
-    <i class="fas fa-plus-circle"></i> Add New Order
-  </a>
-</li>
+   <!-- =================================================================== -->
+<!-- START: New & Improved Sidebar with Bottom-Aligned Support/Logout    -->
+<!-- =================================================================== -->
+<aside class="sidebar" style="display: flex; flex-direction: column; justify-content: space-between;">
 
-          <li class="nav-item">
-  <a href="{{ url_for('clients') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-user"></i> Clients</a>
-</li>
+  <!-- Top Section: Logo and Main Navigation -->
+  <div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+    </div>
 
-<li class="nav-item">
-  <a href="{{ url_for('view_orders') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-file-alt"></i> View Sales Order</a>
-</li>
+    <nav>
+      <ul>
+        <li class="nav-item"><a href="{{ url_for('dashboard') }}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="/add-order"><i class="fas fa-plus-circle"></i> <span>Add New Order</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('clients') }}"><i class="fas fa-user"></i> <span>Clients</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('view_orders') }}"><i class="fas fa-file-alt"></i> <span>View Sales Order</span></a></li>
 
-          <li class="nav-item">
-  <a href="javascript:void(0);" onclick="showComingSoon(this)" style="color: white; text-decoration: none;">
-    <i class="fas fa-receipt"></i> <span> Sales Invoice</span>
-  </a>
-</li>
+        <li class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+          <div class="report-toggle" style="display: flex; align-items: center; width: 100%; color: white;">
+            <i class="fas fa-chart-bar"></i>
+            <span style="margin-left: 6px;">Report</span>
+            <i class="fas fa-chevron-down submenu-arrow" style="margin-left: auto;"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="window.location.href='/report'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Sales Order Overview</span>
+            </li>
+            <li onclick="window.location.href='/po-overview'" class="submenu-item active">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">PO’s Overview</span>
+            </li>
+            <li onclick="window.location.href='/growth-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Growth Overview</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
-<li class="nav-item">
-  <a href="javascript:void(0);" onclick="showReportSection(this)" style="color: white; text-decoration: none;">
-    <i class="fas fa-chart-bar"></i> <span> Report</span>
-  </a>
-</li>
+  <!-- Bottom Section: Support and Logout are grouped here -->
+  <div style="display: flex; flex-direction: column;">
+    <li class="nav-item" style="list-style: none; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 26px; margin-bottom: 7px;">
+        <button onclick="createSupportTicket()" style="background: none; border: none; color: white; padding: 0; font: inherit; cursor: pointer; display: flex; align-items: center;">
+            <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+            <span>Support</span>
+        </button>
+        <span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+    </li>
 
-        </ul>
-</nav>
-<li class="nav-item logout">
-  <a href="/" style="color: white; text-decoration: none;">
-    <i class="fas fa-sign-out-alt"></i> <span> Log Out</span>
-  </a>
-</li>
+    <li class="nav-item logout">
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a>
+    </li>
+  </div>
+
 </aside>
+<!-- =================================================================== -->
+<!-- END: New & Improved Sidebar                                         -->
+<!-- =================================================================== -->
 
-
-    <!-- Main content -->
-    <main class="main-content" id="main-content">
-      <h1>Dashboard</h1>
-      <div class="cards" id="cards">
-        <div class="card">
-  <div class="icon"><i class="fas fa-th-large"></i></div>
-  <div class="label">Total Orders</div>
-  <div class="value">120</div>
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h2>{{ greeting }} {{ user_name }}</h2>
+          <p>Welcome to Activus Sales Order Tracker Portal Dashboard!</p>
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0;">
+            <!-- Expired POs card in top-right white space, perfectly positioned -->
+<div style="position: absolute; top: 30px; right: 190px; z-index: 1;">
+  <div class="metric-box expired-po-metric" style="min-width: 220px; background: #ffeded; border: 2px solid #e74c3c; color: #e74c3c; cursor: pointer;" onclick="showExpiredPOModal()">
+    <i class="fas fa-clock" style="background: #e74c3c; color: white;"></i>
+    <div>
+      Expired POs<br>
+      <span style="font-size: 1.1em; font-weight: 600;">
+        <span id="expired-pos-count">--</span>
+        <span style="font-size: 0.95em; font-weight: 400;">POs</span>
+        <span style="margin: 0 8px; font-size: 1em;">|</span>
+        <span id="expired-pos-value">--</span>
+      </span>
+    </div>
+  </div>
+</div>
+<!-- Expired PO Modal -->
+<div id="expired-po-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:10px; max-width:900px; width:90vw; max-height:80vh; overflow:hidden; padding:0; position:relative; display:flex; flex-direction:column;">
+    <!-- Sticky header, close button, and share button -->
+    <div class="expired-po-modal-header" style="position:sticky; top:0; z-index:2; background:white; display:flex; align-items:center; justify-content:space-between; padding:32px 24px 12px 24px; border-radius:10px 10px 0 0; border-bottom:1px solid #eee;">
+      <h2 style="color:#e74c3c; margin:0;">Expired Purchase Orders</h2>
+      <div style="display: flex; gap: 12px;">
+        <button id="share-expired-po-btn" style="background: #e74c3c; color: white; border: none; border-radius: 6px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 16px;">
+          <i class="fas fa-paper-plane"></i> Share
+        </button>
+        <button onclick="closeExpiredPOModal()" style="background:none; border:none; font-size:22px; color:#e74c3c; cursor:pointer;"><i class='fas fa-times'></i></button>
+      </div>
+    </div>
+    <!-- Scrollable table area -->
+    <div id="expired-po-table-container" style="overflow-y:auto; max-height:calc(80vh - 70px); padding:0 24px 24px 24px;">
+      <div style="text-align:center; color:#888;">Loading...</div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-  <div class="icon"><i class="fas fa-users"></i></div>
-  <div class="label">Total Clients</div>
-  <div class="value">10</div>
+<!-- START: New & Improved Share Expired PO Modal                       -->
+
+<div id="share-po-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.45); z-index:10000; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:14px; max-width:420px; width:95vw; box-shadow:0 8px 32px rgba(18,114,133,0.18); padding:0; position:relative; display:flex; flex-direction:column;">
+    
+    <!-- Modal Header -->
+    <div style="padding:28px 28px 10px 28px; border-radius:14px 14px 0 0; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
+      <h3 style="margin:0; color:#e74c3c; font-weight:700;">Share Expired PO's <i class="fas fa-paper-plane" style="margin-left:8px;"></i></h3>
+      <button onclick="closeSharePOModal()" style="background:none; border:none; font-size:22px; color:#e74c3c; cursor:pointer;"><i class='fas fa-times'></i></button>
+    </div>
+    
+    <!-- Modal Body -->
+    <div style="padding:22px 28px 24px 28px;">
+      <label style="display:flex; align-items:center; gap:10px; margin-bottom:18px;">
+        <input type="checkbox" id="send-copy-myself" style="accent-color:#e74c3c; width:20px; height:20px;">
+        <span style="font-size:16px; color:#e74c3c; font-weight:500;">Send a copy to myself</span>
+      </label>
+      
+      <!-- THIS IS THE NEW PART: Input with Dropdown Container -->
+      <div style="position: relative;">
+          <label style="font-size:15px; color:#333; font-weight:500; margin-bottom:8px; display:block;">Enter or select recipient(s):</label>
+          <input type="text" id="recipient-emails" placeholder="Type or select from list..." style="width:100%; padding:10px 12px; border-radius:7px; border:1px solid #e74c3c; font-size:15px; margin-bottom:12px; outline:none;">
+          <!-- The dropdown will be populated here by JavaScript -->
+          <div id="email-dropdown-list"></div>
+      </div>
+      
+      <div id="email-tags" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;"></div>
+      
+      <button id="send-po-btn" style="width:100%; background:#e74c3c; color:white; border:none; border-radius:7px; padding:12px 0; font-size:16px; font-weight:600; cursor:pointer; box-shadow:0 2px 8px rgba(18,114,133,0.08); transition:background 0.2s;">
+        <i class="fas fa-paper-plane"></i> Send
+      </button>
+      <div id="share-po-status" style="margin-top:10px; font-size:14px; color:#e74c3c; text-align:center; display:none;"></div>
+    </div>
+    
+  </div>
 </div>
 
-<div class="card">
-  <div class="icon"><i class="fas fa-chart-line"></i></div>
-  <div class="label">Total Profit</div>
-  <div class="value">80%</div>
+<!-- END: New & Improved Share Expired PO Modal                         -->
+
+<script>
+// Modal open/close logic
+function showExpiredPOModal() {
+  document.getElementById('expired-po-modal').style.display = 'flex';
+  loadExpiredPOTable();
+}
+function closeExpiredPOModal() {
+  document.getElementById('expired-po-modal').style.display = 'none';
+}
+async function loadExpiredPOTable() {
+  const container = document.getElementById('expired-po-table-container');
+  container.innerHTML = '<div style="text-align:center; color:#888;">Loading...</div>';
+  try {
+    const res = await fetch('/api/orders');
+    const orders = await res.json();
+    const expired = orders.filter(po => po.status && po.status.toLowerCase() === 'delayed');
+    if (expired.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:#e74c3c;">No expired POs found.</div>';
+      document.getElementById('expired-pos-count').textContent = 0;
+      document.getElementById('expired-pos-value').textContent = '₹ 0';
+      return;
+    }
+    document.getElementById('expired-pos-count').textContent = expired.length;
+    const totalValue = expired.reduce((sum, po) => sum + Number(po.po_value || po.po_amount || 0), 0);
+    document.getElementById('expired-pos-value').textContent = '₹ ' + totalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+    // MODIFICATION: The 'Status' header is removed from this line.
+    let table = `<table style="width:100%; border-collapse:collapse; font-size:15px;">
+      <thead><tr style="background:#ffeaea; color:#e74c3c;">
+        <th style="padding:8px; border:1px solid #e74c3c;">Order ID</th>
+        <th style="padding:8px; border:1px solid #e74c3c;">Client</th>
+        <th style="padding:8px; border:1px solid #e74c3c;">Company</th>
+        <th style="padding:8px; border:1px solid #e74c3c;">Project</th>
+        <th style="padding:8px; border:1px solid #e74c3c;">PO Number</th>
+        <th style="padding:8px; border:1px solid #e74c3c;">PO Amount</th>
+        <th style="padding:8px; border:1px solid #e74c3c;">PO Expiry Date</th>
+      </tr></thead><tbody>`;
+
+    expired.forEach(po => {
+      // MODIFICATION: The 'Status' data cell is removed from this section.
+      table += `<tr>
+        <td style='padding:8px; border:1px solid #e74c3c;'>${po.order_id}</td>
+        <td style='padding:8px; border:1px solid #e74c3c;'>${po.client_name || ''}</td>
+        <td style='padding:8px; border:1px solid #e74c3c;'>${po.company || ''}</td>
+        <td style='padding:8px; border:1px solid #e74c3c;'>${po.project || ''}</td>
+        <td style='padding:8px; border:1px solid #e74c3c;'>${po.po_number || ''}</td>
+        <td style='padding:8px; border:1px solid #e74c3c;'>₹${Number(po.po_amount || 0).toLocaleString('en-IN')}</td>
+        <td style='padding:8px; border:1px solid #e74c3c;'>${po.po_expiry_date ? new Date(po.po_expiry_date).toLocaleDateString('en-GB') : ''}</td>
+      </tr>`;
+    });
+    table += '</tbody></table>';
+    container.innerHTML = table;
+  } catch (err) {
+    container.innerHTML = '<div style="color:#e74c3c; text-align:center;">Failed to load expired POs.</div>';
+  }
+}
+</script>
+  <h3 style="margin: 20px 0 0;">Jobs Status</h3>
+  <div class="sort-strip-wrapper" style="margin-top: 16px; margin-left: 20px;">
+    <div class="date-strip" id="date-strip">
+      <label>From: <input type="date" id="from-date"></label>
+      <label>To: <input type="date" id="to-date"></label>
+    </div>
+    <button class="sort-btn" onclick="toggleStrip()">Filter <i class="fas fa-filter"></i></button>
+  </div>
+</div>
+        </div>
+      </div>
+
+      
+    <div class="metrics">
+  <a href="{{ url_for('view_orders') }}" style="text-decoration: none; color: inherit;">
+    <div class="metric-box">
+      <i class="fas fa-clipboard-list"></i>
+      <div>Total Jobs<br><strong id="total-jobs">--</strong></div>
+    </div>
+  </a>
+  <a href="{{ url_for('view_orders') }}" style="text-decoration: none; color: inherit;">
+    <div class="metric-box">
+      <i class="fas fa-building"></i>
+      <div>Total Companies<br><strong id="total-companies">--</strong></div>
+    </div>
+  </a>
+  <a href="{{ url_for('clients') }}" style="text-decoration: none; color: inherit;">
+    <div class="metric-box">
+      <i class="fas fa-users"></i>
+      <div>Total Clients<br><strong id="total-clients">--</strong></div>
+    </div>
+  </a>
+  <a href="{{ url_for('report') }}" style="text-decoration: none; color: inherit;">
+    <div class="metric-box">
+      <i class="fas fa-chart-line"></i>
+      <div>Sales Value<br><strong id="total-sales">--</strong></div>
+    </div>
+  </a>
 </div>
 
-<div class="card">
-  <div class="icon"><i class="fas fa-clock"></i></div>
-  <div class="label">Pending Orders</div>
-  <div class="value">3</div>
+      
+      <div class="job-status-panel">
+        <div class="job-status">
+          <div class="status-cards">
+            <div class="status-box open" id="card-open">
+  <h4>Open Jobs</h4>
+  <span id="status-open-value" style="font-size: 0.8rem; color: #127285; font-weight: 500; position: absolute; top: 5px; left: 140px;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">Sales Value</h6>
+  <span id="status-open" style="font-size: 1.4rem; font-weight: 600; color: #000;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">No. of Sales</h6>
+  <img src="{{ url_for('static', filename='assets/open.png') }}" class="status-icon" alt="Open Icon">
 </div>
+
+<div class="status-box in-progress" id="card-in_progress">
+  <h4>In Progress Jobs</h4>
+  <span id="status-in_progress-value" style="font-size: 0.8rem; color: #127285; font-weight: 500; position: absolute; top: 5px; left: 150px;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">Sales Value</h6>
+  <span id="status-in_progress" style="font-size: 1.4rem; font-weight: 600; color: #000;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">No. of Sales</h6>
+  <img src="{{ url_for('static', filename='assets/in-progress.png') }}" class="status-icon" alt="In Progress Icon">
+</div>
+
+<div class="status-box on-hold" id="card-on_hold">
+  <h4>On Hold Jobs</h4>
+  <span id="status-on_hold-value" style="font-size: 0.8rem; color: #127285; font-weight: 500; position: absolute; top: 5px; left: 176px;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">Sales Value</h6>
+  <span id="status-on_hold" style="font-size: 1.4rem; font-weight: 600; color: #000;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">No. of Sales</h6>
+  <img src="{{ url_for('static', filename='assets/on-hold.png') }}" class="status-icon" alt="On Hold Icon">
+</div>
+
+<div class="status-box delayed" id="card-delayed">
+  <h4>Delayed Jobs</h4>
+  <span id="status-delayed-value" style="font-size: 0.8rem; color: #127285; font-weight: 500; position: absolute; top: 5px; left: 148px;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">Sales Value</h6>
+  <span id="status-delayed" style="font-size: 1.4rem; font-weight: 600; color: #000;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">No. of Sales</h6>
+  <img src="{{ url_for('static', filename='assets/delayed.png') }}" class="status-icon" alt="Delayed Icon">
+</div>
+
+<div class="status-box closed" id="card-closed">
+  <h4>Closed Jobs</h4>
+  <span id="status-closed-value" style="font-size: 0.8rem; color: #127285; font-weight: 500; position: absolute; top: 5px; left: 158px;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">Sales Value</h6>
+  <span id="status-closed" style="font-size: 1.4rem; font-weight: 600; color: #000;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">No. of Sales</h6>
+  <img src="{{ url_for('static', filename='assets/closed.png') }}" class="status-icon" alt="Closed Icon">
+</div>
+
+<div class="status-box cancelled" id="card-cancelled">
+  <h4>Cancelled Jobs</h4>
+  <span id="status-cancelled-value" style="font-size: 0.8rem; color: #127285; font-weight: 500; position: absolute; top: 5px; left: 159px;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">Sales Value</h6>
+  <span id="status-cancelled" style="font-size: 1.4rem; font-weight: 600; color: #000;"></span>
+  <h6 style="margin-left: 210px; margin-top: -10px;">No. of Sales</h6>
+  <img src="{{ url_for('static', filename='assets/cancel.png') }}" class="status-icon" alt="Cancelled Icon">
+</div>
+<h5 class="expired-po-row" style="color: rgb(255, 255, 255); font-size: 15px;">
+  <i class="fas fa-clock" style="margin-right: 6px;"></i>
+  No. of Expired PO's:<span id="expired-po-count">--</span>
+  <span style="margin: 0 8px; font-size: 15px;">|</span>
+  PO Value:<span id="expired-po-value">--</span>
+</h5>
+
+          </div>
+          <div class="chart-container">
+            <canvas id="jobChart"></canvas>
+            
+            <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 
 
 
 <script>
-
+  window.currentUserEmail = "{{ email }}";
+</script>
+  <script>
     
-    function resetActive() {
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+     let jobChartInstance = null;
+
+  const centerText = {
+    id: 'centerText',
+    afterDraw: chart => {
+      const { width, height, ctx } = chart;
+      ctx.save();
+      ctx.font = "bold 16px 'SF Pro Dis', sans-serif";
+      ctx.fillStyle = "#333";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      if (chart.data.labels.length === 1 && chart.data.labels[0] === 'No Data') {
+  ctx.fillText("No Data", width / 2, height / 2);
+} else {
+  ctx.fillText("Jobs", width / 2, height / 2 - 10);
+  ctx.fillText("Status", width / 2, height / 2 + 10);
+}
+
+      ctx.restore();
     }
-
-  // Simulate user name (replace with actual session-based logic if needed)
-  const userName = sessionStorage.getItem("userName") || "Team";
-
-  function showDashboard(element) {
-  resetActive();
-  element.classList.add("active");
-
-  document.getElementById("main-content").innerHTML = `
-    <div class="greeting">
-  <h1>{{ greeting }} {{ role }}</h1>
-  <p>Welcome to Sales Order Tracker Portal Dashboard!</p>
-</div>
-
-
-   <div class="cards-dashboard" style="display: flex; gap: 20px; flex-wrap: wrap;">
-  <!-- Total Orders Card -->
-  <div class="card-dashboard" style="cursor: pointer;" onclick="location.href='{{ url_for('view_orders') }}'">
-    <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
-    <div>
-      <div class="card-label">Total Orders</div>
-      <div class="card-value" id="order-count">{{ total_orders }}</div>
-    </div>
-  </div>
-
-      <div class="card-dashboard" onclick="window.location.href='{{ url_for('clients') }}'" style="cursor: pointer;">
-  <div class="card-icon"><i class="fas fa-users"></i></div>
-  <div>
-    <div class="card-label">Total Clients</div>
-    <div class="card-value" id="client-count">{{ total_clients }}</div>
-  </div>
-</div>
-
-
-      <div class="card-dashboard" onclick="showReportSection(document.querySelectorAll('.nav-item')[4])" style="cursor: pointer;">
-  <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-  <div>
-    <div class="card-label">Profit</div>
-    <div class="card-value" id="profit-percentage-value">{{ average_profit }}%</div>
-  </div>
-</div>
-
-      <div class="card-dashboard" onclick="showPendingOrders()" style="cursor: pointer;">
-        <div class="card-icon"><i class="fas fa-clock"></i></div>
-        <div>
-          <div class="card-label">Pending Orders</div>
-          <div class="card-value">3</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="chart-section">
-      <div class="chart-header">
-        <h2>Performance Overview</h2>
-        <div class="filters">
-          <h6>From:</h6>
-          <label><input type="month" id="from-month" /></label>
-          <h6>To:</h6>
-          <label><input type="month" id="to-month" /></label>
-          <button onclick="filterGraph()">Filter</button>
-          <button onclick="downloadChart()">Download</button>
-        </div>
-      </div>
-      <canvas id="performanceChart" style="max-height: 300px; width: 100%;"></canvas>
-    </div>
-  `;
-  renderChart();
-}
-
-
-
-function showTotalClients(element) {
-  resetActive();
-  if (element) element.classList.add("active");
-
-  document.getElementById("main-content").innerHTML = `
-    <div class="header">
-     <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
-        &lt; Total Clients
-      </h1>
-    </div>
-
-    <div class="custom-filter-group">
-      <!-- Company Dropdown -->
-      <div class="custom-dropdown">
-       <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('client-company-dropdown')">
-  Company <i class="fas fa-chevron-down"></i>
-</button>
-        <div class="dropdown-content" id="client-company-dropdown" onclick="event.stopPropagation()">
-          <input type="text" placeholder="🔍 Search here..." oninput="filterClientDropdownItems(this, 'client-company-list')" />
-          <ul id="client-company-list" class="dropdown-list">
-            <li onclick="selectClientFilter('company', 'ABC Pvt Ltd')"><i class="fas fa-history"></i> ABC Pvt Ltd</li>
-            <li onclick="selectClientFilter('company', 'XYZ Enterprises')"><i class="fas fa-history"></i> XYZ Enterprises</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Client Name Dropdown -->
-      <div class="custom-dropdown">
-       <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('client-name-dropdown')">
-  Client Name <i class="fas fa-chevron-down"></i>
-</button>
-        <div class="dropdown-content" id="client-name-dropdown" onclick="event.stopPropagation()">
-          <input type="text" placeholder="🔍 Search here..." oninput="filterClientDropdownItems(this, 'client-name-list')" />
-          <ul id="client-name-list" class="dropdown-list">
-            <li onclick="selectClientFilter('client', 'Rohan')"><i class="fas fa-history"></i> Rohan</li>
-            <li onclick="selectClientFilter('client', 'Meera')"><i class="fas fa-history"></i> Meera</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-container">
-      <table id="client-table">
-        <thead>
-          <tr>
-            <th>Company Name</th>
-            <th>Client Name</th>
-            <th>Email</th>
-            <th>GST ID</th>
-            <th>Billing Address</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>ABC Pvt Ltd</td><td>Rohan</td><td>rohan@example.com</td><td>GST1234ABC</td><td>123 Billing St, Mumbai</td>
-            <td><i class="fas fa-pen edit-icon"></i> <i class="fas fa-trash delete-icon"></i></td>
-          </tr>
-          <tr>
-            <td>XYZ Enterprises</td><td>Meera</td><td>meera@example.com</td><td>GST7890XYZ</td><td>456 Invoice Rd, Delhi</td>
-            <td><i class="fas fa-pen edit-icon"></i> <i class="fas fa-trash delete-icon"></i></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-
-
-function toggleDropdown(id) {
-  document.querySelectorAll('.dropdown-content').forEach(drop => {
-    if (drop.id !== id) drop.style.display = 'none';
-  });
-
-  const dropdown = document.getElementById(id);
-  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-}
-
-// Hide dropdowns on click outside
-window.addEventListener("click", () => {
-  document.querySelectorAll('.dropdown-content').forEach(drop => drop.style.display = 'none');
-});
-
-function selectClientFilter(type, value) {
-  filterClientTableBy(type, value);
-
-  if (type === "company") {
-    document.getElementById("client-company-dropdown").style.display = "none";
-  } else if (type === "client") {
-    document.getElementById("client-name-dropdown").style.display = "none";
-  }
-}
-
-function filterClientTableBy(type, value) {
-  const rows = document.querySelectorAll("#client-table tbody tr");
-  rows.forEach(row => {
-    const company = row.children[0].textContent.toLowerCase();
-    const client = row.children[1].textContent.toLowerCase();
-
-    let match = true;
-    if (type === "company") match = company.includes(value.toLowerCase());
-    if (type === "client") match = client.includes(value.toLowerCase());
-
-    row.style.display = match ? "" : "none";
-  });
-}
-
-function filterClientDropdownItems(input, listId) {
-  const filter = input.value.toLowerCase();
-  const ul = document.getElementById(listId);
-  const items = ul.getElementsByTagName('li');
-
-  for (let i = 0; i < items.length; i++) {
-    const text = items[i].textContent || items[i].innerText;
-    items[i].style.display = text.toLowerCase().includes(filter) ? "" : "none";
-  }
-
-  // Determine type
-  const type = listId.includes('company') ? 'company' : 'client';
-  filterClientTableBy(type, filter);
-}
-
-window.addEventListener("click", function (e) {
-  const isDropdownBtn = e.target.closest(".dropdown-btn");
-  const isDropdownContent = e.target.closest(".dropdown-content");
-
-  if (!isDropdownBtn && !isDropdownContent) {
-    document.querySelectorAll('.dropdown-content').forEach(drop => {
-      drop.style.display = 'none';
-    });
-  }
-});
-
-
-
-/*--------------------------------------------------------
-  -----------------pending-------------------------------*/
-  
-  function showPendingOrders() {
-  resetActive(); // highlight menu if applicable
-
-  document.getElementById("main-content").innerHTML = `
-    <div class="header">
-      <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
-        &lt; Pending Orders
-      </h1>
-    </div>
-
-    <div class="custom-filter-group">
-      <!-- Order ID Dropdown -->
-      <div class="custom-dropdown">
-       <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('order-id-dropdown')">
-      Order ID <i class="fas fa-chevron-down"></i>
-        </button>
-        <div class="dropdown-content" id="order-id-dropdown" onclick="event.stopPropagation()">
-          <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'order-id-list')" />
-          <ul id="order-id-list" class="dropdown-list">
-            <li onclick="selectOrderFilter('1001')"><i class="fas fa-history"></i> 1001</li>
-            <li onclick="selectOrderFilter('1002')"><i class="fas fa-history"></i> 1002</li>
-            <li onclick="selectOrderFilter('0901')"><i class="fas fa-arrow-up"></i> 0901</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Company Dropdown -->
-      <div class="custom-dropdown">
-        <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('company-dropdown')">
-  Company <i class="fas fa-chevron-down"></i>
-</button>
-        <div class="dropdown-content" id="company-dropdown" onclick="event.stopPropagation()">
-          <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'company-list')" />
-          <ul id="company-list" class="dropdown-list">
-            <li onclick="selectCompanyFilter('Tech Solutions')"><i class="fas fa-history"></i> Tech Solutions</li>
-            <li onclick="selectCompanyFilter('GreenTech')"><i class="fas fa-arrow-up"></i> GreenTech</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-container">
-      <table id="pending-orders-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Client name</th>
-            <th>Company</th>
-            <th>Project</th>
-            <th>Assigned To</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1001</td><td>Aryan</td><td>Tech Solutions</td><td>Warehouse Setup</td><td>Rohan</td>
-            <td>
-              <i class="fas fa-pen edit-icon"></i>
-              <i class="fas fa-trash delete-icon"></i>
-            </td>
-          </tr>
-          <tr>
-            <td>1002</td><td>Kriti</td><td>GreenTech</td><td>Interior Design</td><td>Meera</td>
-            <td>
-              <i class="fas fa-pen edit-icon"></i>
-              <i class="fas fa-trash delete-icon"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-function toggleDropdown(id) {
-  document.querySelectorAll('.dropdown-content').forEach(drop => {
-    if (drop.id !== id) drop.style.display = 'none';
-  });
-
-  const dropdown = document.getElementById(id);
-  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-}
-
-function selectOrderFilter(value) {
-  filterPendingTableBy('orderId', value);
-  document.getElementById('order-id-dropdown').style.display = 'none';
-}
-
-function selectCompanyFilter(value) {
-  filterPendingTableBy('company', value);
-  document.getElementById('company-dropdown').style.display = 'none';
-}
-
-function filterPendingTableBy(type, value) {
-  const rows = document.querySelectorAll("#pending-orders-table tbody tr");
-  rows.forEach(row => {
-    const orderId = row.children[0].textContent.toLowerCase();
-    const company = row.children[2].textContent.toLowerCase();
-
-    let match = true;
-    if (type === "orderId") match = orderId.includes(value.toLowerCase());
-    if (type === "company") match = company.includes(value.toLowerCase());
-
-    row.style.display = match ? "" : "none";
-  });
-}
-
-// The missing function you need to add:
-function filterDropdownItems(input, listId) {
-  const filter = input.value.toLowerCase();
-  const ul = document.getElementById(listId);
-  const items = ul.getElementsByTagName('li');
-
-  // Filter dropdown list items
-  for (let i = 0; i < items.length; i++) {
-    const text = items[i].textContent || items[i].innerText;
-    if (text.toLowerCase().includes(filter)) {
-      items[i].style.display = "";
-    } else {
-      items[i].style.display = "none";
-    }
-  }
-    window.addEventListener("click", function (e) {
-  const isDropdownBtn = e.target.closest(".dropdown-btn");
-  const isDropdownContent = e.target.closest(".dropdown-content");
-
-  if (!isDropdownBtn && !isDropdownContent) {
-    document.querySelectorAll('.dropdown-content').forEach(drop => {
-      drop.style.display = 'none';
-    });
-  }
-});
-
-  // Also filter the table based on which dropdown is being filtered
-  // Decide filter type by listId:
-  // If listId includes 'order-id' -> filter by orderId
-  // else if includes 'company' -> filter by company
-
-  let filterType = null;
-  if (listId.includes('order-id')) filterType = 'orderId';
-  else if (listId.includes('company')) filterType = 'company';
-
-  if (filterType) {
-    const rows = document.querySelectorAll("#pending-orders-table tbody tr");
-    rows.forEach(row => {
-      const orderId = row.children[0].textContent.toLowerCase();
-      const company = row.children[2].textContent.toLowerCase();
-
-      let match = true;
-      if (filterType === "orderId") match = orderId.includes(filter);
-      if (filterType === "company") match = company.includes(filter);
-
-      row.style.display = match ? "" : "none";
-    });
-  }
-}
-
-
-/*--------------------------------
-  ---------next part -------------*/
-
-  // Immediately show dashboard on page load
-  window.onload = () => {
-    showDashboard(document.querySelector('.nav-item.active'));
   };
 
+  Chart.register(centerText, ChartDataLabels);
 
-  function resetActive() {
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-  }
+  const chartLabels = ['Open', 'In Progress', 'On Hold', 'Delayed', 'Closed', 'Cancelled'];
+  const chartColors = ['#c0e6c0', '#b0d8f5', '#ffe0c5', '#f8e0a5', '#ddd', '#f5c1c6'];
 
-
- function showAddOrderForm(element) {
-  resetActive();
-  element.classList.add("active");
-  document.getElementById("main-content").innerHTML = `<div id="form-container"></div>`;
-  renderClientTabs("new");
-}
-
-const clients = {
-  "Hell Energy": {
-    clientName: "Hell Energy",
-    companyName: "Hell Energy",
-    email: "hellenergy@mail.com",
-    phone: "9898989898",
-    gst: "1234567890",
-    address: "Mumbai",
-    division: "A&E and PMC",
-    projectName: "Prefeasibility",
-    subContractorName: "Nill",
-    site: "Mumbai"
-  }
-};
-
-let selectedClient = null;
-let formData = {};
-
-function renderClientTabs(activeTab = "new") {
-  document.getElementById("form-container").innerHTML = `
-    <div class="card" style="padding: 20px 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 900px; margin: auto;">
-      <h2 style="margin-bottom: 20px;">Add Client</h2>
-      <div class="tabs" style="display: flex; border-bottom: 1px solid #ddd;">
-        <div class="tab ${activeTab === "new" ? "active" : ""}" onclick="renderClientTabs('new')" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: 600; border-bottom: ${activeTab === "new" ? '3px solid #007980' : 'none'};">New Client</div>
-        <div class="tab ${activeTab === "existing" ? "active" : ""}" onclick="renderClientTabs('existing')" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: 600; border-bottom: ${activeTab === "existing" ? '3px solid #007980' : 'none'};">Existing Client</div>
-      </div>
-      <div id="client-tab-content" style="padding-top: 24px;">
-        ${activeTab === "new" ? renderNewClientFields() : renderExistingClientFields()}
-      </div>
-    </div>
-  `;
-
-  if (activeTab === "new") {
-    setTimeout(() => {
-      document.getElementById("new-client-form").onsubmit = function (e) {
-        e.preventDefault();
-        const data = new FormData(this);
-        const newClient = {};
-        for (let [k, v] of data.entries()) {
-          if (!v.trim()) return alert("All fields are required.");
-          newClient[k] = v.trim();
-        }
-        clients[newClient.clientName] = newClient;
-        selectedClient = clients[newClient.clientName];
-        formData = { ...newClient };
-        renderClientDetailsForm();
-      };
-    }, 10);
-  }
-}
-
-
-function renderNewClientFields() {
-  return `
-    <form id="new-client-form" style="max-width: 700px; margin: 0 auto;">
-      <div class="form-grid" style="margin-top: 20px;">
-        <div>
-          <label for="clientName">Name</label>
-          <input class="input-field" name="clientName" id="clientName" required>
-        </div>
-        <div>
-          <label for="companyName">Company Name</label>
-          <input class="input-field" name="companyName" id="companyName" required>
-        </div>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" class="input-field" name="email" id="email" required>
-        </div>
-        <div>
-          <label for="phone">Phone</label>
-          <input type="tel" class="input-field" name="phone" id="phone" required>
-        </div>
-        <div style="grid-column: span 2;">
-          <label for="address">Address</label>
-          <textarea class="input-field" name="address" id="address" required></textarea>
-        </div>
-        <div style="grid-column: span 2;">
-          <label for="gst">GST NO</label>
-          <input class="input-field" name="gst" id="gst" required>
-        </div>
-      </div>
-
-      <div class="button-group" style="justify-content: flex-end; margin-top: 30px;">
-        <button type="button" class="btn-secondary" onclick="renderClientTabs('existing')">Cancel</button>
-        <button type="submit" class="btn-primary">Save & Proceed</button>
-      </div>
-    </form>
-  `;
-}
-
-function renderExistingClientFields() {
-  return `
-    <div style="min-height: 300px;">
-      <input type="text" id="client-search" class="input-field search-input" placeholder="🔍 Search client..." oninput="filterClients(this.value)">
-      <div id="client-list" class="client-list">
-        ${Object.keys(clients).map(name => `
-          <div class="client-item" onclick="selectClient('${name}')">
-            <span style="margin-right: 8px;">🕘</span>${name}
-          </div>`).join("")}
-      </div>
-      <div id="client-error" style="color: red; font-size: 13px; margin-top: 6px; display: none;">Please select a client.</div>
-      <div class="button-group">
-        <button class="btn-primary" onclick="goToClientDetails()">Next</button>
-      </div>
-    </div>
-  `;
-}
-
-function filterClients(value) {
-  const filtered = Object.keys(clients).filter(c => c.toLowerCase().includes(value.toLowerCase()));
-  const list = document.getElementById("client-list");
-  list.innerHTML = filtered.map(name => `
-    <div class="client-item" onclick="selectClient('${name}')">
-      <span style="margin-right: 8px;">🕘</span>${name}
-    </div>`).join("");
-}
-
-function selectClient(name) {
-  selectedClient = clients[name];
-  document.querySelectorAll(".client-item").forEach(el => el.classList.remove("selected"));
-  [...document.querySelectorAll(".client-item")].find(el => el.textContent.includes(name))?.classList.add("selected");
-  document.getElementById("client-error").style.display = "none";
-}
-
-function goToClientDetails() {
-  if (!selectedClient) {
-    document.getElementById("client-error").style.display = "block";
-    return;
-  }
-  formData = { ...selectedClient };
-  renderClientDetailsForm();
-}
-
-function renderClientDetailsForm() {
-  document.getElementById("form-container").innerHTML = `
-    <div class="card" style="min-height: 450px;">
-      <h2>Client Details</h2>
-      <form id="client-details-form">
-        <div class="form-grid">
-          <div><label>Client Name</label><input class="input-field" name="clientName" value="${formData.clientName}" required></div>
-          <div><label>Division</label><input class="input-field" name="division" value="${formData.division || ''}" required></div>
-          <div><label>Company Name</label><input class="input-field" name="companyName" value="${formData.companyName}" required></div>
-          <div><label>Project Name</label><input class="input-field" name="projectName" value="${formData.projectName || ''}" required></div>
-          <div><label>Sub Contractor Name</label><input class="input-field" name="subContractorName" value="${formData.subContractorName || ''}" required></div>
-          <div style="display: flex; gap: 20px;">
-            <div style="flex: 1;"><label>Start Date</label><input type="date" class="input-field" name="startDate" required></div>
-            <div style="flex: 1;"><label>End Date</label><input type="date" class="input-field" name="endDate" required></div>
-          </div>
-          <div style="grid-column: span 2;"><label>Site</label><input class="input-field" name="site" value="${formData.site || ''}" required></div>
-        </div>
-        <div class="button-group">
-          <button type="button" class="btn-secondary" onclick="renderClientTabs('existing')">Back</button>
-          <button class="btn-primary" type="submit">Next</button>
-        </div>
-      </form>
-    </div>
-  `;
-
-  document.getElementById("client-details-form").onsubmit = function (e) {
-    e.preventDefault();
-    const data = new FormData(this);
-    for (const [k, v] of data.entries()) formData[k] = v.trim();
-    renderPOForm();
-  };
-}
-
-function renderPOForm() {
-  document.getElementById("form-container").innerHTML = `
-    <div class="card" style="min-height: 450px;">
-      <h2>Purchase Order Details</h2>
-      <form id="po-form">
-        <div class="form-grid">
-          <div><label>PO Number</label><input class="input-field" name="poNumber" required></div>
-          <div><label>PO Amount</label><input class="input-field" name="poAmount" required></div>
-          <div><label>Issued By</label><input class="input-field" name="issuedBy" required></div>
-          <div><label>PO Date</label><input type="date" class="input-field" name="poDate" required></div>
-        </div>
-        <div class="button-group">
-          <button type="button" class="btn-secondary" onclick="renderClientDetailsForm()">Back</button>
-          <button class="btn-primary" type="submit">Next</button>
-        </div>
-      </form>
-    </div>
-  `;
-
-  document.getElementById("po-form").onsubmit = function (e) {
-    e.preventDefault();
-    const data = new FormData(this);
-    for (const [k, v] of data.entries()) formData[k] = v.trim();
-    showSummary();
-  };
-}
-
-function showSummary() {
-  document.getElementById("form-container").innerHTML = `
-    <div class="card" style="min-height: 450px; max-width: 1000px; margin: auto; display: flex; flex-direction: column; justify-content: space-between;">
-      <h2 style="margin-bottom: 20px;">Order Summary</h2>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-        <!-- Left Column -->
-        <div>
-          ${renderSummarySection("Client Details", {
-            "Client Name": formData.clientName,
-            "Company Name": formData.companyName,
-            "Email": formData.email,
-            "Phone": formData.phone,
-            "GST": formData.gst,
-            "Address": formData.address
-          })}
-
-          ${renderSummarySection("Project Info", {
-            "Division": formData.division,
-            "Project Name": formData.projectName,
-            "Sub Contractor Name": formData.subContractorName,
-            "Site": formData.site,
-            "Start Date": formData.startDate,
-            "End Date": formData.endDate
-          })}
-        </div>
-
-        <!-- Right Column -->
-        <div>
-          ${renderSummarySection("PO Info", {
-            "PO Number": formData.poNumber,
-            "PO Amount": formData.poAmount,
-            "Issued By": formData.issuedBy,
-            "PO Date": formData.poDate
-          })}
-        </div>
-      </div>
-
-      <div class="button-group" style="margin-top: 30px; justify-content: flex-end;">
-        <button class="btn-secondary" onclick="renderPOForm()">Back</button>
-        <button class="btn-primary" onclick="showConfirmation()">Submit</button>
-      </div>
-    </div>
-  `;
-}
-
-
-function renderSummarySection(title, dataObj) {
-  return `
-    <div style="margin-bottom: 20px;">
-      <h3 style="font-size: 15px; font-weight: 600; color: #444; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 4px;">${title}</h3>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        ${Object.entries(dataObj).map(([label, value]) => `
-          <div style="background: #f9f9f9; padding: 10px 14px; border-radius: 6px; border: 1px solid #e0e0e0;">
-            <div style="font-size: 12px; color: #666;">${label}</div>
-            <div style="font-size: 14px; font-weight: 500;">${value || '-'}</div>
-          </div>
-        `).join("")}
-      </div>
-    </div>
-  `;
-}
-
-function showConfirmation() {
-  document.getElementById("form-container").innerHTML = `
-    <div class="card" style="min-height: 450px;">
-      <h2>Order Confirmation</h2>
-      <table class="confirmation-table">
-        <tbody>
-          ${Object.entries(formData).map(([k, v]) => `<tr><td>${k.replace(/([A-Z])/g, ' $1')}</td><td>${v}</td></tr>`).join("")}
-        </tbody>
-      </table>
-      <div class="success-box">✅ The order has been successfully added and confirmed.</div>
-    </div>
-  `;
-}
-
-/*===============================
-==========View===============*/
- function showSalesOrders(element) {
-  resetActive();
-  element.classList.add("active");
-
-  document.getElementById("main-content").innerHTML = `
-      <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
-        &lt;  View Sales Order
-      </h1>
-
-      <div class="custom-filter-group">
-        <!-- Order ID Dropdown -->
-        <div class="custom-dropdown">
-          <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('order-id-dropdown')">
-            Order ID <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="dropdown-content" id="order-id-dropdown" onclick="event.stopPropagation()">
-            <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'order-id-list')" />
-            <ul id="order-id-list" class="dropdown-list">
-              <li onclick="filterSalesTableBy('orderId', '1031')"><i class="fas fa-history"></i> 1031</li>
-              <li onclick="filterSalesTableBy('orderId', '1032')"><i class="fas fa-arrow-up"></i> 1032</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="custom-dropdown">
-        <!-- Company Dropdown -->
-          <button class="dropdown-btn" onclick="event.stopPropagation(); toggleDropdown('company-dropdown')">
-            Company <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="dropdown-content" id="company-dropdown" onclick="event.stopPropagation()">
-            <input type="text" placeholder="🔍 Search here..." oninput="filterDropdownItems(this, 'company-list')" />
-            <ul id="company-list" class="dropdown-list">
-              <li onclick="filterSalesTableBy('company', 'ABC')"><i class="fas fa-history"></i> ABC</li>
-              <li onclick="filterSalesTableBy('company', 'XYZ Ltd.')"><i class="fas fa-arrow-up"></i> XYZ Ltd.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-wrapper">
-      <table id="sales-order-table" class="sales-order-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Client name</th>
-            <th>Company</th>
-            <th>Project</th>
-            <th>PO Base Value</th>
-            <th>Profit</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-       <tbody>
-  ${[
-    { id: "1031", client: "ABC", company: "ABC", project: "Alpha", po: 2000, profit: 500 },
-    { id: "1032", client: "DEF", company: "XYZ Ltd.", project: "Beta", po: 3500, profit: 700 },
-  ].map(row => `
-    <tr>
-      <td>${row.id}</td>
-      <td>${row.client}</td>
-      <td>${row.company}</td>
-      <td>${row.project}</td>
-      <td>${formatINR(row.po)}</td>
-      <td>${formatINR(row.profit)}</td>
-      <td>
-        <i class="fas fa-pen edit-icon"></i>
-        <i class="fas fa-trash delete-icon"></i>
-      </td>
-    </tr>
-  `).join("")}
-</tbody>
-
-      </table>
-    </div>
-
-    <div class="view-order-actions">
-      <button class="btn-download" onclick="downloadTableCSV('sales-order-table')">
-        <i class="fas fa-download"></i> Download
-      </button>
-      
-    </div>
-  `;
-}
-
-function formatINR(amount) {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 2
-  }).format(amount); // → ₹2,000.00
-}
-
-
-function filterDropdownItems(input, listId) {
-  const filter = input.value.toLowerCase();
-  const ul = document.getElementById(listId);
-  const items = ul.getElementsByTagName('li');
-
-  for (let i = 0; i < items.length; i++) {
-    const text = items[i].textContent || items[i].innerText;
-    items[i].style.display = text.toLowerCase().includes(filter) ? "" : "none";
-  }
-
-  // Auto filter table on input:
-  const type = listId.includes("order-id") ? "orderId" : "company";
-  filterSalesTableBy(type, filter);
-}
-
-function filterSalesTableBy(type, value) {
-  const rows = document.querySelectorAll("#sales-order-table tbody tr");
-  rows.forEach(row => {
-    const orderId = row.children[0].textContent.toLowerCase();
-    const company = row.children[2].textContent.toLowerCase();
-
-    let match = true;
-    if (type === "orderId") match = orderId.includes(value.toLowerCase());
-    if (type === "company") match = company.includes(value.toLowerCase());
-
-    row.style.display = match ? "" : "none";
-  });
-}
-
-
-
-
-function toggleFilterPanel() {
-  const panel = document.querySelector('.filter-panel');
-  panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
-}
-
-function deleteRow(icon) {
-  const row = icon.closest('tr');
-  row.remove();
-}
-
-function editRow(icon) {
-  const row = icon.closest('tr');
-  const cells = row.querySelectorAll('td');
-  for (let i = 0; i < cells.length - 1; i++) {
-    const newValue = prompt(`Edit ${document.querySelectorAll('th')[i].textContent}`, cells[i].textContent);
-    if (newValue !== null) {
-      cells[i].textContent = newValue;
-    }
-  }
-}
-
-
-function toggleDropdown(id, iconId) {
-  document.querySelectorAll('.dropdown-content').forEach(drop => {
-    if (drop.id !== id) drop.style.display = 'none';
-  });
-
-  const dropdown = document.getElementById(id);
-  const icon = document.getElementById(iconId);
-
-  const isOpen = dropdown.style.display === 'block';
-  dropdown.style.display = isOpen ? 'none' : 'block';
-
-  // Toggle the icon
-  if (icon) {
-    icon.classList.remove(isOpen ? 'fa-chevron-up' : 'fa-chevron-down');
-    icon.classList.add(isOpen ? 'fa-chevron-down' : 'fa-chevron-up');
-  }
-
-  // Reset other icons
-  document.querySelectorAll('.dropdown-btn i.fas').forEach(i => {
-    if (i.id !== iconId) {
-      i.classList.remove('fa-chevron-up');
-      i.classList.add('fa-chevron-down');
-    }
-  });
-}
-
-
-function downloadTableCSV(tableId) {
-  const table = document.getElementById(tableId);
-  let csv = [];
-  const rows = table.querySelectorAll("tr");
-
-  for (let row of rows) {
-    const cols = row.querySelectorAll("td, th");
-    const data = Array.from(cols).map(col => `"${col.innerText.trim()}"`);
-    csv.push(data.join(","));
-  }
-
-  // Add BOM to fix encoding in Excel
-  const BOM = "\uFEFF";
-  const blob = new Blob([BOM + csv.join("\n")], { type: "text/csv;charset=utf-8;" });
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "sales_orders.csv";
-  link.click();
-}
-
-
-
-
-function updateCardIcon(cardElement) {
-  const icon = cardElement.querySelector(".card-icon i");
-  // Change the icon class (example: toggle to a checkmark)
-  if (icon.classList.contains("fa-clipboard-list")) {
-    icon.classList.remove("fa-clipboard-list");
-    icon.classList.add("fa-check-circle");
-  } else {
-    icon.classList.remove("fa-check-circle");
-    icon.classList.add("fa-clipboard-list");
-  }
-}
-
-  function showComingSoon(element) {
-    resetActive();
-    element.classList.add('active');
-    document.getElementById("main-content").innerHTML = `
-      <h1>Coming Soon!</h1>
-      <p>This feature is under development.</p>
-    `;
-  }
-
-  function logout() {
-    window.location.href = "login.html";
-  }
-
-
-function showReportSection(element) {
-  resetActive();
-  element.classList.add("active");
-
-  document.getElementById("main-content").innerHTML = `
-    <h1>Reports</h1>
-    
-    <div class="chart-section">
-      <div class="chart-header">
-        <h2>Performance Overviews</h2>
-        <div class="filters">
-          <label><input type="month" id="from-month"/></label>
-          <label><input type="month" id="to-month" /></label>
-          <button onclick="filterGraph()">Filter</button>
-          <button onclick="downloadChart()">Download</button>
-        </div>
-      </div>
-      <canvas id="performanceChart" style="max-height: 400px;"></canvas>
-      <div id="no-data-message" style="display: none; text-align: center; margin-top: 20px;">
-  <h2 class="no-data-effect">🚫 No Data Found 🚫</h2>
-</div>
-    </div>
-  `;
-  renderChart();
-}
-
-// Dummy chart renderer
-let currentChart = null;
-
-function renderChart() {
-  fetch('/api/chart-data')
-    .then(response => response.json())
-    .then(data => {
-      const ctx = document.getElementById('performanceChart')?.getContext('2d');
-      if (!ctx) {
-        console.error("Canvas with id 'performanceChart' not found.");
-        return;
-      }
-
-      if (currentChart) {
-        currentChart.destroy();
-      }
-
-      // Combine and sort by end_date (just in case backend didn’t)
-      const combined = data.end_dates.map((date, i) => ({
-        date,
-        percentage: data.percentages[i],
-        timestamp: Date.parse(date)
-      })).sort((a, b) => a.timestamp - b.timestamp);
-
-      const sortedLabels = combined.map(item =>
-  new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
-);  
-      const sortedValues = combined.map(item => item.percentage);
-
-      // Gradient fill for the line
-      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-      gradient.addColorStop(0, 'rgba(18, 114, 133, 0.4)');
-      gradient.addColorStop(1, 'rgba(18, 114, 133, 0.05)');
-
-      currentChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: sortedLabels,
-          datasets: [
-            {
-              type: 'bar',
-              label: 'Bar Graph',
-              data: sortedValues,
-              backgroundColor: '#127285',
-              yAxisID: 'y',
-              order: 2,
-              barPercentage: 0.7,       // Default is 0.9. Lower = thinner bars
-              categoryPercentage: 0.7   // Controls space between bars
-
-            },
-            {
-              type: 'line',
-              label: 'Line Graph',
-              data: sortedValues,
-              borderColor: '#ffa500',
-              backgroundColor: gradient,
-              fill: true,
-              tension: 0,
-              pointBackgroundColor: '#ffa500',
-              pointBorderColor: '#ffa500',
-              pointRadius: 2,
-              pointHoverRadius: 7,
-              yAxisID: 'y',
-              order: 1
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          layout: {
-            padding: { top: 20, bottom: 20, left: 10, right: 10 }
-          },
-          scales: {
-  x: {
-    title: {
-      display: true,
-      text: 'Timeframe',
-      color: '#000', // ✅ X-axis title color
-      font: {
-        size: 14,
-        weight: 'bold',
-        family: 'Inter'
-      }
-    },
-    ticks: {
-      color: '#000', // ✅ X-axis ticks color
-      font: {
-        size: 12,
-        family: 'Inter'
-      }
-    },
-    grid: {
-      color: '#eee' // optional: grid line color
-    }
-  },
-  y: {
-    beginAtZero: true,
-    title: {
-      display: true,
-      text: 'Profit %',
-      color: '#000', // ✅ Y-axis title color
-      font: {
-        size: 14,
-        weight: 'bold',
-        family: 'Inter'
-      }
-    },
-    ticks: {
-      color: '#000', // ✅ Y-axis ticks color
-      stepSize: 5
-    },
-    grid: {
-      color: '#eee'
-    }
-            }
-          },
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: '#127285',
-                font: { weight: '600' }
-              }
-            },
-            tooltip: {
-              backgroundColor: '#fff',
-              titleColor: '#127285',
-              bodyColor: '#333',
-              borderColor: '#ccc',
-              borderWidth: 1,
-              padding: 10,
-              callbacks: {
-                label: function (context) {
-                  return `Profit: ${context.formattedValue}%`;
-                }
-              }
-            }
-          }
-        }
-      });
-    })
-    .catch(error => {
-      console.error('Error rendering chart:', error);
-    });
-}
-
-
-
-function downloadChart() {
-  html2canvas(document.getElementById("performanceChart")).then(canvas => {
-    const imgData = canvas.toDataURL("image/png");
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-    pdf.addImage(imgData, "PNG", 10, 10, 180, 90);
-    pdf.save("report-chart.pdf");
-  });
-}
-
-function filterGraph() {
-  const fromMonth = document.getElementById("from-month").value;
-  const toMonth = document.getElementById("to-month").value;
-
-  let url = '/api/chart-data';
-  if (fromMonth && toMonth) {
-    url += `?from=${fromMonth}-01&to=${toMonth}-31`;
-  }
-
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const ctx = document.getElementById('performanceChart')?.getContext('2d');
-      if (!ctx) return;
-
-      if (currentChart) currentChart.destroy();
-
-      const combined = data.end_dates.map((date, i) => ({
-        date,
-        percentage: data.percentages[i],
-        timestamp: Date.parse(date)
-      })).sort((a, b) => a.timestamp - b.timestamp);
-
-      const sortedLabels = combined.map(item =>
-        new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
-      );
-      const sortedValues = combined.map(item => item.percentage);
-
-      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-      gradient.addColorStop(0, 'rgba(18, 114, 133, 0.4)');
-      gradient.addColorStop(1, 'rgba(18, 114, 133, 0.05)');
-
-      currentChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: sortedLabels,
-          datasets: [
-            {
-              type: 'bar',
-              label: 'Bar Graph',
-              data: sortedValues,
-              backgroundColor: '#127285',
-              yAxisID: 'y',
-              order: 2,
-              barPercentage: 0.7,
-              categoryPercentage: 0.7
-            },
-            {
-              type: 'line',
-              label: 'Line Graph',
-              data: sortedValues,
-              borderColor: '#ffa500',
-              backgroundColor: gradient,
-              fill: true,
-              tension: 0,
-              pointBackgroundColor: '#ffa500',
-              pointBorderColor: '#ffa500',
-              pointRadius: 2,
-              pointHoverRadius: 7,
-              yAxisID: 'y',
-              order: 1
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          layout: { padding: { top: 20, bottom: 20, left: 10, right: 10 } },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Timeframe',
-                color: '#000',
-                font: { size: 14, weight: 'bold', family: 'Inter' }
-              },
-              ticks: { color: '#000', font: { size: 12, family: 'Inter' } },
-              grid: { color: '#eee' }
-            },
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Profit %',
-                color: '#000',
-                font: { size: 14, weight: 'bold', family: 'Inter' }
-              },
-              ticks: { color: '#000', stepSize: 5 },
-              grid: { color: '#eee' }
-            }
-          },
-          plugins: {
-            legend: {
-              display: true,
-              labels: { color: '#127285', font: { weight: '600' } }
-            },
-            tooltip: {
-              backgroundColor: '#fff',
-              titleColor: '#127285',
-              bodyColor: '#333',
-              borderColor: '#ccc',
-              borderWidth: 1,
-              padding: 10,
-              callbacks: {
-                label: function (context) {
-                  return `Profit: ${context.formattedValue}%`;
-                }
-              }
-            }
-          }
-        }
-      });
-    })
-    .catch(error => {
-      console.error("Error filtering chart:", error);
-    });
-}
-
-
-
-function showReportSection(element) {
-  resetActive();
-  element.classList.add("active");
-
-  document.getElementById("main-content").innerHTML = `
-    
-    <h1 class="back-header" onclick="showDashboard(document.querySelector('.nav-item:nth-child(1)'))">
-        &lt;  Order Report
-      </h1>
-    <div class="report-section">
-
-      <div class="report-card">
-        <h3>Client Order Timeline</h3>
-        <select>
-          <option>Latest First</option>
-          <option>Oldest First</option>
-          <option>Recently Updated</option>
-        </select>
-        <div class="timeline">
-          <div class="timeline-entry pending">
-            <h4>Project Name</h4>
-            <p>June 2, 2025</p>
-            <p>Order ID</p>
-            <p>Company Name</p>
-          </div>
-          <div class="timeline-entry processing">
-            <h4>Project Name</h4>
-            <p>June 2, 2025</p>
-            <p>Order ID</p>
-            <p>Company Name</p>
-          </div>
-          <div class="timeline-entry shipped">
-            <h4>Project Name</h4>
-            <p>June 2, 2025</p>
-            <p>Order ID</p>
-            <p>Company Name</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="report-card">
-        <h3>Orders by Status Type</h3>
-        <select>
-          <option>This Month</option>
-          <option>Today</option>
-          <option>This Week</option>
-          <option>This Year</option>
-          <option>Custom Date</option>
-        </select>
-        <div class="status-chart-container">
-          <canvas id="statusChart"></canvas>
-        </div>
-        <div class="status-legend">
-          <span><span class="dot dot-pending"></span>Pending Order</span>
-          <span><span class="dot dot-processing"></span>Processing Order</span>
-          <span><span class="dot dot-shipped"></span>Shipped Order</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-actions">
-      <button class="btn-download">📥 Download Report</button>
-      <button class="btn-share">📤 Share</button>
-    </div>
-  `;
-
-  renderDonutChart(); // You’ll need to define this
-}
-
-
-function renderDonutChart() {
-  const ctx = document.getElementById('statusChart').getContext('2d');
-  new Chart(ctx, {
+  const chartConfig = {
     type: 'doughnut',
     data: {
-      labels: ['Pending Order', 'Processing Order', 'Shipped Order'],
+      labels: chartLabels,
       datasets: [{
-        data: [13, 25, 63],
-        backgroundColor: ['#f28e8e', '#f5d97d', '#7edc94'],
-        borderWidth: 1
+        data: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01], // fallback initial values
+        backgroundColor: chartColors,
+        borderWidth: 0
       }]
     },
     options: {
+      cutout: '50%',
       responsive: true,
-      cutout: '60%',
       plugins: {
         legend: { display: false },
-        tooltip: { enabled: true }
+        datalabels: {
+          color: '#333',
+          font: { weight: 'bold', size: 14 },
+       formatter: (value, context) => {
+  const raw = context.chart.config.options.plugins.datalabels.rawCounts || [];
+  const index = context.dataIndex;
+  const total = raw.reduce((a, b) => a + b, 0);
+  const count = raw[index] || 0;
+
+  if (count === 0 || total === 0) return '';  // ✅ hide 0%
+  const percent = (count / total) * 100;
+  return `${percent.toFixed(1)}% (${count})`;
+
+}
+        }
       }
+    },
+    plugins: [centerText]
+  };
+
+  function createJobChart() {
+    const ctx = document.getElementById('jobChart').getContext('2d');
+    jobChartInstance = new Chart(ctx, chartConfig);
+  }
+
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadExpiredPOTable();
+});
+
+function loadPoExpiryData() {
+    const card = document.getElementById('poExpiryCardContent');
+    const wasHidden = card && card.style.display === 'none';
+    
+    if (wasHidden) card.style.display = 'block'; // Show temporarily
+
+    fetch('/get-po-expiry-details')
+        .then(response => response.json())
+        .then(data => {
+            const expiryElem = document.getElementById('po-expiry-count');
+            const totalElem = document.getElementById('po-total-count');
+            if (expiryElem && totalElem) {
+                expiryElem.textContent = data.expiring_soon;
+                totalElem.textContent = data.total_orders;
+            }
+        })
+        .catch(err => console.error("Error loading PO Expiry data:", err))
+        .finally(() => {
+            if (wasHidden && card) card.style.display = 'none'; // Re-hide if it was hidden
+        });
+}
+
+  function updateJobChart() {
+    fetch("/api/job-status-metrics")
+      .then(res => res.json())
+      .then(data => {
+        const rawValues = [
+          data.open,
+          data.in_progress,
+          data.on_hold,
+          data.delayed,
+          data.closed,
+          data.cancelled
+        ];
+        // Store raw values for accurate label calculation
+        chartConfig.originalValues = [...rawValues];
+        // Replace zeros with small slice values (0.01) for visibility
+        const adjustedData = rawValues.map(v => v === 0 ? 0.01 : v);
+        jobChartInstance.data.datasets[0].data = adjustedData;
+        jobChartInstance.update();
+      })
+      .catch(err => console.error("Failed to update chart data:", err));
+  }
+
+  // Init chart on load
+  createJobChart();
+  updateJobChart();
+
+  setInterval(updateJobChart, 100);
+
+ document.querySelector('.download-btn').addEventListener('click', async () => {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  // 1. Get date filters (if any)
+  const from = document.getElementById('from-date')?.value;
+  const to = document.getElementById('to-date')?.value;
+  const dateQuery = (from && to) ? `&from=${from}&to=${to}` : "";
+
+  // 2. Capture chart as image
+  const chartCanvas = document.getElementById("jobChart");
+  const chartImage = chartCanvas.toDataURL("image/png");
+  const chartWidth = 100;
+  const rupee = "₹";
+
+  const chartAspectRatio = chartCanvas.width / chartCanvas.height;
+  const chartHeight = chartWidth / chartAspectRatio;
+
+  // 3. Add chart image to PDF
+pdf.setFont("helvetica", "normal"); // ✅ Add this line to support ₹ symbol
+pdf.setFontSize(16);
+pdf.text("Job Status Report", 15, 20);
+
+ const chartX = (pdf.internal.pageSize.getWidth() - chartWidth) / 2; // ✅ center X
+pdf.addImage(chartImage, 'PNG', chartX, 25, chartWidth, chartHeight);
+
+
+  // 4. Fetch and insert each job status section
+  const statuses = [
+    { label: "Open", key: "open" },
+    { label: "In Progress", key: "in_progress" },
+    { label: "On Hold", key: "on_hold" },
+    { label: "Delayed", key: "delayed" },
+    { label: "Closed", key: "closed" },
+    { label: "Cancelled", key: "cancelled" },
+  ];
+
+  let yOffset = 25 + chartHeight + 10;
+
+  for (const status of statuses) {
+    const response = await fetch(`/api/jobs-by-status?status=${status.label}${dateQuery}`);
+    const jobs = await response.json();
+
+    if (jobs.length > 0) {
+      const tableRows = jobs.map(job => [
+        job.id,
+        job.client,
+        job.company,
+        job.project,
+      'Rs. ' + Number(job.po_amount).toLocaleString("en-IN", { maximumFractionDigits: 0 }),
+        job.status,
+        job.issued_by
+      ]);
+
+      pdf.setFontSize(13);
+      pdf.text(`${status.label} Jobs (${jobs.length})`, 15, yOffset);
+
+      pdf.autoTable({
+        startY: yOffset + 5,
+        head: [['Order ID', 'Client', 'Company', 'Project', 'PO Amount', 'Status', 'Issued By']],
+        body: tableRows,
+        styles: {
+          fontSize: 9,
+          halign: 'center',
+          valign: 'middle'
+        },
+        headStyles: {
+          fillColor: [18, 114, 133],
+          halign: 'center',
+          valign: 'middle'
+        },
+        theme: 'striped',
+        margin: { left: 15, right: 15 },
+        didDrawPage: (data) => {
+          yOffset = data.cursor.y + 10;
+        }
+      });
     }
+  }
+
+  pdf.save("Job-Status-Report.pdf");
+});
+
+
+
+document.getElementById('jobChart').addEventListener('mousemove', function (evt) {
+  const points = jobChartInstance.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+
+  // Remove existing highlight
+  document.querySelectorAll('.status-box').forEach(box => box.classList.remove('highlight-card'));
+
+  if (points.length) {
+    const index = points[0].index;
+    const statusMap = ['open', 'in_progress', 'on_hold', 'delayed', 'closed', 'cancelled'];
+    const statusKey = statusMap[index];
+    const card = document.getElementById(`card-${statusKey}`);
+    if (card) card.classList.add('highlight-card');
+  }
+});
+
+document.getElementById('jobChart').addEventListener('mouseleave', function () {
+  // Remove highlight when mouse leaves chart
+  document.querySelectorAll('.status-box').forEach(box => box.classList.remove('highlight-card'));
+});
+
+/* Date */
+function getDateParams() {
+  const from = document.getElementById('from-date').value;
+  const to = document.getElementById('to-date').value;
+  const params = new URLSearchParams();
+  if (from && to) {
+    params.append("from", from);
+    params.append("to", to);
+  }
+  return params.toString();
+}
+
+/* Dashboard Metrics */
+function updateDashboardMetrics() {
+  const query = getDateParams();
+  fetch("/api/dashboard-metrics?" + query)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('total-jobs').textContent = (data.total_jobs ?? 0);
+      document.getElementById('total-companies').textContent = (data.total_companies ?? 0);
+      document.getElementById('total-clients').textContent = (data.total_clients ?? 0);
+
+      const sales = Number(data.total_sales_value);
+      document.getElementById('total-sales').textContent = isNaN(sales)
+        ? '₹0'
+        : '₹' + sales.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    })
+    .catch(err => {
+      console.error("Error fetching dashboard metrics:", err);
+      document.getElementById('total-jobs').textContent = 0;
+      document.getElementById('total-companies').textContent = 0;
+      document.getElementById('total-clients').textContent = 0;
+      document.getElementById('total-sales').textContent = '₹0';
+    });
+}
+
+
+
+// Load once on page load
+updateDashboardMetrics();
+// Refresh every 10 seconds
+setInterval(updateDashboardMetrics, 10000);
+
+/* Job status Metrics */
+function updateJobStatusMetrics() {
+  const from = document.getElementById('from-date')?.value;
+  const to = document.getElementById('to-date')?.value;
+
+  const params = new URLSearchParams();
+  if (from && to) {
+    params.append("from", from);
+    params.append("to", to);
+  }
+
+  fetch(`/api/job-status-metrics?${params.toString()}`)
+    .then(res => res.json())
+    .then(data => {
+      const statuses = [
+        { key: 'open', label: 'Open' },
+        { key: 'in_progress', label: 'In Progress' },
+        { key: 'on_hold', label: 'On Hold' },
+        { key: 'delayed', label: 'Delayed' },
+        { key: 'closed', label: 'Closed' },
+        { key: 'cancelled', label: 'Cancelled' }
+      ];
+
+      statuses.forEach(status => {
+        // Value
+        const valueSpan = document.getElementById(`status-${status.key}-value`);
+        if (valueSpan) {
+          valueSpan.innerHTML =
+            data[`${status.key}_value`] !== undefined && data[`${status.key}_value`] !== null
+              ? `<span style="font-size:1.0rem; font-weight:700; color:#127285;"></span>
+                 <span style="font-size:1.0rem; font-weight:700; color:#127285; margin-left:4px;">
+                  ₹ ${Number(data[`${status.key}_value`]).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                 </span>`
+              : '--';
+        }
+        // Count
+        const countSpan = document.getElementById(`status-${status.key}`);
+        if (countSpan) {
+          countSpan.textContent = data[status.key];
+        }
+      });
+
+      // Chart update logic (unchanged)
+      const rawCounts = [
+        data.open,
+        data.in_progress,
+        data.on_hold,
+        data.delayed,
+        data.closed,
+        data.cancelled
+      ];
+
+      const total = rawCounts.reduce((a, b) => a + b, 0);
+
+      if (total === 0) {
+        jobChartInstance.data.labels = ['No Data'];
+        jobChartInstance.data.datasets[0].data = [1];
+        jobChartInstance.data.datasets[0].backgroundColor = ['#f5f5f5'];
+        jobChartInstance.data.datasets[0].borderColor = ['#127285'];
+        jobChartInstance.data.datasets[0].borderWidth = 2;
+        jobChartInstance.options.plugins.datalabels.display = false;
+        jobChartInstance.update();
+      } else {
+        const filteredLabels = ['Open', 'In Progress', 'On Hold', 'Delayed', 'Closed', 'Cancelled'];
+        const filteredColors = ['#c0e6c0', '#b0d8f5', '#ffe0c5', '#f8e0a5', '#ddd', '#f5c1c6'];
+
+        jobChartInstance.data.labels = filteredLabels;
+        jobChartInstance.data.datasets[0].backgroundColor = filteredColors;
+        jobChartInstance.data.datasets[0].borderColor = [];
+        jobChartInstance.data.datasets[0].borderWidth = 0;
+        jobChartInstance.options.plugins.datalabels.display = true;
+
+        jobChartInstance.config.options.plugins.datalabels.rawCounts = [...rawCounts];
+        const adjusted = rawCounts.map((c) => c === 0 ? 0 : c);
+        jobChartInstance.data.datasets[0].data = adjusted;
+        jobChartInstance.update();
+      }
+    });
+}
+
+// Call both metric functions on load
+updateDashboardMetrics();
+updateJobStatusMetrics();
+
+// Refresh both every 10 seconds
+setInterval(updateDashboardMetrics, 10000);
+setInterval(updateJobStatusMetrics, 10000);
+
+function toggleStrip() {
+  const strip = document.getElementById('date-strip');
+  const fromInput = document.getElementById('from-date');
+  const toInput = document.getElementById('to-date');
+
+  // If it's already visible (second click)
+  if (strip.classList.contains('show')) {
+    strip.classList.remove('show');             // hide strip
+    fromInput.value = "";                        // clear date fields
+    toInput.value = "";
+    updateDashboardMetrics();                    // reset to overall data
+    updateJobStatusMetrics();
+    updateExpiredPOMetricCard(); // <-- update on filter change
+  } else {
+    strip.classList.add('show');                 // show strip
+  }
+}
+
+document.getElementById('from-date').addEventListener('change', () => {
+  updateDashboardMetrics();
+  updateJobStatusMetrics();
+  updateExpiredPOMetricCard();
+});
+
+document.getElementById('to-date').addEventListener('change', () => {
+  updateDashboardMetrics();
+  updateJobStatusMetrics();
+  updateExpiredPOMetricCard();
+});
+function toggleStrip() {
+  const strip = document.getElementById('date-strip');
+  const fromInput = document.getElementById('from-date');
+  const toInput = document.getElementById('to-date');
+  if (strip.classList.contains('show')) {
+    strip.classList.remove('show');
+    fromInput.value = "";
+    toInput.value = "";
+    updateDashboardMetrics();
+    updateJobStatusMetrics();
+    updateExpiredPOMetricCard(); 
+  } else {
+    strip.classList.add('show');
+  }
+}
+document.getElementById('from-date').addEventListener('change', () => {
+  updateDashboardMetrics();
+  updateJobStatusMetrics();
+  updateExpiredPOMetricCard();
+});
+document.getElementById('to-date').addEventListener('change', () => {
+  updateDashboardMetrics();
+  updateJobStatusMetrics();
+  updateExpiredPOMetricCard();
+});
+function toggleStrip() {
+  const strip = document.getElementById('date-strip');
+  const fromInput = document.getElementById('from-date');
+  const toInput = document.getElementById('to-date');
+  if (strip.classList.contains('show')) {
+    strip.classList.remove('show');
+    fromInput.value = "";
+    toInput.value = "";
+    updateDashboardMetrics();
+    updateJobStatusMetrics();
+    updateExpiredPOMetricCard(); 
+  } else {
+    strip.classList.add('show');
+  }
+}
+document.getElementById('from-date').addEventListener('change', () => {
+  updateDashboardMetrics();
+  updateJobStatusMetrics();
+  updateExpiredPOMetricCard();
+});
+document.getElementById('to-date').addEventListener('change', () => {
+  updateDashboardMetrics();
+  updateJobStatusMetrics();
+  updateExpiredPOMetricCard();
+});
+function updateExpiredPOStats(poList) {
+  let expiredCount = 0;
+  let expiredValue = 0;
+
+  poList.forEach(po => {
+    if (po.status && po.status.toLowerCase() === 'delayed') {
+      expiredCount++;
+      expiredValue += Number(po.po_value || 0);
+    }
+  });
+
+  // Update DOM
+  document.getElementById("expired-po-count").innerText = expiredCount;
+  document.getElementById("expired-po-value").innerText = expiredValue.toLocaleString("en-IN");
+}
+
+
+
+/* Ping and session check (unchanged) */
+setInterval(() => {
+  fetch("/api/ping", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ page: window.location.pathname })
+  });
+}, 1000); // every 30 seconds
+
+setInterval(() => {
+  fetch('/api/check-session')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.valid) {
+        // 🔁 Redirect immediately to your Flask logout route
+        window.location.href = '/logout';
+      }
+    })
+    .catch(err => {
+      console.error("Session check error", err);
+    });
+}, 1000);
+
+
+
+// Show/hide share modal
+document.getElementById('share-expired-po-btn').onclick = function() {
+  document.getElementById('share-po-modal').style.display = 'flex';
+  document.getElementById('share-po-status').style.display = 'none';
+  // When the modal opens, fetch the user emails
+  populateEmailDropdown();
+};
+
+function closeSharePOModal() {
+  document.getElementById('share-po-modal').style.display = 'none';
+}
+
+const emailInput = document.getElementById('recipient-emails');
+const emailTags = document.getElementById('email-tags');
+const emailDropdown = document.getElementById('email-dropdown-list');
+let emails = [];
+let allUserEmails = []; // To store the fetched list of all users
+
+// Function to fetch all user emails from the backend
+async function populateEmailDropdown() {
+    try {
+        const response = await fetch('/api/get-all-user-emails');
+        allUserEmails = await response.json();
+        filterEmailDropdown(); // Initially show all users
+    } catch (error) {
+        console.error('Failed to fetch user emails:', error);
+    }
+}
+
+// Function to filter and display the dropdown based on input
+function filterEmailDropdown() {
+    const filter = emailInput.value.toLowerCase();
+    emailDropdown.innerHTML = '';
+    const filteredEmails = allUserEmails.filter(email => 
+        email.toLowerCase().includes(filter) && !emails.includes(email)
+    );
+
+    if (filteredEmails.length > 0) {
+        filteredEmails.forEach(email => {
+            const item = document.createElement('div');
+            item.textContent = email;
+            item.onclick = () => {
+                addEmailTag(email);
+            };
+            emailDropdown.appendChild(item);
+        });
+        emailDropdown.style.display = 'block';
+    } else {
+        emailDropdown.style.display = 'none';
+    }
+}
+
+emailInput.addEventListener('keyup', filterEmailDropdown);
+emailInput.addEventListener('focus', filterEmailDropdown);
+
+// Close dropdown if clicked outside
+document.addEventListener('click', function(event) {
+    if (!emailInput.contains(event.target) && !emailDropdown.contains(event.target)) {
+        emailDropdown.style.display = 'none';
+    }
+});
+
+// Add email tag logic (handles both typing and clicking)
+function addEmailTag(emailValue) {
+    const val = emailValue.trim();
+    if (val && validateEmail(val) && !emails.includes(val)) {
+        emails.push(val);
+        renderEmailTags();
+    }
+    emailInput.value = '';
+    emailDropdown.style.display = 'none';
+}
+
+emailInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        addEmailTag(emailInput.value);
+    }
+});
+
+function renderEmailTags() {
+  emailTags.innerHTML = '';
+  emails.forEach(email => {
+    const tag = document.createElement('span');
+    tag.textContent = email;
+    tag.style = "background:#e74c3c;color:white;padding:4px 10px;border-radius:12px;font-size:14px;display:inline-flex;align-items:center;gap:6px;";
+    const remove = document.createElement('span');
+    remove.innerHTML = '×';
+    remove.style = "margin-left:6px;cursor:pointer;font-weight:bold;";
+    remove.onclick = () => {
+      emails = emails.filter(e => e !== email);
+      renderEmailTags();
+    };
+    tag.appendChild(remove);
+    emailTags.appendChild(tag);
   });
 }
 
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Send PDF logic (remains the same)
+document.getElementById('send-po-btn').onclick = async function() {
+    // ... your existing send PDF logic here ...
+    const statusDiv = document.getElementById('share-po-status');
+    statusDiv.style.display = 'none';
+    const sendMyself = document.getElementById('send-copy-myself').checked;
+    let recipientList = [...emails];
+
+    if (sendMyself && window.currentUserEmail && !recipientList.includes(window.currentUserEmail)) {
+        recipientList.push(window.currentUserEmail);
+    }
+
+    if (recipientList.length === 0) {
+        statusDiv.textContent = "Please enter at least one recipient email or check 'Send a copy to myself'.";
+        statusDiv.style.display = 'block';
+        return;
+    }
+
+    statusDiv.textContent = "Sending...";
+    statusDiv.style.display = 'block';
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(16);
+    pdf.text("Expired Purchase Orders", 15, 20);
+
+    const table = document.querySelector('#expired-po-table-container table');
+    if (!table) {
+        statusDiv.textContent = "No expired PO data to send.";
+        return;
+    }
+
+    pdf.autoTable({
+        startY: 28,
+        html: table,
+        styles: { fontSize: 10, halign: 'center', valign: 'middle' },
+        headStyles: { fillColor: [231, 76, 60], halign: 'center', valign: 'middle' },
+        theme: 'striped',
+        margin: { left: 15, right: 15 }
+    });
+
+    const pdfBlob = pdf.output('blob');
+    const formData = new FormData();
+    formData.append('recipients', JSON.stringify(recipientList));
+    formData.append('pdf', pdfBlob, 'ExpiredPOs.pdf');
+
+    fetch('/api/send-expired-po-pdf', { method: 'POST', body: formData })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            statusDiv.textContent = "Sent successfully!";
+            statusDiv.style.color = "#e74c3c";
+            setTimeout(closeSharePOModal, 1200);
+        } else {
+            statusDiv.textContent = "Failed to send. Try again.";
+            statusDiv.style.color = "#e74c3c";
+        }
+    })
+    .catch(() => {
+        statusDiv.textContent = "Error sending email.";
+        statusDiv.style.color = "#e74c3c";
+    });
+};
+
+// --- END: New Share Modal Logic ---
+
+// You must set window.currentUserEmail from your backend (Flask) via Jinja
+// Example: <script>window.currentUserEmail = "{{ user_email }}";</script>
+
+
+ <script>
+function updateExpiredPOMetricCard() {
+  fetch('/api/orders')
+    .then(res => res.json())
+    .then(orders => {
+      const expired = orders.filter(po => po.status && po.status.toLowerCase() === 'delayed');
+      // Update top metric card
+      const topCount = document.getElementById('expired-pos-count');
+      const topValue = document.getElementById('expired-pos-value');
+      // Update row below status cards
+      const rowCount = document.getElementById('expired-po-count');
+      const rowValue = document.getElementById('expired-po-value');
+      const totalValue = expired.reduce((sum, po) => sum + Number(po.po_value || po.po_amount || 0), 0);
+      if (topCount) topCount.textContent = expired.length;
+      if (topValue) topValue.textContent = '₹ ' + totalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+      if (rowCount) rowCount.textContent = expired.length;
+      if (rowValue) rowValue.textContent = '₹ ' + totalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    })
+    .catch(() => {
+      const topCount = document.getElementById('expired-pos-count');
+      const topValue = document.getElementById('expired-pos-value');
+      const rowCount = document.getElementById('expired-po-count');
+      const rowValue = document.getElementById('expired-po-value');
+      if (topCount) topCount.textContent = 0;
+      if (topValue) topValue.textContent = '₹ 0';
+      if (rowCount) rowCount.textContent = 0;
+      if (rowValue) rowValue.textContent = '₹ 0';
+    });
+}
+
+
+/**
+ * Called when the Support button is clicked.
+ * It fetches a unique ticket ID from the server and then opens the user's email client.
+ */
+async function createSupportTicket() {
+    try {
+        const response = await fetch('/api/generate-support-ticket');
+        const data = await response.json();
+
+        if (data.ticket_id) {
+            const recipient = 'dt@activusdesignbuild.in';
+            const subject = `Support Ticket: ${data.ticket_id}`;
+            
+            // This creates the mailto link and programmatically "clicks" it
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+        } else {
+            // Fallback in case of an error
+            alert('Could not generate a support ticket ID. Please email dt@activusdesignbuild.in directly.');
+        }
+    } catch (error) {
+        console.error("Failed to create support ticket:", error);
+        alert('An error occurred. Please email dt@activusdesignbuild.in directly.');
+    }
+}
+
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
-

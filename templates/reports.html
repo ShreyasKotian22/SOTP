@@ -1,0 +1,2583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Performance Report</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+
+   select[multiple] {
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding-right: 32px; /* for arrow space */
+  background-color: var(--teal-light);
+  cursor: pointer;
+}
+ 
+    :root {
+      --teal: #127285;
+      --teal-light: #e0f6f8;
+    }
+
+    body {
+      margin: 0;
+      font-family: SF Pro Display, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+     * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: SF Pro Display, sans-serif;
+}
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background-color: #0A7386;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+
+    .sidebar .logo img {
+      width: 245px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
+
+    .nav-item i,
+    .logout i {
+      font-size: 18px;
+      margin-right: 8px;
+      vertical-align: middle;
+      width: 18px;
+      height: 22px;
+      display: inline-block;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
+
+    .logout {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    /* Sidebar text and icon color */
+    .sidebar nav ul li a,
+    .sidebar nav ul li a i,
+    .sidebar nav ul li a span,
+    .sidebar .logout a,
+    .sidebar .logout a i,
+    .sidebar .logout a span {
+      color: white;
+      text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar .logout a:hover {
+      color: white;
+    }
+    .main {
+      flex: 1;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      overflow-y: auto;
+      opacity: 0;
+      animation: fadeIn 1.2s ease-out forwards;
+    }
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: nowrap;        /* Keep all filters on a single line */
+  gap: 16px;                /* Smaller gap between filters */
+  margin-bottom: 24px;
+  justify-content: space-between;
+}
+
+.filter-group {
+  width: 19%;               /* Slightly smaller to fit 6 in one row */
+  min-width: 120px;         /* Prevents breaking on smaller screens */
+  position: relative;
+}
+
+/*Back button hovering effect*/
+.back-heading {
+  text-decoration: none;
+  color: inherit;
+ 
+}
+
+.back-heading h1 {
+  font-size: 24px;
+  margin: 5px;
+  margin-bottom: 10px;
+  transition: color 0.2s ease;
+}
+
+.back-heading:hover h1 {
+  color: #127285;
+  cursor: pointer;
+  transform: translateX(-2px);
+}
+
+
+.filter-group select,
+.filter-group input.flatpickr-input {
+  width: 100%;
+  height: 60px;
+  padding: 12px 36px 12px 16px;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  background-color: white;
+  color: var(--teal);
+  font-weight: 500;
+  font-size: 16px;
+  appearance: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Optional label above each select (if used later) */
+.filter-group label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Custom dropdown icon using Font Awesome */
+.filter-group::after {
+ 
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--teal);
+  font-size: 11px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+cursor: pointer;
+}
+
+/* Focus effect for inputs/selects */
+.filter-group select:focus,
+.filter-group input.flatpickr-input:focus {
+  background-color: var(--teal-light);
+  outline: none;
+  border-color: var(--teal);
+}
+
+    select, input.flatpickr-input {
+      padding: 8px 12px;
+      border: 1px solid var(--teal);
+      border-radius: 6px;
+      color: var(--teal);
+      font-weight: 500;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    select:focus, input.flatpickr-input:focus {
+      background-color: var(--teal-light);
+      outline: none;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .sort-btn {
+      padding: 6px 14px;
+      background-color: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .chart-container {
+      flex: 1;
+      min-height: 300px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    #downloadBtn {
+      background-color: var(--teal);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* Flatpickr calendar styling */
+    .flatpickr-months {
+      background-color: #127285;
+      color: white;
+    }
+
+    .flatpickr-weekday {
+      background-color: #127285;
+      color: white;
+    }
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange {
+      background-color: #127285 !important;
+      color: white;
+    }
+
+    .flatpickr-day:hover {
+      background-color: #5ab3bd;
+      color: white;
+    }
+       .nav-item.active {
+  background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
+}
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.selected-value {
+  padding: 18px 12px !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+}
+.selected-value span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: calc(100% - 40px); /* Reserve space for arrow and clear icons */
+}
+
+
+.dropdown-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 260px;
+  border: 1px solid #ccc;
+  background: white;
+  z-index: 1000;
+  border-radius: 0 0 12px 12px;
+  overflow-y: auto;
+}
+
+.dropdown-list.active {
+  display: block;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.options-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options-list li:hover {
+  background-color: #f0f0f0;
+}
+
+
+#resetBtn {
+  background-color: white;
+  color: #ffffff;
+  border: 2px solid rgb(243, 243, 244);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#resetBtn:hover {
+  background-color: #127285;
+  color: #ffffff;
+  transform: translateY(-4px); /* Slight lift */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Deeper shadow */
+  transition: all 0.3s ease;
+}
+
+/* Ensure the clear icon is hidden by default */
+.clear-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  display: none; /* ⛔️ Hide by default */
+}
+
+/* Only show clear icon when dropdown has a selection */
+.custom-dropdown.has-selection .clear-icon {
+  display: block; /* ✅ Show only when .has-selection is present */
+}
+
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #127285;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+#floatingDatePanel {
+  position: fixed;
+  top: 100px;
+  left: -250px;
+  width: 250px;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  padding: 16px;
+  border-radius: 12px;
+  z-index: 999;
+  transition: left 0.3s ease;
+}
+
+#floatingDatePanel.show {
+  left: 20px; /* Slide into view */
+}
+
+.date-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toggle-filters-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  margin-left: -20px; /* 🔧 move to the left */
+}
+
+.toggle-filters-container span {
+  white-space: nowrap;
+}
+
+
+.date-filters {
+  display: flex;
+  gap: 8px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+}
+
+.date-filters.show {
+  max-width: 292px;
+  opacity: 1;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+
+
+.has-submenu {
+  position: relative;
+}
+
+.has-submenu .submenu {
+  display: none;
+  list-style: none;
+  background-color: #0a6a7c;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 280px;
+  border-radius: 0 0 12px 12px;
+  z-index: 999;
+  padding: 8px 0;
+}
+
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 0px 30px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+   margin-bottom: -7px; /* ✅ Add spacing between items */
+}
+
+.submenu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.submenu-arrow {
+  margin-left: auto;
+}
+
+.selected-value {
+  padding: 18px 12px !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+}
+
+/* Divider to simulate dual button */
+.selected-value::after {
+  content: "";
+  position: absolute;
+  right: 42px; /* space before arrow */
+  top: 0%;
+  height: 100%;
+  width: 2px;
+  background-color: var(--teal);
+  opacity: 0.5;
+}
+
+
+
+/* Arrow on right like a fixed button */
+.selected-value .arrow-icon {
+  width: 30px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--teal);
+  pointer-events: none; /* Prevents hover or click effects */
+  user-select: none;
+  font-size: 14px;
+}
+
+
+/* Hover only on right arrow area */
+.selected-value .arrow-icon {
+  pointer-events: auto; /* ✅ Make it clickable again */
+  cursor: pointer;
+}
+.entity-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.entity-details-table th,
+.entity-details-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.entity-details-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+.scroll-table-container {
+  overflow-x: auto;
+  overflow-y: auto; /* ✅ vertical scroll */
+  max-height: 400px; /* ✅ limit vertical height */
+  max-width: 100%;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+
+/* Keep table header sticky */
+#detailsTable thead th {
+  position: sticky;
+  top: 0;
+  background-color: #127285;
+  color: white;
+  font-weight: 600;
+  z-index: 2;
+}
+
+/* Table structure and styling */
+#detailsTable {
+  width: 1600px; /* can be changed to auto for dynamic width */
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#detailsTable th,
+#detailsTable td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+
+
+.chart-container {
+  position: relative; /* ✅ Needed for legendImage to anchor */
+  height: 360px; /* Or any fixed height */
+  max-height: 500px;
+}
+/* Hover effect */
+.filter-group:hover .selected-value {
+  background-color: #127285;
+  color: white;
+  border-radius: 9px;
+ 
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.filter-group:hover .arrow-icon {
+  color: white;
+}
+
+/* Divider turns white */
+.filter-group:hover .selected-value::after {
+  background-color: #ffffff;
+  opacity: 1;
+  border-radius: 9px;
+}
+
+/* On click: white background, teal text/icon */
+.filter-group .selected-value.active {
+  background-color: #127285;
+  color: white;
+  border-radius: 9px;
+  
+}
+
+.filter-group .selected-value.active .arrow-icon {
+  color: #ffffff;
+}
+
+.filter-group .selected-value.active::after {
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+.chart-container {
+  height: 400px; /* Or any fixed height */
+  max-height: 500px;
+}
+  .submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .submenu-item:hover {
+    background-color: #117d91;
+  }
+
+  .submenu-item.active {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+  }
+
+  .submenu-item i {
+    width: 18px;
+  }
+
+
+  </style>
+</head>
+<body>
+    <!-- =================================================================== -->
+<!-- START: New & Improved Sidebar with Bottom-Aligned Support/Logout    -->
+<!-- =================================================================== -->
+<aside class="sidebar" style="display: flex; flex-direction: column; justify-content: space-between;">
+
+  <!-- Top Section: Logo and Main Navigation -->
+  <div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+    </div>
+
+    <nav>
+      <ul>
+        <li class="nav-item"><a href="{{ url_for('dashboard') }}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="/add-order"><i class="fas fa-plus-circle"></i> <span>Add New Order</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('clients') }}"><i class="fas fa-user"></i> <span>Clients</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('view_orders') }}"><i class="fas fa-file-alt"></i> <span>View Sales Order</span></a></li>
+
+        <li class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+          <div class="report-toggle" style="display: flex; align-items: center; width: 100%; color: white;">
+            <i class="fas fa-chart-bar"></i>
+            <span style="margin-left: 6px;">Report</span>
+            <i class="fas fa-chevron-down submenu-arrow" style="margin-left: auto;"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="window.location.href='/report'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Sales Order Overview</span>
+            </li>
+            <li onclick="window.location.href='/po-overview'" class="submenu-item active">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">PO’s Overview</span>
+            </li>
+            <li onclick="window.location.href='/growth-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Growth Overview</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Bottom Section: Support and Logout are grouped here -->
+  <div style="display: flex; flex-direction: column;">
+    <li class="nav-item" style="list-style: none; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 26px; margin-bottom: 7px;">
+        <button onclick="createSupportTicket()" style="background: none; border: none; color: white; padding: 0; font: inherit; cursor: pointer; display: flex; align-items: center;">
+            <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+            <span>Support</span>
+        </button>
+        <span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+    </li>
+
+    <li class="nav-item logout">
+      <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a>
+    </li>
+  </div>
+
+</aside>
+<!-- =================================================================== -->
+<!-- END: New & Improved Sidebar                                         -->
+<!-- =================================================================== -->
+
+
+
+
+     
+
+  <div class="main">
+
+    
+
+  <!-- ✅ Back Button -->
+<style>
+
+  .back-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #127285;
+    cursor: pointer;
+    transform: translateX(-2px);
+  }
+  
+</style>
+
+<div style="display: inline; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+  <!-- Left: Heading with link -->
+  <h1 style="margin: 0; font-size: x-large;">
+    <a href="{{ url_for('dashboard') }}" class="back-link" style="text-decoration: none; color: inherit;">
+      <i class="fas fa-th-large"></i> ‎Reports
+    </a>
+  </h1>
+
+  <!-- Right: Statement -->
+  <span style="font-size: 12px; color: #474747; max-width: 400px; text-align: right;">
+    Note: The sales values displayed in the graph represent the PO Base Value, not the total amount.
+  </span>
+</div>
+
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+  <h4 id="reportSubheading" style="color: black; font-weight: 700; margin: 0px 0 0px 2px;">
+    Sales Order Overview
+  </h4>
+  
+
+  <!-- ✅ New Sort Controls -->
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <label for="chartSortDropdown" style="font-weight: 600; color: #127285;">Sort:</label>
+    <select id="chartSortDropdown" onchange="handleSortChange()" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+      <option value="">None</option>
+      <option value="sales_desc">Sales Value (High to Low)</option>
+      <option value="sales_asc">Sales Value (Low to High)</option>
+      <option value="count_desc">No. of Sales (High to Low)</option>
+      <option value="count_asc">No. of Sales (Low to High)</option>
+    </select>
+  </div>
+</div>
+
+
+
+<!-- ✅ Filters -->
+<div class="filters">
+  <!-- Company Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="companyDropdown">
+      <div class="selected-value" onclick="handleLabelClick('company_name')">
+        <span>Company</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'company'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('company')">×</div>
+      <div class="dropdown-list" id="companyDropdownList">
+        <input type="text" class="search-input" placeholder="Search company..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="companyOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'company')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="clientDropdown">
+      <div class="selected-value" onclick="handleLabelClick('client_name')">
+        <span>Client</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'client'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('client')">×</div>
+      <div class="dropdown-list" id="clientDropdownList">
+        <input type="text" class="search-input" placeholder="Search client..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="clientOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'client')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subcontractor Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="subcontractorDropdown">
+      <div class="selected-value" onclick="handleLabelClick('sub_contractor_name')">
+        <span>Subcontractor</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'subcontractor'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('subcontractor')">×</div>
+      <div class="dropdown-list" id="subcontractorDropdownList">
+        <input type="text" class="search-input" placeholder="Search subcontractor..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="subcontractorOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'subcontractor')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="siteDropdown">
+      <div class="selected-value" onclick="handleLabelClick('site')">
+        <span>Site</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'site'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('site')">×</div>
+      <div class="dropdown-list" id="siteDropdownList">
+        <input type="text" class="search-input" placeholder="Search site..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="siteOptionsList">
+          <li>
+            <label>
+              <input type="checkbox" onchange="toggleSelectAll(this, 'site')"> Select All
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Division Dropdown -->
+  <div class="filter-group">
+    <div class="custom-dropdown" id="divisionDropdown">
+      <div class="selected-value" onclick="toggleDropdown(this, 'division')">
+        <span>Division</span>
+        <i class="fas fa-chevron-down arrow-icon" onclick="toggleDropdown(this, 'division'); event.stopPropagation();"></i>
+      </div>
+      <div class="clear-icon" onclick="clearDropdown('division')">×</div>
+      <div class="dropdown-list" id="divisionDropdownList">
+        <input type="text" class="search-input" placeholder="Search division..." onkeyup="filterDropdownOptions(this)">
+        <ul class="options-list" id="divisionOptionsList"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <!-- ✅ Chart Header Row -->
+<div class="header-row">
+  <h3>Performance Overview</h3>
+  
+
+  <div class="toggle-filters-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+
+    <!-- ✅ From-To filters (moved to left) -->
+    <div class="date-filters show" id="dateFilterContainer" style="display: flex; gap: 10px; align-items: center;">
+      <label style="font-size: 14px; font-weight: 500; color: #127285;">
+        From: <input type="date" id="from-date" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+      </label>
+      <label style="font-size: 14px; font-weight: 500; color: #127285;">
+        To: <input type="date" id="to-date" style="padding: 6px 10px; border: 2px solid #127285; border-radius: 8px;">
+      </label>
+    <button class="sort-btn" onclick="updateChart(getFilterValues())">
+  Filter <i class="fas fa-filter"></i>
+</button>
+
+    </div>
+
+    <!-- ✅ Sort label and dropdown -->
+    <span class="sort-btn" style="background-color: transparent; color: #127285; cursor: default; padding: 0; font-weight: 600;">Interval:</span>
+   <select id="sortDropdown" style="padding: 6px 24px 6px 12px; border: 2px solid #127285; border-radius: 8px;">
+
+      <option value="Monthly" selected>Monthly</option>
+      <option value="Weekly">Weekly</option>
+      <option value="Quarterly">Quarterly</option>
+      <option value="Yearly">Yearly</option>
+    </select>
+    
+    <!-- ✅ Reset Button -->
+    <button id="resetBtn" class="sort-btn" style="background-color: #127285;">
+      <i class="fas fa-undo"></i> Reset
+    </button>
+    
+  </div>
+</div>
+
+ 
+
+  <!-- ✅ Chart --> 
+<!-- Report Tabs -->
+
+
+<div id="reportContent">
+  <div id="salesTab" class="report-tab">
+    
+  <div class="chart-container">
+   <canvas id="performanceChart" height="400"></canvas>
+   
+   <!-- Image beside legend -->
+
+
+
+  </div>
+
+  <!-- ✅ MOVE THIS BELOW THE CANVAS -->
+  <div id="detailsTableContainer" style="margin-top: 30px;"></div>
+</div>
+
+  <!-- ✅ Download Button -->
+  <div class="footer">
+    <button id="downloadBtn"><i class="fas fa-download"></i> Download Report</button>
+  </div>
+
+
+
+
+
+
+
+
+</div> <!-- CLOSE .main here -->
+
+
+<script>
+
+let defaultFromDate = null;
+let defaultToDate = null;
+let isInitialLoad = true;
+
+
+let currentGroupBy = 'period';  // default
+
+let chart;
+const ctx = document.getElementById('performanceChart').getContext('2d');
+
+const whiteDotOnLinePlugin = {
+  id: 'whiteDotOnLine',
+  afterDraw(chart) {
+    const { ctx, canvas } = chart;
+    const legendItems = chart.legend?.legendItems || [];
+
+    // Find the index of the "No. of Sales" legend item within the VISIBLE legend items array.
+    // This is the key change.
+    const targetLegendItemIndex = legendItems.findIndex(item => item.text === 'No. of Sales');
+
+    // If it's not found for any reason, exit gracefully.
+    if (targetLegendItemIndex === -1) {
+      return;
+    }
+
+    // Get the corresponding legend layout box using the correct index from the visible items.
+    const legendBox = chart.legend.legendHitBoxes[targetLegendItemIndex];
+    if (!legendBox) {
+      return;
+    }
+
+    // The rest of your drawing logic remains the same.
+    const dotX = legendBox.left + legendBox.width / 2 - 36; // move dot 6px left
+    const dotY = legendBox.top + legendBox.height / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(dotX, dotY, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+    ctx.strokeStyle = "#28a745";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
+const rainbowLegendPlugin = {
+  id: 'rainbowLegendPlugin',
+  afterDraw(chart) {
+    const ctx = chart.ctx;
+    const salesLegend = chart.legend.legendItems.find(item => item.text === "Sales (₹)");
+    if (!salesLegend) return;
+
+    const box = chart.legend.legendHitBoxes[salesLegend.datasetIndex];
+    if (!box) return;
+
+    const x = box.left + box.width - 66;
+    const y = box.top + 0;
+    const width = 12.5;
+    const height = box.height - 0;
+
+    // Save the canvas context state
+    ctx.save();
+
+    // Create vertical rainbow gradient
+    const gradient = ctx.createLinearGradient(x, y, x, y + height);
+    gradient.addColorStop(0.0, "#ff0000");  // Red
+    gradient.addColorStop(0.17, "#ff7f00"); // Orange
+    gradient.addColorStop(0.34, "#ffff00"); // Yellow
+    gradient.addColorStop(0.51, "#00ff00"); // Green
+    gradient.addColorStop(0.68, "#0000ff"); // Blue
+    gradient.addColorStop(0.85, "#4b0082"); // Indigo
+    gradient.addColorStop(1.0, "#9400d3");  // Violet
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x, y, width, height);
+
+    // Restore canvas to avoid affecting text
+    ctx.restore();
+  }
+};
+
+
+  async function fetchChartData(filters) {
+    const res = await fetch("/api/performance-data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(filters)
+    });
+    return await res.json();
+  }
+
+setInterval(() => {
+  fetch("/api/ping", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ page: window.location.pathname })
+  });
+}, 3000); // every 30 seconds 
+
+function fillMissingMonths(data) {
+  if (data.length === 0) return [];
+
+  const filled = [];
+  const formatDate = (date) => date.toLocaleString("default", { month: "short", year: "numeric" });
+
+  const parsePeriod = (p) => {
+    const parts = p.split(" ");
+    return new Date(parts[1], new Date(Date.parse(parts[0] + " 1")).getMonth());
+  };
+
+  const sorted = [...data].sort((a, b) => parsePeriod(a.period) - parsePeriod(b.period));
+  const start = parsePeriod(sorted[0].period);
+  const end = parsePeriod(sorted[sorted.length - 1].period);
+
+  const map = new Map(data.map(d => [d.period, d]));
+
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    const label = formatDate(cursor);
+    filled.push(
+      map.has(label)
+        ? map.get(label)
+        : {
+            period: label,
+            total_sales: 0,
+            sales_count: 0,
+            client_name: "-",
+            company_name: "-",
+            order_id: "-",
+            project_name: "-",
+            division: "-",
+            status: "-"
+          }
+    );
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  return filled;
+}
+
+
+function fillMissingPeriods(data, interval) {
+  if (!data || data.length === 0) return [];
+
+  const map = new Map(data.map(d => [d.period, d]));
+  const filled = [];
+
+  if (interval === "Monthly") {
+    // Helper: parse "Sep 2024" → Date
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const parse = (p) => {
+      const [m, y] = p.split(" ");
+      const monthIndex = monthNames.findIndex(name => name.toLowerCase() === m.toLowerCase());
+      return new Date(parseInt(y), monthIndex, 1);
+    };
+    const format = (d) => `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+
+    const sorted = [...data].sort((a, b) => parse(a.period) - parse(b.period));
+    const start = parse(sorted[0].period);
+    const end = parse(sorted[sorted.length - 1].period);
+
+    const cursor = new Date(start);
+    while (cursor <= end) {
+      const label = format(cursor);
+      if (map.has(label)) {
+        filled.push(map.get(label));
+      } else {
+        filled.push({
+          period: label,
+          total_sales: 0,
+          sales_count: 0,
+          client_name: "-",
+          company_name: "-",
+          order_id: "-",
+          project_name: "-",
+          division: "-",
+          status: "-"
+        });
+      }
+      cursor.setMonth(cursor.getMonth() + 1);
+    }
+  }
+
+  else if (interval === "Weekly") {
+    const getWeekLabel = (date) => {
+      const year = date.getFullYear();
+      const firstDay = new Date(year, 0, 1);
+      const dayOffset = firstDay.getDay();
+      const week = Math.ceil(((date - firstDay) / 86400000 + dayOffset + 1) / 7);
+      return `${year} W${week}`;
+    };
+
+    const parse = (p) => {
+      const [year, week] = p.split(" W");
+      const jan1 = new Date(year, 0, 1);
+      return new Date(jan1.setDate((parseInt(week) - 1) * 7 + 1));
+    };
+
+    const sorted = [...data].sort((a, b) => parse(a.period) - parse(b.period));
+    const start = parse(sorted[0].period);
+    const end = parse(sorted[sorted.length - 1].period);
+
+    const cursor = new Date(start);
+    while (cursor <= end) {
+      const label = getWeekLabel(cursor);
+      filled.push(map.get(label) || {
+        period: label,
+        total_sales: 0,
+        sales_count: 0,
+        client_name: "-",
+        company_name: "-",
+        order_id: "-",
+        project_name: "-",
+        division: "-",
+        status: "-"
+      });
+      cursor.setDate(cursor.getDate() + 7);
+    }
+  }
+
+  else if (interval === "Quarterly") {
+    const quarters = ["Q1", "Q2", "Q3", "Q4"];
+    const parse = (p) => {
+      const [q, y] = p.split(" ");
+      const month = { Q1: 0, Q2: 3, Q3: 6, Q4: 9 }[q];
+      return new Date(parseInt(y), month, 1);
+    };
+    const format = (d) => `${quarters[Math.floor(d.getMonth() / 3)]} ${d.getFullYear()}`;
+
+    const sorted = [...data].sort((a, b) => parse(a.period) - parse(b.period));
+    const start = parse(sorted[0].period);
+    const end = parse(sorted[sorted.length - 1].period);
+
+    const cursor = new Date(start);
+    while (cursor <= end) {
+      const label = format(cursor);
+      filled.push(map.get(label) || {
+        period: label,
+        total_sales: 0,
+        sales_count: 0,
+        client_name: "-",
+        company_name: "-",
+        order_id: "-",
+        project_name: "-",
+        division: "-",
+        status: "-"
+      });
+      cursor.setMonth(cursor.getMonth() + 3);
+    }
+  }
+
+  return filled;
+}
+
+
+
+
+async function updateChart(filters) {
+ const res = await fetchChartData(filters);
+ if (isInitialLoad && res.default_from_date && res.default_to_date) {
+  defaultFromDate = res.default_from_date;
+  defaultToDate = res.default_to_date;
+  document.getElementById("from-date").value = defaultFromDate;
+  document.getElementById("to-date").value = defaultToDate;
+  isInitialLoad = false;
+}
+
+const data = Array.isArray(res.data) ? res.data : res; // fallback
+const records = Array.isArray(res.records) ? res.records : [];
+
+window.latestChartRawData = data;
+renderDetailsTable(records);
+
+  // console.log("Chart Data:", data);
+
+  let labels = [];
+  let datasets = [];
+  let groupByMode = filters.group_by || "period";
+  const isEntityGroup = ["company_name", "client_name", "division", "site", "sub_contractor_name"].includes(groupByMode);
+  const sortKey = filters.sort || "";
+  // Apply sorting if user selected one
+  if (sortKey && isEntityGroup) {
+      if (sortKey === "sales_desc" || sortKey === "sales_asc") {
+          const salesMap = new Map();
+          data.forEach(item => {
+              const period = item.period;
+              const current = salesMap.get(period) || 0;
+              salesMap.set(period, current + (item.y || 0));
+          });
+
+          const sortedPeriods = [...salesMap.entries()]
+              .sort((a, b) => sortKey === "sales_desc" ? b[1] - a[1] : a[1] - b[1])
+              .map(entry => entry[0]);
+
+          data.sort((a, b) => {
+              return sortedPeriods.indexOf(a.period) - sortedPeriods.indexOf(b.period);
+          });
+      } else if (sortKey === "count_desc" || sortKey === "count_asc") {
+          const countMap = {};  
+          data.forEach(item => countMap[item.period] = (countMap[item.period] || 0) + 1);
+          
+          const sortedPeriods = Object.keys(countMap).sort((a, b) => {
+              return sortKey === 'count_desc' ? countMap[b] - countMap[a] : countMap[a] - countMap[b];
+          });
+
+          data.sort((a, b) => {
+              return sortedPeriods.indexOf(a.period) - sortedPeriods.indexOf(b.period);
+          });
+      }
+  }
+
+  // Ensure correct label order based on the sorted data
+  const orderedPeriods = [];
+  const labelOrderMap = {};
+  data.forEach(item => {
+      const key = item.period;
+      if (!labelOrderMap[key]) {
+          labelOrderMap[key] = true;
+          orderedPeriods.push(key);
+      }
+  });
+  labels = orderedPeriods;
+
+  const palette = [
+    "#127285", "#D7263D", "#FFBA08", "#3A86FF", "#8338EC",
+    "#FF006E", "#00BBF9", "#F15BB5", "#9B5DE5", "#3A0CA3",
+    "#1D3557", "#2A9D8F", "#E76F51", "#E63946", "#8D99AE",
+    "#F6BD60", "#84A59D", "#F28482", "#F7A9A8", "#588157",
+    "#DDA15E", "#6B9080", "#B5838D", "#4A4E69", "#FFB4A2"
+  ];
+
+if (isEntityGroup) {
+    // Group data by the unique sales order (PO)
+    const salesByPO = {};
+    data.forEach(item => {
+        const po = item.po || 'unknown';
+        if (!salesByPO[po]) {
+            salesByPO[po] = [];
+        }
+        salesByPO[po].push(item);
+    });
+
+    const colorPalette = [...palette];
+    let colorIndex = 0;
+    datasets = []; // Reset datasets array
+
+// Create a separate dataset for each unique PO to enable stacking
+for (const po in salesByPO) {
+// 1. Group items by period
+const periodMap = {};
+data.forEach(item => {
+  const key = item.period;
+  if (!periodMap[key]) periodMap[key] = [];
+  periodMap[key].push(item);
+});
+
+// 2. Sort PO segments inside each period by sales (y), ascending
+const sortedData = [];
+Object.values(periodMap).forEach(group => {
+  const sortedGroup = group.sort((a, b) => (a.y || 0) - (b.y || 0));
+  sortedData.push(...sortedGroup);
+});
+
+// 3. Rebuild salesByPO after sorting
+const salesByPO = {};
+sortedData.forEach(item => {
+  const po = item.po || 'unknown';
+  if (!salesByPO[po]) {
+    salesByPO[po] = [];
+  }
+  salesByPO[po].push(item);
+});
+
+// 4. Then generate datasets (same as before)
+const colorPalette = [...palette];
+let colorIndex = 0;
+datasets = [];
+
+for (const po in salesByPO) {
+  const items = salesByPO[po];
+  const color = colorPalette[colorIndex % colorPalette.length];
+  colorIndex++;
+
+  datasets.push({
+    label: `Sales (₹) - ${po}`,
+    data: items.map(item => ({
+      x: item.period,
+      y: item.y,
+      project: item.project,
+      po: item.po,
+      entity_name: item.entity_name || "",
+      company_name: item.company_name,
+      po_date: item.po_date,
+    })),
+    backgroundColor: color,
+    stack: 'sales',
+    yAxisID: 'y',
+    order: 2,
+    barThickness: 18
+  });
+}
+}
+
+    
+    // This logic for No. of Sales remains the same
+    const entityCounts = {};
+    data.forEach(item => {
+        // Use a Set to count unique POs per entity
+        if (!entityCounts[item.period]) {
+            entityCounts[item.period] = new Set();
+        }
+        entityCounts[item.period].add(item.po);
+    });
+
+    const salesCountData = labels.map(label => {
+        const count = entityCounts[label] ? entityCounts[label].size : 0;
+        const entityMatch = data.find(d => d.period === label);
+        return {
+            x: label,
+            y: count,
+            entity_name: entityMatch?.entity_name || ""
+        };
+    });
+
+    datasets.push({
+        label: "No. of Sales",
+        data: salesCountData,
+        type: "line",
+        yAxisID: "y1",
+        borderColor: "#28a745",
+        backgroundColor: "#28a745",
+        tension: 0,
+        fill: false,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: "#fff",
+        pointBorderColor: "#28a745",
+        pointBorderWidth: 2,
+        order: 1
+    });
+
+} 
+else {
+    // Default period-based behavior (non-stacked)
+    let sortedData = Array.isArray(data) ? [...data] : [];
+    if (filters.interval !== "Yearly") {
+        sortedData = fillMissingPeriods(sortedData, filters.interval);
+    }
+
+    const sortKey = filters.sort || "";
+
+    if (sortKey === "sales_desc") {
+        sortedData.sort((a, b) => parseFloat(b.total_sales || 0) - parseFloat(a.total_sales || 0));
+    } else if (sortKey === "sales_asc") {
+        sortedData.sort((a, b) => parseFloat(a.total_sales || 0) - parseFloat(b.total_sales || 0));
+    } else if (sortKey === "count_desc") {
+        sortedData.sort((a, b) => (b.sales_count || 0) - (a.sales_count || 0));
+    } else if (sortKey === "count_asc") {
+        sortedData.sort((a, b) => (a.sales_count || 0) - (b.sales_count || 0));
+    } else {
+        try {
+           sortedData.sort((a, b) => new Date(a.period) - new Date(b.period));
+        } catch(e) { /* fallback if date parsing fails */ }
+    }
+
+    labels = sortedData.map(item => item.period);
+
+    const salesWithMeta = sortedData.map(item => ({
+        x: item.period || "-",
+        y: parseFloat(item.total_sales || 0),
+        client: item.client_name || "-",
+        company: item.company_name || "-",
+        order_id: item.order_id || "-",
+        project: item.project_name || "-",
+        division: item.division || "-",
+        status: item.status || "-"
+    }));
+
+    const salesCount = sortedData.map(item => parseInt(item.sales_count || 0));
+
+    datasets = [{
+        label: "Sales (₹)",
+        data: salesWithMeta,
+        backgroundColor: "#127285",
+        parsing: {
+            xAxisKey: "x",
+            yAxisKey: "y",
+        },
+        yAxisID: "y",
+        order: 2,
+        pointRadius: 4,
+        pointBackgroundColor: salesWithMeta.map(d => d.y === 0 ? "red" : "white"),
+        pointBorderColor: salesWithMeta.map(d => d.y === 0 ? "red" : "#127285"),
+        maxBarThickness: 30
+    }, {
+        label: "No. of Sales",
+        data: salesCount,
+        type: "line",
+        yAxisID: "y1",
+        borderColor: "#28a745",
+        backgroundColor: "#28a745",
+        tension: 0,
+        fill: false,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBorderWidth: 2,
+        pointBackgroundColor: salesCount.map(v => v === 0 ? "red" : "white"),
+        pointBorderColor: salesCount.map(v => v === 0 ? "red" : "#28a745"),
+        segment: {
+            borderColor: ctx => {
+                const p1 = ctx.p1?.parsed?.y;
+                return p1 === 0 ? "red" : "#28a745";
+            },
+            backgroundColor: ctx => {
+                const p1 = ctx.p1?.parsed?.y;
+                return p1 === 0 ? "red" : "#28a745";
+            }
+        },
+        order: 1
+    }];
+}
+
+  // Destroy existing chart if present
+  if (chart) chart.destroy();
+  const salesDataset = datasets.find(d => d.label === "Sales (₹)");
+const salesIndex = datasets.indexOf(salesDataset);
+const isSalesVisible = chart?.isDatasetVisible
+  ? chart.isDatasetVisible(salesIndex)
+  : true;
+
+Chart.register(whiteDotOnLinePlugin);
+Chart.register(rainbowLegendPlugin);
+
+
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+     interaction: {
+      mode: 'index', // Use 'index' for stacked charts to get all items in the stack
+      intersect: false
+    },
+
+
+
+
+plugins: {
+  legend: {
+    display: true,
+    onClick: (e, legendItem, legend) => {
+      const chart = legend.chart;
+      const clickedText = legendItem.text;
+
+      if (clickedText === 'Sales (₹)') {
+        const salesDatasets = chart.data.datasets
+          .map((ds, i) => ({ ...ds, index: i }))
+          .filter(ds => ds.label.startsWith('Sales (₹)') && ds.type !== 'line');
+
+        const anyVisible = salesDatasets.some(ds => chart.isDatasetVisible(ds.index));
+
+        salesDatasets.forEach(ds => {
+          chart.setDatasetVisibility(ds.index, !anyVisible);
+        });
+      } else if (clickedText === 'No. of Sales') {
+        const salesLine = chart.data.datasets
+          .map((ds, i) => ({ ...ds, index: i }))
+          .find(ds => ds.label === 'No. of Sales');
+
+        if (salesLine) {
+          const isVisible = chart.isDatasetVisible(salesLine.index);
+          chart.setDatasetVisibility(salesLine.index, !isVisible);
+        }
+      }
+
+      chart.update();
+    },
+    labels: {
+      usePointStyle: true,
+      padding: 20,
+      boxWidth: 18,
+      generateLabels: (chart) => {
+        const all = chart.data.datasets;
+        const seen = new Set();
+
+        return all
+          .filter(ds => {
+            const baseLabel = ds.label.startsWith("Sales (₹)") ? "Sales (₹)" : ds.label;
+            const key = baseLabel + (ds.type || "bar"); // distinguish line/bar
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          })
+          .map(ds => {
+            const isLine = ds.type === 'line';
+            const originalDatasetIndex = chart.data.datasets.findIndex(dataset => dataset.label === ds.label && dataset.type === ds.type);
+            const text = ds.label.startsWith("Sales (₹)") ? "Sales (₹)" : ds.label;
+
+            return {
+              text,
+              strokeStyle: ds.borderColor || ds.backgroundColor,
+              fillStyle: isLine ? 'transparent' : (ds.backgroundColor || ds.borderColor),
+              lineWidth: isLine ? 5 : 0,
+              pointStyle: isLine ? 'line' : 'rect',
+              lineCap: 'round',
+              datasetIndex: originalDatasetIndex,
+              hidden: !chart.isDatasetVisible(originalDatasetIndex)
+            };
+          });
+      }
+    }
+  },
+tooltip: {
+  mode: 'nearest',       // ✅ Show tooltip only for the hovered segment
+  intersect: false,       // ✅ Require cursor to touch a specific bar segment
+  callbacks: {
+    title: function (tooltipItems) {
+      const raw = tooltipItems[0].raw || {};
+      const label = tooltipItems[0].label || "";
+      const groupBy = currentGroupBy;
+
+      const entityGroupings = ["company_name", "client_name", "division", "site", "sub_contractor_name"];
+      const fullEntity = raw.entity_name || "";
+      const labelParts = label.split(" - ");
+      const datePart = labelParts.length > 1 ? labelParts.slice(1).join(" - ") : "";
+
+      if (fullEntity) {
+        return `${fullEntity}${datePart ? " - " + datePart : ""}`;
+      }
+
+      return label;
+    },
+
+    label: function (tooltipItem) {
+      const dataset = tooltipItem.dataset;
+      const raw = tooltipItem.raw || {};
+      const labelParts = [];
+
+      if (dataset.label === "No. of Sales") {
+        return `No. of Sales: ${tooltipItem.formattedValue}`;
+      }
+
+      if (window.sortedEntitySales && tooltipItem.label in window.sortedEntitySales) {
+        const entityName = raw.entity_name || tooltipItem.label.split(" - ")[0];
+        const totalSales = window.sortedEntitySales[tooltipItem.label] || 0;
+        labelParts.push(`Entity: ${entityName}`);
+        labelParts.push(`Total Sales: ₹${totalSales.toLocaleString("en-IN")}`);
+        return labelParts;
+      }
+
+      if (raw.project && raw.po) {
+        labelParts.push(`Project: ${raw.project}`);
+        labelParts.push(`PO: ${raw.po}`);
+      }
+
+      labelParts.push(`Sales: ₹${(raw.y || 0).toLocaleString("en-IN")}`);
+      return labelParts;
+    }
+  }
+}
+
+},
+
+      // ✅ START: REPLACED SCALES CONFIGURATION
+      scales: {
+        x: {
+          stacked: isEntityGroup, 
+          ticks: {
+            maxRotation: 45,
+            minRotation: 30,
+            autoSkip: false
+          }
+        },
+        y:{
+          display: true, 
+          stacked: isEntityGroup,
+          beginAtZero: true,
+          type: 'linear',
+          title: {
+            display: true,
+            text: "₹ (INR)"
+          },
+    ticks: {
+  callback: function (value) {
+    if (value === 0) return '₹0';
+
+    if (value < 100000) return `₹${(value / 1000).toFixed(0)}K`;
+    else if (value < 10000000) return `₹${(value / 100000).toFixed(1)}L`;
+    else return `₹${(value / 10000000).toFixed(1)}Cr`;
+  }
+}
+
+        },
+       y1: {
+          beginAtZero: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'No. of Sales'
+          },
+          grid: {
+            drawOnChartArea: false
+          },
+          ticks: {
+            stepSize: 1,
+            callback: value => Number.isInteger(value) ? value : ''
+          },
+          max: (() => {
+            const lineDataset = datasets.find(d => d.label === "No. of Sales");
+            if (!lineDataset || !lineDataset.data?.length) return 2;
+
+            const allCounts = lineDataset.data.map(d => (typeof d === 'object' ? d.y : d) || 0);
+            const maxCount = Math.max(...allCounts, 0);
+            return maxCount < 2 ? 2 : Math.ceil(maxCount) + 1;
+          })()
+        }
+      }
+      // ✅ END: REPLACED SCALES CONFIGURATION
+    }
+  }); 
+
+}
+
+
+function getDateOfISOWeek(week, year) {
+  const simple = new Date(year, 0, 1 + (week - 1) * 7);
+  const dow = simple.getDay();
+  const ISOweekStart = simple;
+  if (dow <= 4)
+    ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else
+    ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  return ISOweekStart;
+}
+
+
+async function setDefaultDateRange() {
+  try {
+    const res = await fetch("/api/po-date-range");
+    const data = await res.json();
+
+    if (data.min_date) {
+      document.getElementById("from-date").value = data.min_date;
+      
+      const today = new Date().toISOString().split("T")[0]; // ✅ today
+      document.getElementById("to-date").value = today;
+
+      // Optional: Save globally
+      defaultFromDate = data.min_date;
+      defaultToDate = today;
+    }
+  } catch (err) {
+    console.error("Failed to fetch date range", err);
+  }
+}
+
+
+// Call this on load
+
+
+function getSmartYAxisMax(values) {
+  if (!values.length) return 1000000;
+
+  const cleaned = values.filter(v => typeof v === 'number' && v > 0);
+  const sorted = [...cleaned].sort((a, b) => a - b);
+
+  if (sorted.length < 3) return Math.ceil(Math.max(...sorted, 1) * 1.25);
+
+  const cutoff = Math.floor(sorted.length * 0.9);
+  const top90 = sorted.slice(0, cutoff);
+  const max90 = Math.max(...top90);
+  const buffer = max90 * 0.25;
+
+  return Math.ceil(max90 + buffer);
+}
+
+
+
+
+
+// Helper: Get all current filter values for dropdowns and dates
+function getCurrentFilterParams() {
+  const params = [];
+  const from = document.getElementById("from-date").value;
+  const to = document.getElementById("to-date").value;
+  if (from) params.push(`from_date=${encodeURIComponent(from)}`);
+  if (to) params.push(`to_date=${encodeURIComponent(to)}`);
+
+  // For each dropdown, get selected values (comma-separated)
+  ['company', 'client', 'division', 'subcontractor', 'site'].forEach(id => {
+    const vals = getDropdownValue(id);
+    if (vals.length > 0) params.push(`${id}=${encodeURIComponent(vals.join(','))}`);
+  });
+  return params;
+}
+
+
+async function populateFilters(from = null, to = null) {
+  let url = '/api/filter-options';
+  const params = [];
+  if (from) params.push(`from_date=${encodeURIComponent(from)}`);
+  if (to) params.push(`to_date=${encodeURIComponent(to)}`);
+  if (params.length > 0) url += '?' + params.join('&');
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  populateCustomDropdown('company', data.company_names);
+  populateCustomDropdown('client', data.client_names);
+  populateCustomDropdown('division', data.divisions);
+  populateCustomDropdown('subcontractor', data.subcontractors || []);
+  populateCustomDropdown('site', data.sites || []);
+}
+
+
+
+async function createSupportTicket() {
+    try {
+        const response = await fetch('/api/generate-support-ticket');
+        const data = await response.json();
+
+        if (data.ticket_id) {
+            const recipient = 'dt@activusdesignbuild.in';
+            const subject = `Support Ticket: ${data.ticket_id}`;
+            
+            // This creates the mailto link and programmatically "clicks" it
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+        } else {
+            // Fallback in case of an error
+            alert('Could not generate a support ticket ID. Please email dt@activusdesignbuild.in directly.');
+        }
+    } catch (error) {
+        console.error("Failed to create support ticket:", error);
+        alert('An error occurred. Please email dt@activusdesignbuild.in directly.');
+    }
+}
+
+
+
+function populateSelect(id, items, placeholderText, preselectedValues = []) {
+  const select = document.getElementById(id);
+  select.innerHTML = ''; // Clear old options
+
+  const placeholder = document.createElement('option');
+  placeholder.disabled = true;
+  placeholder.textContent = placeholderText;
+  select.appendChild(placeholder);
+
+  items.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item;
+    opt.textContent = item;
+    if (preselectedValues.includes(item)) {
+      opt.selected = true;
+    }
+    select.appendChild(opt);
+  });
+}
+
+
+
+  function getMultiSelectValues(id) {
+  const select = document.getElementById(id);
+  return Array.from(select.selectedOptions).map(option => option.value);
+}
+
+function getDropdownValue(id) {
+  const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:checked:not(.select-all)`);
+  return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function getFilterValues(group_by = currentGroupBy || 'period') {
+  const from = document.getElementById('from-date').value;
+  const to = document.getElementById('to-date').value;
+
+  const filters = {
+    company_name: getDropdownValue('company'),
+    client_name: getDropdownValue('client'),
+    sub_contractor_name: getDropdownValue('subcontractor'),
+    project_name: getDropdownValue('project'),
+    division: getDropdownValue('division'),
+    site: getDropdownValue('site'),
+    interval: document.getElementById('sortDropdown')?.value || 'Monthly',
+    sort: document.getElementById('chartSortDropdown')?.value || '',
+    from_date: /^\d{4}-\d{2}-\d{2}$/.test(from) ? from : null,
+to_date: /^\d{4}-\d{2}-\d{2}$/.test(to) ? to : null,
+
+    group_by: group_by
+  };
+
+  return filters;
+}
+
+
+
+function getSelectValue(id) {
+  const val = document.getElementById(id).value;
+  return val && !val.includes("Name") && val !== "Order ID" ? val : null;
+}
+
+
+
+
+
+document.getElementById("resetBtn").addEventListener("click", async () => {
+  const dropdownIds = ['company', 'client', 'subcontractor', 'site', 'division'];
+
+  dropdownIds.forEach(id => {
+    const label = document.querySelector(`#${id}Dropdown .selected-value`);
+    const span = label.querySelector("span");
+    if (span) span.textContent = `Select ${capitalize(id)}`;
+
+    const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]`);
+    checkboxes.forEach(cb => cb.checked = false);
+
+    document.getElementById(`${id}Dropdown`).classList.remove('has-selection');
+  });
+
+  // Reset dropdowns
+  document.getElementById('chartSortDropdown').value = '';
+  document.getElementById('sortDropdown').value = 'Monthly';
+  document.getElementById("detailsTableContainer").innerHTML = "";
+
+  // Reset group_by mode
+  currentGroupBy = 'period';
+
+  // ✅ Fetch default date range (min to today)
+  try {
+    const res = await fetch('/api/po-date-range');
+    const data = await res.json();
+    const today = new Date().toISOString().split("T")[0];
+
+    if (data.min_date) {
+      document.getElementById('from-date').value = data.min_date;
+      document.getElementById('to-date').value = today;
+    } else {
+      document.getElementById('from-date').value = '';
+      document.getElementById('to-date').value = '';
+    }
+  } catch (err) {
+    console.error('Failed to fetch default date range', err);
+  }
+
+  // ✅ Wait for dropdowns to populate before updating chart
+  await populateFilters();
+
+  const filters = getFilterValues(currentGroupBy); // currentGroupBy is now 'period'
+  await updateChart(filters);
+});
+
+
+
+
+// 🔁 Map dropdown ID to backend group_by field
+function getGroupKey(id) {
+  const map = {
+    company: 'company_name',
+    client: 'client_name',
+    division: 'division',
+    subcontractor: 'sub_contractor_name',
+    site: 'site'
+  };
+  return map[id] || 'period';
+}
+
+// Replace all toggleDropdown definitions with this version:
+function toggleDropdown(element, id) {
+  const dropdownList = document.getElementById(`${id}DropdownList`);
+
+  // Only show dropdown when arrow is clicked
+  if (element.classList.contains('arrow-icon')) {
+    dropdownList.classList.toggle("active");
+    return;
+  }
+
+  // If label clicked → update group_by and chart
+  const group_by = getGroupKey(id);
+  currentGroupBy = group_by;
+
+  // ✅ Always pass up-to-date filter values
+  const filters = getFilterValues(group_by);
+  updateChart(filters);
+}
+
+
+
+
+
+
+// Update reset button logic to default to period (month/year)
+document.getElementById('resetBtn').addEventListener('click', async () => {
+  const dropdownIds = ['company', 'client', 'subcontractor', 'site', 'division'];
+
+  dropdownIds.forEach(id => {
+    const label = document.querySelector(`#${id}Dropdown .selected-value`);
+    const span = label.querySelector("span");
+    if (span) span.textContent = ` ${capitalize(id)}`;
+
+    const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]`);
+    checkboxes.forEach(cb => cb.checked = false);
+
+    document.getElementById(`${id}Dropdown`).classList.remove('has-selection');
+  });
+  document.getElementById('chartSortDropdown').value = ''; 
+  document.getElementById('sortDropdown').value = 'Monthly';
+    // ✅ Clear the table below the chart
+  document.getElementById("detailsTableContainer").innerHTML = "";
+
+  // ✅ Reset groupBy mode
+  currentGroupBy = 'period';
+
+ 
+
+  populateFilters();
+  
+  updateChart(getFilterValues(currentGroupBy));  // <-- uses 'period' now
+});
+
+
+
+
+
+
+function filterDropdownOptions(input) {
+  const filter = input.value.toLowerCase();
+  const items = input.parentElement.querySelectorAll("li");
+  items.forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(filter) ? "block" : "none";
+  });
+}
+
+function populateCustomDropdown(id, items) {
+  const ul = document.getElementById(id + "OptionsList");
+  ul.innerHTML = "";
+
+  // 🔹 "Select All" at the top
+  const selectAllLi = document.createElement("li");
+  selectAllLi.innerHTML = `
+    <label><input type="checkbox" class="select-all" onchange="toggleSelectAll(this, '${id}')"> Select All</label>
+  `;
+  ul.appendChild(selectAllLi);
+
+  // 🔹 Individual options
+  items.forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <label><input type="checkbox" value="${item}" onchange="handleOptionChange('${id}')"> ${item}</label>
+    `;
+    ul.appendChild(li);
+  });
+}
+
+
+function toggleSelectAll(checkbox, id) {
+  const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:not(.select-all)`);
+  checkboxes.forEach(cb => cb.checked = checkbox.checked);
+  updateSelectedLabel(id);
+  updateChart(getFilterValues(getGroupKey(id))); 
+}
+
+
+async function handleOptionChange(id) {
+  const checkboxes = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:not(.select-all)`);
+  const selectAllCheckbox = document.querySelector(`#${id}OptionsList input.select-all`);
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  selectAllCheckbox.checked = allChecked;
+
+  updateSelectedLabel(id);
+
+  // ✅ Get current selected values for all 5 filters
+  const filters = {
+    company_name: getDropdownValue("company"),
+    client_name: getDropdownValue("client"),
+    division: getDropdownValue("division"),
+    sub_contractor_name: getDropdownValue("subcontractor"),
+    site: getDropdownValue("site"),
+    from_date: document.getElementById("from-date").value,
+    to_date: document.getElementById("to-date").value
+  };
+
+  // ✅ Fetch updated dependent options
+  const res = await fetch("/api/filter-options-dependent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(filters)
+  });
+  const data = await res.json();
+
+  // ✅ Rebuild other dropdowns
+  if (id !== "company") populateCustomDropdown("company", data.company_names || []);
+  if (id !== "client") populateCustomDropdown("client", data.client_names || []);
+  if (id !== "division") populateCustomDropdown("division", data.divisions || []);
+  if (id !== "subcontractor") populateCustomDropdown("subcontractor", data.subcontractors || []);
+  if (id !== "site") populateCustomDropdown("site", data.sites || []);
+
+  updateChart(getFilterValues(getGroupKey(id)));
+}
+
+
+
+
+function updateSelectedLabel(id) {
+  const checked = document.querySelectorAll(`#${id}OptionsList input[type="checkbox"]:checked:not(.select-all)`);
+  const labelContainer = document.querySelector(`#${id}Dropdown .selected-value`);
+
+  // Remove existing text (but keep the arrow icon)
+  const span = labelContainer.querySelector("span");
+  if (!span) return;
+
+  if (checked.length === 0) {
+    span.textContent = `Select ${capitalize(id)}`;
+  } else if (checked.length === 1) {
+    span.textContent = checked[0].value;
+  } else {
+    span.textContent = `${checked.length} selected`;
+  }
+}
+
+
+
+
+// Close all dropdowns when clicking outside
+window.addEventListener("click", function(e) {
+  if (!e.target.closest(".custom-dropdown")) {
+    document.querySelectorAll(".dropdown-list").forEach(d => d.classList.remove("active"));
+  }
+});
+
+
+
+
+document.getElementById("downloadBtn").addEventListener("click", async function () {
+  const { jsPDF } = window.jspdf;
+  const filters = getFilterValues(currentGroupBy);
+  const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" }); // ⬅️ Landscape mode
+  let y = 10;
+
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(16);
+  pdf.text("Performance Report", 148, y, { align: "center" });
+  y += 10;
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(11);
+  if (filters.from_date && filters.to_date) {
+    pdf.text(`Timeline: ${filters.from_date} to ${filters.to_date}`, 14, y);
+    y += 7;
+  }
+
+  const filterLines = [
+    `Interval: ${filters.interval || "Monthly"}`,
+    `Company: ${filters.company_name.length > 0 ? filters.company_name.join(", ") : "All"}`,
+    `Client: ${filters.client_name.length > 0 ? filters.client_name.join(", ") : "All"}`,
+    `Division: ${filters.division.length > 0 ? filters.division.join(", ") : "All"}`,
+    `Subcontractor: ${filters.sub_contractor_name.length > 0 ? filters.sub_contractor_name.join(", ") : "All"}`,
+    `Site: ${filters.site.length > 0 ? filters.site.join(", ") : "All"}`
+  ];
+  filterLines.forEach(line => {
+    pdf.text(line, 14, y);
+    y += 6;
+  });
+
+  y += 5;
+
+  // Add Chart Image
+  if (typeof chart !== "undefined") {
+    const chartImage = chart.toBase64Image();
+    const chartHeight = 90;
+    const chartWidth = 260;
+    pdf.addImage(chartImage, "PNG", 14, y, chartWidth, chartHeight);
+    y += chartHeight + 10;
+  }
+
+  // Use visible table data if available
+  const tableEl = document.querySelector("#detailsTable");
+  if (tableEl) {
+    const headers = [
+  "Order ID", "PO Date", "PO Expiry", "Client", "Company", "Project", "Division",
+  "Subcontractor", "Start", "End", "Duration", "Site", "PO Number", "Sales (Rs.)",
+  "Status", "Issued By"
+];
+
+const body = Array.from(tableEl.querySelectorAll("tbody tr")).map(row => {
+  const cells = Array.from(row.querySelectorAll("td")).map(td => td.innerText.trim());
+  // Replace ₹ with Rs. in the Sales column (index 13)
+  if (cells[13]) {
+    cells[13] = cells[13].replace("₹", "Rs.");
+  }
+  return cells;
+});
+
+
+    pdf.autoTable({
+      startY: y,
+      head: [headers],
+      body: body,
+      styles: {
+        fontSize: 7,
+        cellPadding: 1.5,
+        overflow: 'linebreak'
+      },
+      headStyles: {
+        fillColor: [18, 114, 133],
+        textColor: 255
+      },
+      theme: "striped",
+      tableWidth: 'auto', // ⬅️ Allow horizontal space
+      margin: { left: 14, right: 14 }
+    });
+
+    y = pdf.lastAutoTable.finalY + 10;
+  } else {
+    pdf.text("No detailed table is currently visible.", 14, y);
+  }
+
+  const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  pdf.save(`Performance_Report_${timestamp}.pdf`);
+});
+
+
+
+
+let activeDropdown = null;
+
+
+function toggleDropdown(el, id) {
+  const isArrow = el.classList.contains("arrow-icon");
+  const dropdownList = document.getElementById(`${id}DropdownList`);
+  const parentDropdown = dropdownList.closest(".custom-dropdown");
+
+  // Close all other dropdowns
+  document.querySelectorAll(".dropdown-list").forEach(d => {
+    if (d !== dropdownList) d.classList.remove("active");
+  });
+
+  // Toggle this dropdown
+  if (isArrow) {
+    const isActive = dropdownList.classList.contains("active");
+    dropdownList.classList.toggle("active");
+
+    // Track which dropdown is open
+    activeDropdown = isActive ? null : parentDropdown;
+  } else {
+    // Label clicked → change group_by + update chart
+    handleLabelClick(getGroupKey(id));
+  }
+}
+
+
+
+
+// Close dropdown when clicking outside
+window.addEventListener("click", function (e) {
+  if (!e.target.closest(".custom-dropdown")) {
+    document.querySelectorAll(".dropdown-list").forEach(d => d.classList.remove("active"));
+    activeDropdown = null;
+  }
+});
+
+
+
+function clearDropdown(id) {
+  const dropdown = document.getElementById(id + "Dropdown");
+  const selectedValue = dropdown.querySelector(".selected-value");
+
+  selectedValue.textContent = "Select " + capitalize(id.replace(/([A-Z])/g, ' $1')).trim();
+  dropdown.classList.remove("has-selection");
+
+  updateChart(getFilterValues()); // Refresh chart without that filter
+}
+
+
+function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+
+
+// Flatpickr for date pickers
+flatpickr("#fromDate", { dateFormat: "Y-m-d" });
+flatpickr("#toDate", { dateFormat: "Y-m-d" });
+
+
+
+
+
+
+
+
+
+
+function switchReportTab(tab) {
+  document.querySelectorAll('.report-tab').forEach(div => div.style.display = 'none');
+
+  const subheading = document.getElementById('reportSubheading');
+
+  if (tab === 'sales') {
+    document.getElementById('salesTab').style.display = 'block';
+    if (subheading) subheading.textContent = "Sales Order Overview";
+    // ✅ Destroy previous chart if exists
+    if (window.chart) {
+      window.chart.destroy();
+      window.chart = null;
+    }
+    // ✅ Re-render the chart with current filters/grouping
+    updateChart(getFilterValues(currentGroupBy));
+  } else if (tab === 'po') {
+    document.getElementById('poTab').style.display = 'block';
+    if (subheading) subheading.textContent = "PO’s Overview";
+    // Optionally destroy chart if you want to free memory
+    if (window.chart) {
+      window.chart.destroy();
+      window.chart = null;
+    }
+  } else if (tab === 'growth') {
+    document.getElementById('growthTab').style.display = 'block';
+    if (subheading) subheading.textContent = "Growth Overview";
+    if (window.chart) {
+      window.chart.destroy();
+      window.chart = null;
+    }
+  }
+}
+
+function handleSortChange() {
+  const sortVal = document.getElementById("chartSortDropdown").value;
+  updateChart(getFilterValues(currentGroupBy)); // This ensures updated sort is passed
+  const selectedSort = document.getElementById("chartSortDropdown").value;
+  filters.sort = selectedSort;
+  renderChart();  // or whatever your re-render function is
+}
+
+
+function handleLabelClick(groupByField) {
+  currentGroupBy = groupByField;
+  updateChart(getFilterValues(groupByField));
+  document.getElementById("chartSortDropdown").dispatchEvent(new Event("change"));
+}
+
+function formatDate(input) {
+  if (!input) return "-";
+
+  const date = typeof input === "string" || typeof input === "number"
+    ? new Date(input)
+    : input instanceof Date
+      ? input
+      : new Date(String(input));
+
+  if (isNaN(date.getTime())) return "-";  // invalid date
+
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+
+function renderDetailsTable(data) {
+  const container = document.getElementById("detailsTableContainer");
+  if (!container) return;
+
+  if (!data.length) {
+    container.innerHTML = "<p>No orders found for this selection.</p>";
+    return;
+  }
+
+  const sortValue = document.getElementById("chartSortDropdown")?.value || "";
+  const sortedData = [...data];
+
+  if (sortValue === "sales_desc") {
+    sortedData.sort((a, b) => parseFloat(b.po_amount || 0) - parseFloat(a.po_amount || 0));
+  } else if (sortValue === "sales_asc") {
+    sortedData.sort((a, b) => parseFloat(a.po_amount || 0) - parseFloat(b.po_amount || 0));
+  }
+
+  window.currentDetailsData = sortedData;
+
+  let tableHTML = `
+    <div class="scroll-table-container">
+      <table id="detailsTable">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>PO Date</th>
+            <th>PO Expiry</th>
+            <th>Client</th>
+            <th>Company</th>
+            <th>Project</th>
+            <th>Division</th>
+            <th>Subcontractor</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Duration</th>
+            <th>Site</th>
+            <th>PO Number</th>
+            <th>Sales (₹)</th>
+            <th>Status</th>
+            <th>Issued By</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  sortedData.forEach(row => {
+    function safe(val) {
+      if (val === null || val === undefined || val === "" || val.toLowerCase?.() === "null") return "-";
+      return val;
+    }
+
+    tableHTML += `
+      <tr>
+        <td>${safe(row.order_id || row.id)}</td>
+        <td>${formatDate(row.po_date)}</td>
+        <td>${formatDate(row.po_expiry_date)}</td>
+        <td>${safe(row.client_name)}</td>
+        <td>${safe(row.company_name)}</td>
+        <td>${safe(row.project_name)}</td>
+        <td>${safe(row.division)}</td>
+        <td>${safe(row.sub_contractor_name)}</td>
+        <td>${formatDate(row.start_date)}</td>
+        <td>${formatDate(row.end_date)}</td>
+        <td>${safe(row.project_duration)}</td>
+        <td>${safe(row.site)}</td>
+        <td>${safe(row.po_number)}</td>
+        <td>₹${parseFloat(row.po_amount || 0).toLocaleString("en-IN")}</td>
+        <td>${safe(row.status)}</td>
+        <td>${safe(row.issued_by)}</td>
+      </tr>
+    `;
+  });
+
+  tableHTML += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  container.innerHTML = tableHTML;
+}
+
+
+function handleHashTabSwitch() {
+  const hash = window.location.hash.replace('#', '') || 'sales';
+  switchReportTab(hash);
+}
+
+// On page load, show the correct tab based on hash
+
+// Also handle hash changes (user clicks back/forward or changes hash)
+window.addEventListener("hashchange", handleHashTabSwitch);
+
+async function fetchDependentOptions(company_name, from_date, to_date) {
+  const res = await fetch("/api/filter-options-dependent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ company_name, from_date, to_date })
+  });
+
+  return await res.json();
+}
+
+
+function toggleSubmenu(el) {
+  // Optional: visually mark which submenu is open (for styling later)
+  document.querySelectorAll('.has-submenu').forEach(item => {
+    if (item !== el) item.classList.remove('open');
+  });
+  el.classList.toggle('open');
+}
+ document.addEventListener('DOMContentLoaded', () => {
+    updateChart(); // ✅ This triggers the latest data load
+  });
+
+
+</script>
+<script>
+// =======================================================================================
+// === RECTIFIED AND CONSOLIDATED SCRIPT LOADER =========================================
+// =======================================================================================
+document.addEventListener("DOMContentLoaded", async () => {
+    // --- 1. SETUP AND INITIALIZATION ---
+    // This block runs once the basic HTML page is loaded.
+
+    // First, set the default date range in the date pickers.
+    await setDefaultDateRange();
+
+    // Then, populate all filter dropdowns with the full list of available options.
+    await populateFilters();
+
+    // --- 2. START BACKGROUND TASKS ---
+
+    // Set up a regular check to ensure the user's session is still valid.
+    setInterval(() => {
+        fetch('/api/check-session')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.valid) {
+                    // If the session has expired, log the user out.
+                    window.location.href = '/logout';
+                }   
+            })
+            .catch(err => console.error("Session check error:", err));
+    }, 1000); // Check every 2 seconds.
+
+    // --- 3. ATTACH EVENT LISTENERS FOR USER ACTIONS ---
+
+    // Listen for changes on the date inputs to update the chart dynamically.
+    const fromInput = document.getElementById("from-date");
+    const toInput = document.getElementById("to-date");
+    [fromInput, toInput].forEach(input => {
+        input.addEventListener("change", () => {
+            updateChart(getFilterValues(currentGroupBy));
+        });
+    });
+
+    // Listen for changes to the interval dropdown (Monthly, Weekly, etc.).
+    document.getElementById("sortDropdown").addEventListener("change", () => {
+        updateChart(getFilterValues(currentGroupBy));
+    });
+
+    // Handle browser tab switching (e.g., for #sales, #po-overview).
+    handleHashTabSwitch();
+    window.addEventListener("hashchange", handleHashTabSwitch);
+
+    // Add a visual 'active' state when a filter dropdown is clicked.
+    document.querySelectorAll('.filter-group .selected-value').forEach(el => {
+        el.addEventListener('click', function () {
+            document.querySelectorAll('.filter-group .selected-value').forEach(item => {
+                item.classList.remove('active');
+            });
+            this.classList.add('active');
+        });
+    });
+
+    // --- 4. FINAL STEP: RENDER THE CHART ---
+    
+    // After all setup is complete, get the initial filter values and render the chart ONCE.
+    // This consolidated, single call is what prevents the flickering issue.
+    const initialFilters = getFilterValues();
+    await updateChart(initialFilters);
+});
+
+</script>
+</body>
+</html>

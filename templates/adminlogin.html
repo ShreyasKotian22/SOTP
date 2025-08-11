@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+
+  <!-- Flash message styles (Bootstrap-like) -->
+  <style>
+    .flash-message {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+    }
+
+    .flash-success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .flash-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+
+  </style>
+
+  <style>
+   
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+       font-family: 'SF Pro Display', sans-serif;
+      background: #ffffff;
+    }
+
+    .page-wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      width: 95vw;
+      height: 95vh;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .login-container {
+      display: flex;
+      flex: 1;
+    }
+
+    .login-left {
+      width: 50%;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      position: relative; 
+    }
+
+    .login-content {
+      width: 100%;
+    }
+
+    .heading {
+      font-size: 32px;
+       font-family: 'SF Pro Display', sans-serif;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .input-field {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .icon {
+      margin-right: 5px;
+      font-size: 16px;
+    }
+
+    .forgot-link {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 13px;
+      text-decoration: none;
+      color: #127285;
+    }
+
+    .login-btn {
+      font-family: 'SF Pro Display', sans-serif;    
+       width: 100%;
+      background-color: #127285;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .login-right {
+      width: calc(50% - 16px);
+      margin: 8px;
+      background-color: #127285;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      overflow: hidden;
+    }
+
+    .right-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .password-wrapper {
+     position: relative;
+    }
+
+    .toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #127285;
+}
+
+
+    .icon-svg {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      color: #127285;
+    }
+    .flash {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .flash-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+       .message-error {
+  font-size: 13px;
+  color: red;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  margin-left: 6px;
+}
+
+    .login-btn:disabled {
+  background-color: #ccc !important;
+  cursor: not-allowed;
+}
+.bottom-links {
+  text-align: left;
+  margin-top: 8px;
+  padding-left: 2px;
+}
+.support-text {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 14px;
+  color: #ffffff;
+  opacity: 0.85;
+  font-weight: 700;
+  text-align: right;
+}
+.login-right {
+  position: relative;
+  width: calc(50% - 16px);
+  margin: 8px;
+  background-color: #127285;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #127285;
+  font-size: 18px;
+  z-index: 2;
+  pointer-events: auto;
+}
+.password-wrapper {
+  position: relative;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 40px 12px 15px; /* leave space on the right for the eye icon */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #127285;
+  font-size: 18px;
+  z-index: 1;
+}
+
+/* Hover effect when it's "Send OTP" */
+.login-btn.send-otp:hover {
+  background-color: #0a5d6a;
+}
+
+/* Hover effect when it's "Login" */
+.login-btn.login:hover {
+  background-color: #0a5d6a;
+}
+
+/* Disabled hover */
+.login-btn:disabled:hover {
+  background-color: #ccc !important;
+  cursor: not-allowed;
+}
+
+
+
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <div class="login-box">
+      <div class="login-container">
+
+        <!-- Left Panel -->
+        <div class="login-left">
+          <div class="login-content">
+            <div id="loading-overlay" style="
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+">
+  <div style="font-size: 16px; color: #127285; font-weight: bold;">
+    <i class="fas fa-spinner fa-spin"></i> Sending OTP...
+  </div>
+</div>
+
+            <h2 class="heading">Admin Login</h2>
+            
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-message">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+            <!-- Login Form -->
+            <div>
+              <label for="email">
+                <span class="icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                  </svg>
+                </span>
+                Email
+              </label>
+              <input type="email" id="login-email" name="email" class="input-field" placeholder="Enter email" required />
+              <p id="admin-email-error" class="message-error" style="display: none; margin-left: 6px;">
+  Email not found or not an Admin
+</p>
+
+<label for="password">
+  <span class="icon">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon-svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+    </svg>
+  </span>
+  Enter Email OTP
+</label>
+
+<div class="password-wrapper">
+  <input type="password" name="otp" id="password-field" class="input-field" placeholder="Enter Email OTP" disabled />
+  <i class="fa fa-eye toggle-password" id="toggle-otp-eye"></i>
+</div>
+
+<!-- OTP Error Message -->
+<p id="otp-error-message" class="message-error" style="display: none; margin: 4px 0 12px 6px;">
+  Invalid OTP. Please try again.
+</p>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+  <p id="otp-status-message" class="message-error" style="display: none; color: green; font-size: 13px; margin: 0 6px 0 0; line-height: 1.5;">
+    OTP sent to your email
+  </p>
+</div>
+
+            <div class="bottom-links">
+<button type="button" class="login-btn send-otp" id="send-otp-button" onclick="sendOTP()">Send OTP</button>
+
+  <button type="button" class="login-btn" id="resend-otp-button" style="margin-top: 12px; background-color:#6c757d; text-decoration: underline; display:none;" onclick="sendOTP(true)">Resend OTP</button>
+  <a href="{{ url_for('login') }}" style="text-decoration: underline; color: #0a4c77; display: inline-block; margin-top: 10px; font-weight: 500; font-size: 14px;">
+  User Login
+</a>
+
+</div>
+</div>
+            <script>
+
+document.getElementById('login-email').addEventListener('input', function () {
+  const emailInput = this.value.trim();
+  const messageElement = document.getElementById('login-email-message');
+  const loginButton = document.getElementById('login-button');
+
+  const regex = /^[a-zA-Z][a-zA-Z0-9]*@[a-zA-Z0-9]+(\.[a-zA-Z]{2,})+$/;
+  const activeColor = '#127285'; // Your original button color
+  const disabledColor = '#ccc';  // Grey for disabled button
+
+  // If empty → clear error, enable button, and set to original color
+  if (emailInput === '') {
+    messageElement.textContent = '';
+    loginButton.disabled = false;
+    loginButton.style.backgroundColor = activeColor;
+    return;
+  }
+
+  // If invalid email format
+  if (
+    emailInput.includes(' ') ||
+    /^[^a-zA-Z0-9]/.test(emailInput) ||
+    /^[0-9]/.test(emailInput) ||
+    !regex.test(emailInput)
+  ) {
+    messageElement.textContent = "Not a Valid Email!";
+    loginButton.disabled = true;
+    loginButton.style.backgroundColor = disabledColor;
+  } else {
+    // Valid email
+    messageElement.textContent = '';
+    loginButton.disabled = false;
+    loginButton.style.backgroundColor = activeColor;
+  }
+});
+
+  // Toggle password visibility
+  document.querySelector('.toggle-password').addEventListener('click', function () {
+    const passwordInput = document.querySelector('#password-field');
+    const icon = this.querySelector('i');
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    icon.classList.toggle('fa-eye');
+    icon.classList.toggle('fa-eye-slash');
+  });
+
+  // Prevent space character in password
+  const passwordField = document.getElementById('password-field');
+
+  passwordField.addEventListener('keydown', function (e) {
+    if (e.key === ' ') {
+      e.preventDefault(); // Block space key
+    }
+  });
+
+  passwordField.addEventListener('input', function () {
+    this.value = this.value.replace(/\s/g, ''); // Remove any pasted spaces
+  });
+
+  // Hide flash messages after 3 seconds
+  setTimeout(function () {
+    const flash = document.getElementById('flash-message');
+    if (flash) {
+      flash.style.display = 'none';
+    }
+  }, 3000); // 3 seconds
+
+  let otpSent = false;
+let otpTimer = null;
+let countdownInterval = null;
+
+async function sendOTP(isResend = false) {
+  const email = document.getElementById('login-email').value.trim();
+  const otpField = document.getElementById('password-field');
+  const sendBtn = document.getElementById('send-otp-button');
+  const resendBtn = document.getElementById('resend-otp-button');
+  const emailError = document.getElementById('admin-email-error');
+  const otpStatus = document.getElementById('otp-status-message');
+  const timerBox = document.getElementById('otp-timer');
+  const otpErrorMessage = document.getElementById('otp-error-message');
+  const loadingOverlay = document.getElementById('loading-overlay'); // <-- Added
+
+  // Show appropriate loading message
+const loadingText = loadingOverlay.querySelector('div');
+if (otpSent && !isResend) {
+  loadingText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying OTP...';
+} else {
+  loadingText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending OTP...';
+}
+
+loadingOverlay.style.display = 'flex'; // Show loader
+
+
+  try {
+    if (otpSent && !isResend) {
+      const otp = otpField.value.trim();
+
+      if (!otp || otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+        otpErrorMessage.textContent = "Invalid OTP. Please enter the 6-digit OTP.";
+        otpErrorMessage.style.display = "block";
+        loadingOverlay.style.display = 'none'; // <-- Hide loader
+        return;
+      }
+
+      const res = await fetch("/verify-admin-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+      });
+
+      const data = await res.json();
+
+      loadingOverlay.style.display = 'none'; // <-- Hide loader
+
+      if (data.success) {
+        otpErrorMessage.style.display = "none";
+        window.location.href = "/admin";
+      } else {
+        otpErrorMessage.textContent = data.message || "Invalid OTP. Please try again.";
+        otpErrorMessage.style.display = "block";
+      }
+
+      return;
+    }
+
+    // Send OTP request
+    const response = await fetch("/send-admin-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await response.json();
+
+    loadingOverlay.style.display = 'none'; // <-- Hide loader
+
+    if (data.success) {
+      // Hide any previous error
+      emailError.style.display = "none";
+
+      // Show success message
+      otpStatus.textContent = "OTP sent to your email";
+      otpStatus.style.display = "inline-block";
+      otpStatus.style.color = "green";
+
+      // Enable OTP input and update state
+      otpSent = true;
+      otpField.disabled = false;
+
+      // Change "Send OTP" button to "Login"
+      sendBtn.textContent = "Login";
+      sendBtn.classList.remove("send-otp");
+      sendBtn.classList.add("login");
+
+      // Show and disable "Resend OTP" button
+      resendBtn.style.display = "block";
+      resendBtn.disabled = true;
+
+      // Start Resend OTP cooldown timer
+      let resendCooldown = 60;
+      resendBtn.textContent = `Resend OTP (${resendCooldown}s)`;
+      const resendInterval = setInterval(() => {
+        resendCooldown--;
+        resendBtn.textContent = `Resend OTP (${resendCooldown}s)`;
+        if (resendCooldown <= 0) {
+          clearInterval(resendInterval);
+          resendBtn.disabled = false;
+          resendBtn.textContent = "Resend OTP";
+        }
+      }, 1000);
+
+      // Start OTP expiration countdown
+      let timeLeft = 60;
+      timerBox.textContent = `Expires in ${timeLeft}s`;
+      timerBox.style.display = "inline-block";
+
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          timerBox.textContent = `Expires in ${timeLeft}s`;
+        } else {
+          clearInterval(countdownInterval);
+          otpSent = false;
+          timerBox.style.display = "none";
+          otpStatus.textContent = "OTP expired. Please resend.";
+          otpStatus.style.color = "red";
+          otpStatus.style.display = "inline-block";
+
+          // Reset button text & class
+          sendBtn.textContent = "Send OTP";
+          sendBtn.classList.remove("login");
+          sendBtn.classList.add("send-otp");
+        }
+      }, 1000);
+    } else {
+      // If sending OTP failed
+      otpStatus.textContent = data.message || "Failed to send OTP.";
+      otpStatus.style.color = "red";
+      otpStatus.style.display = "inline-block";
+    }
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    loadingOverlay.style.display = 'none'; // <-- Hide loader on failure
+    otpStatus.textContent = "";
+    otpStatus.style.color = "red";
+    otpStatus.style.display = "inline-block";
+  }
+}
+
+</script>
+
+          </div>
+        </div>
+
+               <!-- Right Panel -->
+<div class="login-right">
+  <img src="/static/assets/Group 2.png" alt="Login Graphic" class="right-image">
+  <div class="support-text">
+    <i class="fas fa-envelope"></i> Support - dt@activusdesignbuild.in
+  </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

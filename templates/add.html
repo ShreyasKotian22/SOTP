@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <title>Add New Order</title>
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-
-    
-    
     html, body {
       height: 100%;
+      overflow: hidden !important;
     }
     body {
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
+      overflow: hidden !important;
     }
     * {
   box-sizing: border-box;
@@ -38,57 +39,77 @@ body {
 }
 
 /* Sidebar */
-.sidebar {
-  width: 280px;
-  background-color: #006D7D;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 0;
-}
 
-.sidebar .logo img {
-  width: 245px;
-  margin: 0 auto 20px;
-  display: block;
-}
+    .sidebar {
+      width: 280px;
+      background-color: #006D7D;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
 
-.sidebar nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    .sidebar .logo img {
+      width: 245px;
+      margin: 0 auto 20px;
+      display: block;
+    }
 
-.sidebar nav ul li {
-  padding: 12px 30px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.3s;
-}
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav ul li {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
 
     .nav-item i,
-.logout i {
-  font-size: 18px;
-}
+    .logout i {
+      font-size: 18px;
+      margin-right: 8px;
+      vertical-align: middle;
+      width: 18px;
+      height: 22px;
+      display: inline-block;
+    }
 
-.nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.356);
-  cursor: pointer;
-}
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
 
+    .logout {
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
 
-.logout {
-  padding: 12px 30px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: auto;
-}
+    /* Sidebar text and icon color */
+    .sidebar nav ul li a,
+    .sidebar nav ul li a i,
+    .sidebar nav ul li a span,
+    .sidebar .logout a,
+    .sidebar .logout a i,
+    .sidebar .logout a span {
+      color: white;
+      text-decoration: none;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar .logout a:hover {
+      color: white;
+    }
 
 /* Main content */
 .main-content {
@@ -97,7 +118,15 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  overflow: hidden;
+  overflow: auto;
+  opacity: 0;
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 .main-content h1 {
@@ -106,6 +135,33 @@ body {
   font-weight: 700;
   margin-bottom: 25px;
   text-align: left;
+}
+/*Back button hovering effect*/
+.back-heading {
+  text-decoration: none;
+  color: inherit;
+ 
+}
+
+.back-heading h1 {
+  margin: 1px;
+ 
+  margin-left: 10px;
+  transition: color 0.2s ease;
+}
+
+.back-heading:hover h1 {
+  color: #127285;
+  cursor: pointer;
+  transform: translateX(-2px);
+}
+
+
+/*Spacing for the back button b/w form*/
+.back-button-wrapper {
+  margin-top: 10px;
+  margin-bottom: 30px; /* creates space between button and form */
+  padding-left: 10px;  /* aligns with form card */
 }
 
 /* Greeting section */
@@ -366,6 +422,14 @@ body {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  opacity: 0;
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 .card {
@@ -374,7 +438,7 @@ body {
   padding: 30px;
   max-width: 900px;
   margin: auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: none !important;
 }
 
 .tabs {
@@ -400,6 +464,23 @@ body {
   color: #006D7D;
   font-weight: 600;
 }
+.input-field#companyName[readonly] {
+  background-color: #e9ecef !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
+.input-field[readonly] {
+  background-color: #e9ecef !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
+
+.input-field#endDate[readonly] {
+  background-color: #e9ecef !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
+
 
 .input-field,
 select {
@@ -498,7 +579,7 @@ body {
 /* Sidebar */
 .sidebar {
   width: 280px;
-  background-color: #127285;
+  background-color: #0a7386;
   color: white;
   display: flex;
   flex-direction: column;
@@ -550,290 +631,3113 @@ body {
 .nav-item.active {
   background-color: rgba(255, 255, 255, 0.25); /* subtle highlight */
 }
+body {
+  display: flex;
+  background-color: #f5f6f8;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Container Layout */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
 
 
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.main-content h1 {
+  font-size: 24px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+/* Greeting section */
+.greeting {
+  margin-bottom: 25px;
+}
+
+.greeting h1 {
+  font-size: 26px;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.greeting p {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Dashboard stat cards */
+.cards-dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: -39px; /* ⬅️ Moves cards closer to greeting */
+  margin-bottom: 20px;
+}
+
+.card-dashboard {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 220px;
+  height: 80px;
+}
+
+.card-icon {
+  background-color: #127285;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+/* Dashboard stat cards */
+.cards-dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: -39px;
+  margin-bottom: 20px;
+}
+
+.card-dashboard {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  max-width: 220px;
+  height: 80px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dashboard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon */
+.card-icon {
+  background-color: #127285;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+/* Text */
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.card-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+
+/* Chart section */
+.chart-section {
+  background-color: white;
+  padding: 24px;
+  border-radius: 15px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.08);
+  width: 88%;
+  max-width: 100%;
+  margin: 0 0 20px 30px; /* Moved left */
+  box-sizing: border-box;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.chart-header h2 {
+  font-size: 20px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 700;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filters select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #127285;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-placeholder {
+  margin-top: 20px;
+  height: 198px;
+  display: flex;
+  justify-content: flex-start; /* Align left */
+  align-items: center;
+  color: #888;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+  padding-left: 20px; /* Optional spacing */
+}
+
+#performanceChart {
+  margin-top: 10px;
+  max-height: 350px;
+}
+
+
+/* Icon styles */
+.nav-item i,
+.logout i {
+  font-size: 18px;
+}
+
+
+/* ====== Add New Order Form Styling ====== */
+
+
+#form-container {
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+
+#form-container .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 900px;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+#form-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+#form-container .tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+}
+
+#form-container .tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+#form-container .tab.active {
+  border-bottom: 3px solid #006D7D;
+  color: #006D7D;
+  font-weight: 600;
+}
+
+#form-container .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+#form-container .form-grid.full {
+  grid-template-columns: 1fr;
+}
+
+#form-container label {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+#form-container .input-field,
+#form-container textarea,
+#form-container select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+#form-container textarea.input-field {
+  min-height: 80px;
+  resize: vertical;
+}
+
+#form-container .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#form-container button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#form-container .btn-secondary {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+#form-container .btn-primary {
+  background-color: #007980;
+  color: white;
+}
+
+#form-container .btn-secondary:hover {
+  background-color: #f2f2f2;
+}
+
+#form-container .btn-primary:hover {
+  background-color: #005f66;
+}
+
+#form-container .client-item {
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: 1px solid transparent;
+}
+
+#form-container .client-item:hover,
+#form-container .client-item.selected {
+  background-color: #eaeaea;
+  border-color: #999;
+}
+
+#form-container .search-input {
+  margin-bottom: 14px;
+}
+
+#form-container .summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+#form-container .summary-table th,
+#form-container .summary-table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+  background: none;
+  color: #111;
+}
+
+#form-container .summary-table th {
+  font-weight: 600;
+}
+
+#form-container .confirmation-table {
+  width: 100%;
+  font-size: 14px;
+  margin-top: 1rem;
+  border-spacing: 0 12px;
+}
+
+#form-container .confirmation-table td {
+  padding: 6px 10px;
+  vertical-align: top;
+  color: #111;
+}
+
+#form-container .confirmation-table td:first-child {
+  font-weight: 600;
+  width: 200px;
+}
+
+#form-container .success-box {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #f2fdf5;
+  border: 1px solid #d5ebdd;
+  border-radius: 8px;
+  color: #1b4e2a;
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+#form-container .summary-table,
+#form-container .confirmation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+#form-container .summary-table th,
+#form-container .summary-table td,
+#form-container .confirmation-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  color: #111;
+}
+
+#form-container .confirmation-table td:first-child {
+  font-weight: 600;
+  width: 200px;
+}
+
+#form-container .success-box {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #f2fdf5;
+  border: 1px solid #d5ebdd;
+  border-radius: 8px;
+  color: #1b4e2a;
+  font-weight: 600;
+  font-size: 15px;
+}
+textarea.input-field {
+  min-height: 80px;
+  resize: vertical;
+}
+#client-list {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.client-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.client-item.selected {
+  background-color: #cde4e8;
+  font-weight: 500;
+}
+
+.client-item:hover {
+  background-color: #f3f3f3;
+}
+.card {
+  min-height: 400px;
+}
+
+#client-list {
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.client-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.client-item.selected {
+  background-color: #cde4e8;
+  font-weight: 500;
+}
+
+.client-item:hover {
+  background-color: #f3f3f3;
+}
+
+.invalid-field {
+  border: 1px solid red !important;
+}
+
+.summary-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.summary-table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.summary-table tr td:first-child {
+  font-weight: 500;
+  width: 30%;
+}
+
+.card {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-bottom: 80px; /* ➕ adds space so sticky button doesn't overlap content */
+}
+
+
+.button-group {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.card.no-scroll {
+  height: calc(100vh - 30px);
+}
+
+
+.preview-card {
+  background-color: #127285;
+  color: white;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.preview-card {
+  break-inside: avoid; /* prevent cut-off in PDF */
+}
+
+
+.preview-header {
+  font-weight: 600;
+  font-size: 15px;
+  padding-bottom: 8px;
+  margin: 0 -16px 12px -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-bottom: 1px solid white;
+}
+
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;                 /* Tighter spacing between fields */
+}
+
+.preview-field {
+  font-size: 12px;
+}
+
+.preview-label {
+  font-weight: 500;
+  font-size: 13px;
+  color: white; /* Ensure label stays white */
+  margin-bottom: 2px;
+}
+
+.preview-value {
+  font-weight: 500;
+  font-size: 13px;
+  color: #d8edf2; /* Light teal or soft white */
+}
+
+.printable-summary {
+  max-height: none !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+
+/* Prevent outer scroll from clipping select dropdown */
+select.input-field {
+  position: relative;
+  z-index: 2;
+  background-color: #fff;
+}
+
+
+/*====================================
+========= Order Amount Preview =======*/
+
+.amount-summary {
+  background: rgba(18, 114, 133, 0.95);
+  color: white;
+  border-radius: 5px; /* fixed: removed space in '5 px' */
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  margin-top: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.amount-header {
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 24px;
+  border-bottom: 1px solid white; /* ✅ Proper horizontal line below Total Amount */
+  background: rgba(18, 114, 133, 1);
+  text-align: center;
+}
+
+
+.amount-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.amount-table td {
+  padding: 14px 24px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  background: rgba(18, 114, 133, 0.95);
+}
+
+
+.amount-table td:first-child {
+  text-align: left; /* Align labels slightly left */
+  padding-left: 55px; /* Push label away from edge */
+}
+
+.amount-table td:last-child {
+  text-align: right;
+  padding-right: 55px; /* Push amount away from edge */
+  
+}
+
+.amount-table tr.divider-row td {
+  height: 1px;
+  padding: 0;
+  background-color: white;
+  border: none;
+}
+
+.amount-table tr.total-row {
+  font-weight: bold;
+  background-color: #0b6a7f;
+  border-top: 1px solid white; /* Ensures horizontal line above TOTAL row */
+}
+
+
+.amount-table tr.highlight-row {
+  font-weight: bold;
+  background-color: #0b6a7f;
+  border-bottom: none; 
+}
+
+.amount-summary-card {
+  background-color: #127285; /* Teal background from image */
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+  font-family: 'SF Pro Display', sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.amount-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.amount-summary-header th {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.amount-summary-table td {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Align the amount column to the right */
+.amount-summary-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+/* Style for the "Total Amount" row */
+.amount-summary-table .total-row td {
+  font-weight: 700;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Style for the "Total Amount (in Words)" row */
+.amount-summary-table .words-row td {
+  padding-top: 14px;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  text-align: left; /* Keep this left-aligned */
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+
+
+/* Remove scroll limit for summary confirmation cards */
+#form-container .card.no-scroll {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.full-width-divider {
+  height: 1px;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.full-width-divider {
+  height: 1px;
+  background-color: 1px solid rgba(255, 255, 255, 0.15); /* ✅ subtle white with opacity */
+  grid-column: 1 / -1;
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+/* Push Order Details and Summary Preview forms upwards */
+
+.form-wrapper.form-summary-preview {
+  margin-top: -30px;  /* adjust this value as needed */
+}
+
+/*-----------------------------------------
+--------------message box ----------------*/
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+.modal-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.modal-body p {
+  margin: 10px 0;
+  font-size: 15px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 16px;
+}
+
+.cancel-btn,
+.download-btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #eee;
+  color: #333;
+}
+
+.download-btn {
+  background-color: #127285;
+  color: white;
+}
+
+.download-dropdown {
+  position: relative;
+}
+
+.download-btn {
+  padding: 8px 14px;
+  background: #127285;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.dropdown-menu button {
+  padding: 8px 12px;
+  background: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-menu button:hover {
+  background: #f0f0f0;
+}
+
+.dropdown-menu.show {
+  display: flex;
+}
+
+.download-dropdown {
+  position: relative;
+  display: inline-block;
+}
+@media print {
+  .form-summary-preview {
+    background: white !important;
+    color: black;
+    padding: 20px;
+  }
+}
+
+
+
+/*---------------------------------------------
+---------Drop down slection client details----*/
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 220px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  padding: 10px;
+}
+
+
+.dropdown-list li {
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-list {
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  background: white;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.dropdown-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-wrapper .dropdown-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #000000;
+  font-size: 16px;
+}
+
+.dropdown-list {
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  background: white;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.dropdown-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background-color: #ffffff;
+}
+
+
+/* Fix Start & End Date overflow when scrolling */
+.form-grid > div {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+.button-group.sticky-inside {
+  position: sticky;
+  bottom: 0;
+  padding: 10px 0;
+  background: none;
+  text-align: right;
+  border-top: none;
+}
+#subContractorInputWrapper {
+  position: relative;
+}
+
+.has-submenu {
+  position: relative;
+}
+
+.has-submenu .submenu {
+  display: none;
+  list-style: none;
+  background-color: #0a6a7c;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 280px;
+  border-radius: 0 0 12px 12px;
+  z-index: 999;
+  padding: 8px 0;
+}
+
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 0px 30px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+   margin-bottom: -7px; /* ✅ Add spacing between items */
+}
+
+.submenu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.submenu-arrow {
+  margin-left: auto;
+}
+
+html, body {
+  height: 100vh;
+  overflow: hidden !important; /* 🚫 removes outer scrollbar */
+  margin: 0;
+  padding: 0;
+}
+
+body > .container,
+body > .main-content {
+  overflow: hidden !important;  /* prevent body-level scroll */
+  height: 100vh;
+}
+
+#form-container {
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.card.no-scroll {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card.no-scroll > div[style*="overflow-y: auto"] {
+  flex: 1;
+  overflow-y: auto !important;  /* ✅ only scroll inside this section */
+}
+
+
+
+
+
+
+</style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <style>
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .heading-link {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+}
+
+.heading-link:hover {
+  color: #127285;
+  transform: translateX(-2px);
+  cursor: pointer;
+}
+
+.order-summary-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px 60px  ;
+  width: 100%;
+  max-width: 794px;             /* Optional: keep content centered */
+  margin: auto;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: #000;
+}
+@media print {
+  .button-group,
+  .btn-primary,
+  .btn-secondary,
+  .download-btn,
+  .download-dropdown {
+    display: none !important;
+  }
+}
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.form-wrapper {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.card.no-scroll {
+  height: calc(100vh - 40px); /* adjust height so it fits without scroll gap */
+}
+
+
+
+.order-summary-content {
+  max-height: 80vh;         /* Adjust height as needed */
+  overflow-y: auto;         /* Enable vertical scrolling */
+  padding-right: 16px;      /* Optional: space for scrollbar */
+  box-sizing: border-box;
+}
+
+
+
+
+
+/* DASHBOARD (SIDEBAR & MAIN CONTENTS) */
+    
+  </style>
   </style>
 </head>
 <body>
-  <aside class="sidebar">
+
+  <aside class="sidebar" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div>
     <div class="logo">
-        <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
-      </div>
+      <img src="{{ url_for('static', filename='assets/LOGO.png') }}" alt="Logo" />
+    </div>
+
     <nav>
       <ul>
-         <li class="nav-item">
-  <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-th-large"></i> <span>  Dashboard</span>
-  </a>
-</li>
-        <li class="nav-item active">
-  <a href="/add-order" style="color: white; text-decoration: none;">
-    <i class="fas fa-plus-circle"></i> Add New Order
-  </a>
-</li>
+        <li class="nav-item"><a href="{{ url_for('dashboard') }}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="/add-order"><i class="fas fa-plus-circle"></i> <span>Add New Order</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('clients') }}"><i class="fas fa-user"></i> <span>Clients</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('view_orders') }}"><i class="fas fa-file-alt"></i> <span>View Sales Order</span></a></li>
 
-<li class="nav-item">
-  <a href="{{ url_for('clients') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-user"></i> Clients</a>
-</li>
-
-          <li class="nav-item">
-  <a href="{{ url_for('view_orders') }}" style="color: white; text-decoration: none;">
-    <i class="fas fa-file-alt"></i> View Sales Order</a>
-</li>
-        <li class="nav-item">
-  <a href="javascript:void(0);" onclick="showComingSoon(this)" style="color: white; text-decoration: none;">
-    <i class="fas fa-receipt"></i> <span> Sales Invoice</span>
-  </a>
-</li>
-        <li class="nav-item">
-  <a href="javascript:void(0);" onclick="showReportSection(this)" style="color: white; text-decoration: none;">
-    <i class="fas fa-chart-bar"></i> <span> Report</span>
-  </a>
-</li>
+        <li class="nav-item has-submenu" onclick="toggleSubmenu(this)">
+          <div class="report-toggle" style="display: flex; align-items: center; width: 100%; color: white;">
+            <i class="fas fa-chart-bar"></i>
+            <span style="margin-left: 6px;">Report</span>
+            <i class="fas fa-chevron-down submenu-arrow" style="margin-left: auto;"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="window.location.href='/report'" class="submenu-item active">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Sales Order Overview</span>
+            </li>
+            <li onclick="window.location.href='/po-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">PO’s Overview</span>
+            </li>
+            <li onclick="window.location.href='/growth-overview'" class="submenu-item">
+              <i class="fas fa-chart-bar"></i>
+              <span style="margin-left: 8px;">Growth Overview</span>
+            </li>
+          </ul>
+        </li>
       </ul>
-</nav>
-<li class="nav-item logout">
-  <a href="/" style="color: white; text-decoration: none;">
-    <i class="fas fa-sign-out-alt"></i> <span> Log Out</span>
-  </a>
-</li>
+    </nav>
+  </div>
+
+  <!-- ✅ Bottom Section: Support + Logout -->
+<div style="display: flex; flex-direction: column;">
+    <li class="nav-item" style="list-style: none; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 26px; margin-bottom: 7px;">
+        <button onclick="createSupportTicket()" style="background: none; border: none; color: white; padding: 0; font: inherit; cursor: pointer; display: flex; align-items: center;">
+            <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+            <span>Support</span>
+        </button>
+        <span style="color: white; font-size: 14px; margin-left: 1px;">dt@activusdesignbuild.in</span>
+    </li>
+
+  <li class="nav-item logout">
+    <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Log Out</span></a>
+  </li>
+</div>
+
 </aside>
 
-  <main class="main">
-    <div id="form-container"></div>
-  </main>
-
+    
+  <main class="main-content" id="main-content">
+      <a href="{{ url_for('dashboard') }}" class="back-heading" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+  <h1><i class="fas fa-th-large"></i> Add New Order</h1>
+</a>
   <script>
-  const clients = {
-    "Hell Energy": {
-      clientName: "Hell Energy",
-      division: "A&E and PMC",
-      companyName: "Hell Energy",
-      projectName: "Prefeasibility",
-      subContractorName: "Nill",
-      site: "Mumbai"
-    },
-    "Reliance Retail Limited": {
-      clientName: "Reliance Retail",
-      division: "Retail Ops",
-      companyName: "Reliance",
-      projectName: "Launchpad",
-      subContractorName: "ABC Subcon",
-      site: "Navi Mumbai"
+
+    
+
+    function resetActive() {
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     }
-  };
 
-  let selectedClient = null;
-  let formData = {};
+ 
+/*----------------------------------
+-------------Add New Order--------*/
 
-  function renderClientTabs(activeTab = "new") {
-    document.getElementById("form-container").innerHTML = `
-      <div class="card">
-        <h2>Add Client</h2>
-        <div class="tabs">
-          <div class="tab ${activeTab === "new" ? "active" : ""}" onclick="renderNewClientForm()">New Client</div>
-          <div class="tab ${activeTab === "existing" ? "active" : ""}" onclick="renderClientTabs('existing')">Existing Client</div>
-        </div>
-        ${activeTab === "new" ? renderNewClientFields() : renderExistingClientFields()}
-      </div>
-    `;
+
+let selectedClient = null;
+let formData = {};
+
+function showAddOrderForm(element) {
+  resetActive();
+  element.classList.add("active");
+  document.getElementById("main-content").innerHTML = `<div id="form-container"></div>`;
+  
+  // THIS IS THE FIX: Reset the global formData object ONLY when starting a new order.
+  formData = {}; 
+
+  renderClientDetailsForm();
+}
+let allClients = []; // Will hold all client objects
+
+// Fetch all clients and populate email datalist
+function loadClientEmails() {
+  fetch('/api/clients')
+    .then(res => res.json())
+    .then(data => {
+      allClients = data; // [{email, clientName, companyName, phone, ...}]
+      const datalist = document.getElementById('clientEmailList');
+      if (datalist) {
+        datalist.innerHTML = '';
+        allClients.forEach(client => {
+          if (client.email) {
+            const opt = document.createElement('option');
+            opt.value = client.email;
+            datalist.appendChild(opt);
+          }
+        });
+      }
+    });
+}
+
+async function createSupportTicket() {
+    try {
+        const response = await fetch('/api/generate-support-ticket');
+        const data = await response.json();
+
+        if (data.ticket_id) {
+            const recipient = 'dt@activusdesignbuild.in';
+            const subject = `Support Ticket: ${data.ticket_id}`;
+            
+            // This creates the mailto link and programmatically "clicks" it
+            window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+        } else {
+            // Fallback in case of an error
+            alert('Could not generate a support ticket ID. Please email dt@activusdesignbuild.in directly.');
+        }
+    } catch (error) {
+        console.error("Failed to create support ticket:", error);
+        alert('An error occurred. Please email dt@activusdesignbuild.in directly.');
+    }
+}
+
+
+// Auto-fill fields when email is selected
+function onClientEmailSelect(email) {
+  const client = allClients.find(c => c.email === email);
+  if (client) {
+    // Fill the personal name and company name fields
+    const clientNameInput = document.getElementById('clientName');
+    const companyNameInput = document.getElementById('companyName');
+    if (clientNameInput) clientNameInput.value = client.clientName || '';
+    if (companyNameInput) companyNameInput.value = client.companyName || '';
+    // Update formData with all relevant client details
+    formData.clientName = client.clientName || '';
+    formData.companyName = client.companyName || '';
+    formData.email = client.email || '';
+    formData.phone = client.phone || '';
+    formData.address = client.address || '';
+    formData.gst = client.gst || '';
+    formData.pan = client.pan || '';
   }
+}
 
-  function renderNewClientFields() {
-    return `
-      <form id="new-client-form">
-        <div class="form-grid">
-          <div><label>Client Name</label><input class="input-field" name="clientName" required></div>
-          <div><label>Division</label><input class="input-field" name="division" required></div>
-          <div><label>Company Name</label><input class="input-field" name="companyName" required></div>
-          <div><label>Project Name</label><input class="input-field" name="projectName" required></div>
-          <div><label>Sub Contractor Name</label><input class="input-field" name="subContractorName" required></div>
-          <div><label>Site</label><input class="input-field" name="site" required></div>
-        </div>
-        <div class="button-group">
-          <button type="submit" class="btn-primary">Add Client</button>
-        </div>
-      </form>
-    `;
+// Call this on page load
+document.addEventListener('DOMContentLoaded', loadClientEmails);
+
+/* Client Details Form */
+function renderClientDetailsForm() {
+  // Restore form data from sessionStorage only if coming from Back button
+  window.__retainAddOrderForm = false;
+  // Ensure email dropdown is repopulated after rendering the form (for edit/back)
+  setTimeout(loadClientEmails, 0);
+  // Restore form data from sessionStorage only if coming from Back button or Edit
+  if (window.__retainAddOrderForm) {
+    let savedPOForm = sessionStorage.getItem('addOrderFormData');
+    if (savedPOForm) {
+      try {
+        const parsed = JSON.parse(savedPOForm);
+        formData = { ...formData, ...parsed };
+      } catch (e) {}
+    }
+    window.__retainAddOrderForm = false;
   }
+  document.getElementById("form-container").innerHTML = `
+  <div class="form-wrapper form-client-details">
+    <div class="card no-scroll" style="max-width: 850px; margin: auto; height: calc(100vh - 40px); display: flex; flex-direction: column;">
 
-  function renderExistingClientFields() {
-    return `
-      <input type="text" class="input-field search-input" placeholder="Search client..." oninput="filterClients(this.value)">
-      <div id="client-list">
-        ${Object.keys(clients).map(name => `<div class="client-item" onclick="selectClient('${name}')">${name}</div>`).join("")}
-      </div>
-      <div class="button-group">
-        <button class="btn-secondary" onclick="alert('Cancelled')">Cancel</button>
-        <button class="btn-primary" onclick="goToClientDetails()">Next</button>
-      </div>
-    `;
-  }
+      <h2 style="margin-bottom: 2px; margin-left:25px; font-size: 24px; font-weight: 600;">
+        <a href="{{ url_for('dashboard') }}" class="heading-link"><i class="fas fa-th-large"> </i>‎ ‎ Add New Order
+        </a>
+        <span style="font-weight: 400;">- Order details</span>
+      </h2>
 
-  function renderNewClientForm() {
-    renderClientTabs("new");
-    setTimeout(() => {
-      document.getElementById("new-client-form").onsubmit = function (e) {
-        e.preventDefault();
-        const data = new FormData(this);
-        const newClient = {};
-        for (let [k, v] of data.entries()) newClient[k] = v;
-
-        clients[newClient.clientName] = newClient;
-        selectedClient = clients[newClient.clientName];
-
-        renderClientTabs("existing");
-
-        setTimeout(() => {
-          selectClient(newClient.clientName);
-        }, 50);
-      };
-    }, 10);
-  }
-
-  function filterClients(value) {
-    const filtered = Object.keys(clients).filter(c => c.toLowerCase().includes(value.toLowerCase()));
-    const list = document.getElementById("client-list");
-    list.innerHTML = filtered.map(name => `<div class="client-item" onclick="selectClient('${name}')">${name}</div>`).join("");
-  }
-
-  function selectClient(name) {
-    selectedClient = clients[name];
-    document.querySelectorAll(".client-item").forEach(el => el.classList.remove("selected"));
-    [...document.querySelectorAll(".client-item")].find(el => el.textContent === name)?.classList.add("selected");
-  }
-
-  function goToClientDetails() {
-    if (!selectedClient) return alert("Please select a client.");
-    formData = { ...selectedClient };
-    renderClientDetailsForm();
-  }
-
-  function renderClientDetailsForm() {
-    document.getElementById("form-container").innerHTML = `
-      <div class="card">
-        <h2>Client Details</h2>
-        <form id="client-details-form">
+      <!-- ✅ Scrollable area -->
+      <div style="flex: 1; overflow-y: auto; padding: 30px;">
+        <form id="client-details-form" novalidate>
           <div class="form-grid">
-            <div><label>Client Name</label><input class="input-field" name="clientName" value="${formData.clientName}" required></div>
-            <div><label>Division</label><input class="input-field" name="division" value="${formData.division}" required></div>
-            <div><label>Company Name</label><input class="input-field" name="companyName" value="${formData.companyName}" required></div>
-            <div><label>Project Name</label><input class="input-field" name="projectName" value="${formData.projectName}" required></div>
-            <div><label>Sub Contractor Name</label><input class="input-field" name="subContractorName" value="${formData.subContractorName}" required></div>
-            <div><label>Start Date</label><input type="date" class="input-field" name="startDate" required></div>
-            <div><label>End Date</label><input type="date" class="input-field" name="endDate" required></div>
-            <div style="grid-column: span 2;"><label>Site</label><input class="input-field" name="site" value="${formData.site}" required></div>
-          </div>
-          <div class="button-group">
-            <button type="button" class="btn-secondary" onclick="renderClientTabs('existing')">Back</button>
-            <button class="btn-primary" type="submit">Next</button>
+            ${/* ✅ All your *exact* fields untouched below */''}
+            <div>
+              
+  <label for="clientEmail">Email</label>
+    <div class="input-field" style="position: relative; padding: 0; margin-bottom: 0;">
+    <i class="fas fa-user-plus"
+       title="Add New Client"
+       onclick="window.location.href='/add-clients#add-client'"
+       style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #000000; cursor: pointer; font-size: 14px; z-index: 2;"></i>
+    <input list="clientEmailList" class="input-field" id="clientEmail" name="clientEmail" autocomplete="off" required placeholder="Select or type email..." onchange="onClientEmailSelect(this.value)" style="padding-left: 30px; margin-bottom: 0;" value="${formData.email || ''}">
+    <datalist id="clientEmailList"></datalist>
+  </div>
+</div>
+            <div>
+             <label>Personal Name</label>
+<input class="input-field" id="clientName" name="clientName" required placeholder="" disabled style="background:#eee; color:#888; cursor:not-allowed;">
+            </div>
+
+            <div>
+              <label for="division">Division</label>
+              <select class="input-field" name="division" id="division" required>
+                <option value="" disabled ${!formData.division ? 'selected' : ''}>Select Division</option>
+                <option value="A&E" ${formData.division === 'A&E' ? 'selected' : ''}>A&E</option>
+                <option value="PMC" ${formData.division === 'PMC' ? 'selected' : ''}>PMC</option>
+                <option value="Industrial Land" ${formData.division === 'Industrial Land' ? 'selected' : ''}>Industrial Land</option>
+                <option value="Equipment Division" ${formData.division === 'Equipment Division' ? 'selected' : ''}>Equipment Division</option>
+                <option value="OEM Master Franchise" ${formData.division === 'OEM Master Franchise' ? 'selected' : ''}>OEM Master Franchise</option>
+                <option value="Co-Packing" ${formData.division === 'Co-Packing' ? 'selected' : ''}>Co-Packing</option>
+                <option value="Design & Build" ${formData.division === 'Design & Build' ? 'selected' : ''}>Design & Build</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Company Name</label>
+              <input class="input-field" name="companyName" id="companyName" readonly required value="${formData.companyName || ''}">
+            </div>
+
+            <div>
+              <label>Project Name</label>
+              <input class="input-field" name="projectName" id="projectName" required
+                oninput="this.value = this.value.replace(/[^A-Za-z0-9 ()&.,-]/g, '')"
+                pattern="[A-Za-z0-9 ()&.,-]{3,50}"
+                title="Only letters, numbers, and basic punctuation (min 3, max 50 characters)"
+                value="${formData.projectName || ''}">
+            </div>
+
+            <div>
+              <label>Site Location</label>  
+              <input class="input-field" name="site" id="site" required
+                pattern="[A-Za-z0-9 ,.-]{3,80}"
+                title="Only letters, numbers, commas, periods, and dashes (3–80 characters)"
+                value="${formData.site || ''}">
+            </div>
+
+            <div>
+              <label>State</label>
+              <select class="input-field" name="state" id="state" required>
+                <option value="">Select State...</option>
+                ${[
+                  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Chandigarh",
+                  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
+                  "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+                  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
+                  "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Delhi", "Puducherry"
+                ].map(state => `<option value="${state}" ${formData.state === state ? "selected" : ""}>${state}</option>`).join("")}
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 20px;">
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <label for="addSubContractorCheckbox" style="margin-bottom: 0px;">Add a Sub-Contractor?</label>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 14px; color: #333;">Yes?</span>
+                    <input type="checkbox" id="addSubContractorCheckbox"
+                           ${(formData.addSubContractor === undefined || formData.addSubContractor) ? 'checked' : ''}
+                           onchange="handleSubContractorToggle()">
+                  </div>
+                </div>
+                <div id="subContractorInputWrapper" style="margin-top: 6px;">
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="includeWeekends" name="includeWeekends" value="${formData.includeWeekends || ''}" />
+
+            <div>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <label style="margin-bottom: 4px;">Project Duration (in days)</label>
+    <div style="font-size: 12px; display: flex; gap: 10px; align-items: center;">
+      <span>Include Weekends?</span>
+      <label style="font-weight: 400;">
+        <input type="radio" name="includeWeekends" value="yes"
+          ${formData.includeWeekends === "yes" ? "checked" : ""}
+          onchange="setWeekendChoice('yes')" style="margin-right: 4px;">Yes
+      </label>
+      <label style="font-weight: 400;">
+        <input type="radio" name="includeWeekends" value="no"
+          ${formData.includeWeekends === "no" ? "checked" : ""}
+          onchange="setWeekendChoice('no')" style="margin-right: 4px;">No
+      </label>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+    <input type="number" class="input-field" id="projectDuration" name="projectDuration"
+  placeholder="Select Yes/No" min="1" required autocomplete="off" inputmode="numeric"
+  value="${formData.projectDuration || ''}" onchange="calculateEndDate()" disabled />
+
+  </div>
+  <p style="margin-top: 6px; font-size: 12px; color: #666;">
+    (* No. of Working hours is 8 hours per day *)
+  </p>
+</div>
+
+            <div style="display: flex; gap: 20px;">
+              <div style="flex: 1;">
+                <label>Start Date</label>
+                <input type="date" class="input-field" name="startDate" id="startDate" readonly
+                  style="background-color: #e9ecef; color: #888; cursor: not-allowed;"
+                  value="${formData.startDate || ''}" />
+              </div>
+
+              <div style="flex: 1;">
+                <label>End Date</label>
+                <input type="date" class="input-field" name="endDate" id="endDate" required
+                  value="${formData.endDate || ''}"
+                  onchange="calculateStartDateFromEndDate()" />
+              </div>
+            </div>
           </div>
         </form>
       </div>
-    `;
+
+      <!-- ✅ Fixed Next Button outside the scroll -->
+      <div class="button-group" style="padding: 16px; justify-content: flex-end; border-top: 1px solid #ccc; background: #fff;">
+        <button type="submit" class="btn-primary" form="client-details-form">Next</button>
+      </div>
+    </div>
+  </div>
+  `;
+
+  setTimeout(() => {
+  handleSubContractorToggle(); // show dropdown if checkbox is checked
+}, 0);
+
+
+  setTimeout(() => {
+    const savedName = formData.clientName;
+    const span = document.getElementById("selected-client-name");
+    if (span) {
+      span.innerText = savedName || " ‎ ‎ ‎ Select a Client Name...";
+      span.style.color = savedName ? "#000" : "#aaa";
+    }
+
+    const hidden = document.getElementById("clientName");
+    if (hidden && savedName) hidden.value = savedName;
+
+    updateDurationInputState();
+  }, 0);
 
     document.getElementById("client-details-form").onsubmit = function (e) {
-      e.preventDefault();
-      const data = new FormData(this);
-      for (const [k, v] of data.entries()) formData[k] = v;
-      renderPOForm();
-    };
+    e.preventDefault();
+
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      return;
+    }
+
+    // 1. Get only the data from the current (client details) form.
+    const clientDetailsData = new FormData(this);
+
+    // 2. MERGE this data into the main formData object instead of replacing it.
+    // This preserves any PO details that might already exist.
+    for (const [key, value] of clientDetailsData.entries()) {
+        const trimmedValue = value.trim();
+        if (trimmedValue) {
+            formData[key] = trimmedValue;
+        }
+    }
+    
+    // 3. Render the next form. The formData object now contains the complete, merged data.
+    renderPurchaseOrderForm();
+  };
+// When returning to the client details form, restore the form fields from localStorage automatically
+// (Handled above in renderClientDetailsForm)
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('/api/subcontractors')
+    .then(response => response.json())
+    .then(data => {
+      const dropdown = document.getElementById('companyNameDropdown');
+      dropdown.innerHTML = '<option value="">Select Subcontractor</option>';
+      data.forEach(name => {
+        if (name) {
+          const option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          dropdown.appendChild(option);
+        }
+      });
+    })
+    .catch(err => {
+      // Optionally show an error or fallback
+      const dropdown = document.getElementById('companyNameDropdown');
+      dropdown.innerHTML = '<option value="">Failed to load</option>';
+    });
+});
+
+ //Company Name Dropdown for Subcontractor
+ fetch('/api/subcontractors')
+  .then(response => response.json())
+  .then(data => {
+    // Populate dropdown with company names
+  });
+
+  // ✅ Restore client name display after rendering
+setTimeout(() => {
+  const savedName = formData.clientName;
+  if (savedName) {
+    const span = document.getElementById("selected-client-name");
+    if (span) {
+      span.innerText = savedName;
+      span.style.color = "#000";
+    }
+
+    const hidden = document.getElementById("clientName");
+    if (hidden) {
+      hidden.value = savedName;
+    }
+  } else {
+    const span = document.getElementById("selected-client-name");
+    if (span) {
+      span.innerText = " ‎ ‎ ‎ Select a  Name...";
+      span.style.color = "#aaa";
+    }
+  }
+}, 0);
+
+
+/* Start date &End date */
+function calculateStartDateFromEndDate() {
+  const endDateValue = document.getElementById("endDate").value;
+  const durationValue = parseInt(document.getElementById("projectDuration").value);
+  const startInput = document.getElementById("startDate");
+  const includeWeekends = document.getElementById("includeWeekends").value;
+
+  if (endDateValue && durationValue > 0) {
+    let endDate = new Date(endDateValue);
+    let startDate = new Date(endDate);
+
+    if (includeWeekends === "no") {
+      let daysCounted = 0;
+      while (daysCounted < durationValue - 1) {
+        startDate.setDate(startDate.getDate() - 1);
+        const day = startDate.getDay();
+        if (day !== 0 && day !== 6) {
+          daysCounted++;
+        }
+      }
+    } else {
+      startDate.setDate(startDate.getDate() - (durationValue - 1));
+    }
+
+    const iso = startDate.toISOString().split("T")[0];
+    startInput.value = iso;
+    formData.startDate = iso;
+    formData.endDate = endDateValue;
+  } else {
+    startInput.value = "";
+    formData.startDate = "";
+  }
+}
+
+function setWeekendChoice(choice) {
+  // Save the user's choice ('yes' or 'no')
+  formData.includeWeekends = choice;
+  document.getElementById("includeWeekends").value = choice;
+
+  // Call our new helper function to enable the input
+  updateDurationInputState();
+
+  // Trigger date recalculations if needed
+  const durationInput = document.getElementById("projectDuration");
+  const endDateInput = document.getElementById("endDate");
+
+  if (durationInput.value && document.getElementById("startDate").value) {
+    calculateEndDate();
+  } else if (durationInput.value && endDateInput.value) {
+    calculateStartDateFromEndDate();
+  }
+}
+
+function updateDurationInputState() {
+  const durationInput = document.getElementById('projectDuration');
+  const choice = formData.includeWeekends;
+
+  // If a choice ('yes' or 'no') has been made, enable the input.
+  if (choice) {
+    durationInput.disabled = false;
+    durationInput.style.backgroundColor = '#fff';
+    durationInput.style.cursor = 'text';
+  } 
+  // Otherwise, if no choice has been made, keep it disabled.
+  else {
+    durationInput.disabled = true;
+    durationInput.style.backgroundColor = '#e9ecef';
+    durationInput.style.cursor = 'not-allowed';
+  }
+}
+
+function calculateEndDate() {
+  const start = document.getElementById("startDate").value;
+  const durationDays = parseInt(document.getElementById("projectDuration").value);
+  const endInput = document.getElementById("endDate");
+
+  if (start && durationDays) {
+    const startDate = new Date(start);
+    startDate.setDate(startDate.getDate() + durationDays);
+    endInput.value = startDate.toISOString().split("T")[0];
+  } else {
+    endInput.value = "";
+  }
+}
+
+
+function handleStartDateChange() {
+  const duration = document.getElementById("projectDuration").value;
+  const warning = document.getElementById("expiry-warning");
+
+  if (!duration || isNaN(parseInt(duration))) {
+    warning.style.display = "block";
+    // Prevent auto-end-date update if duration is missing
+    document.getElementById("endDate").value = "";
+  } else {
+    warning.style.display = "none";
+    calculateEndDate(); // proceed with normal logic
+  }
+}
+
+function validateProjectDurationBeforeStartDate(event) {
+  const duration = document.getElementById("projectDuration").value.trim();
+  const warning = document.getElementById("expiry-warning");
+
+  if (!duration || isNaN(parseInt(duration))) {
+    event.preventDefault(); // Block date picker
+    warning.style.display = "block";
+  } else {
+    warning.style.display = "none";
+  }
+}
+
+// ...existing code...
+function syncAllFormDataFromDOM() {
+  // List all keys you want in CSV
+  const keys = [
+    "clientName", "companyName", "email", "phone", "gst", "pan", "address",
+    "projectName", "division", "startDate", "endDate", "site", "subContractorName", "projectDuration",
+    "poNumber", "poAmount", "poExpiryDate", "issuedBy", "poDate", "gstPercent", "gstAmount",
+    "cgst", "sgst", "tdsPercent", "tdsAmount"
+  ];
+  keys.forEach(key => {
+    const el = document.getElementById(key);
+    if (el && el.value) {
+      formData[key] = el.value.trim();
+    } else if (formData[key]) {
+      // Keep the value already in formData
+      formData[key] = formData[key];
+    } else {
+      formData[key] = "";
+    }
+  });
+}
+// ...existing code...
+function filterSearchClientItems(input, listId) {
+  const filter = input.value.toLowerCase();
+  const ul = document.getElementById(listId);
+  const items = ul.getElementsByTagName('li');
+  for (let i = 0; i < items.length; i++) {
+    const text = items[i].textContent || items[i].innerText;
+    items[i].style.display = text.toLowerCase().includes(filter) ? "" : "none";
+  }
+}
+
+function toggleDropdown(id) {
+  document.querySelectorAll('.dropdown-content').forEach(drop => {
+    if (drop.id !== id) drop.style.display = 'none';
+  });
+  const dropdown = document.getElementById(id);
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+// ✅ Single listener only once
+window.addEventListener("click", function (e) {
+  const isDropdownBtn = e.target.closest(".dropdown-btn");
+  const isDropdownContent = e.target.closest(".dropdown-content");
+  if (!isDropdownBtn && !isDropdownContent) {
+    document.querySelectorAll('.dropdown-content').forEach(drop => drop.style.display = 'none');
+  }
+});
+
+
+
+function askIncludeWeekends() {
+  // Only ask if not already set
+  if (!formData.includeWeekends) {
+    const answer = confirm("Do you want to include Sat/Sun as working days?");
+    formData.includeWeekends = answer ? "yes" : "no";
+    document.getElementById("includeWeekends").value = formData.includeWeekends;
+    document.getElementById("weekend-choice-label").innerText = answer ? "Includes Sat/Sun" : "Excludes Sat/Sun";
+  }
+}
+
+// Update calculateEndDate to use the weekend logic
+function calculateEndDate() {
+  const start = document.getElementById("startDate").value;
+  const durationDays = parseInt(document.getElementById("projectDuration").value);
+  const endInput = document.getElementById("endDate");
+  const includeWeekends = document.getElementById("includeWeekends").value;
+
+  if (start && durationDays > 0) {
+    let endDate = new Date(start);
+
+    if (includeWeekends === "no") {
+      let daysAdded = 0;
+      while (daysAdded < durationDays - 1) {
+        endDate.setDate(endDate.getDate() + 1);
+        const day = endDate.getDay();
+        if (day !== 0 && day !== 6) {
+          daysAdded++;
+        }
+      }
+    } else {
+      endDate.setDate(endDate.getDate() + durationDays - 1);
+    }
+
+    endInput.value = endDate.toISOString().split("T")[0];
+    formData.endDate = endInput.value;
+  } else {
+    endInput.value = "";
+    formData.endDate = "";
+  }
+}
+
+
+function formatINR(val) {
+  const num = parseFloat(val);
+  return isNaN(num) ? '' : '₹' + Number(Math.round(num)).toLocaleString('en-IN');
+}
+
+
+function unformatINR(str) {
+  return str.replace(/[₹,]/g, '').trim();
+}
+
+
+function formatDateDDMMYYYY(dateStr) {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`; // Use - instead of /
+}
+
+function handlePOAmountInput(input) {
+  const raw = input.value.replace(/[^\d]/g, '');
+  const num = parseInt(raw);
+  if (isNaN(num)) {
+    input.value = '';
+    formData.poAmount = '';
+    return;
+  }
+  input.value = '₹' + num.toLocaleString('en-IN');
+  formData.poAmount = num.toString(); // store as plain number
+  calculateGSTSplit();
+}
+
+
+ function redirectToAddClient(event) {
+  if (event) event.stopPropagation();
+  window.location.href = "{{ url_for('add_client_form') }}";
+}
+
+
+
+
+
+
+
+function formatPOAmount(input) {
+  const raw = formData.poAmount || '';
+  input.value = formatINR(raw);
+}
+
+function unformatPOAmount(input) {
+  input.value = unformatINR(input.value);
+}
+
+
+function renderPurchaseOrderForm() {
+  document.getElementById("form-container").innerHTML = `
+    <div class="card no-scroll" style="max-width: 800px; margin: auto; height: 85vh; display: flex; flex-direction: column;">
+  <h2 style="margin: 20px 30px 0; font-size: 24px; font-weight: 600; margin-bottom: 2px;">
+    <a href="{{ url_for('dashboard') }}" class="heading-link"><i class="fas fa-th-large"> </i>‎ ‎ Add New Order</a>
+    <span style="font-weight: 400;"> - Purchase Order Details</span>
+  </h2>
+
+
+ <div style="flex: 1; overflow-y: auto; padding: 30px;">
+
+    <form id="po-form">
+      <div class="form-grid">
+          <div>
+            <label>PO Number</label>
+           <input type="text" id="poNumber" name="poNumber" class="input-field" value="${formData.poNumber || getNextPONumber()}">
+
+
+          </div>
+<div style="position: relative;">
+  <label>Issued By</label>
+  
+ <div class="dropdown-wrapper">
+ <input type="text" id="issuedBy" class="input-field" placeholder="Select Issued By" required value="${formData.issuedBy || ''}">
+
+  <i class="fas fa-chevron-down dropdown-icon"></i>
+  <div class="dropdown-list" id="issuedByDropdown" style="display:none;">
+    <ul id="issuedByList"></ul>
+  </div>
+</div>
+
+
+  <div id="issuedByDropdown" class="dropdown-list" style="display: none;">
+    <input type="text" id="issuedBySearch" class="input-field" placeholder="Search..." oninput="filterIssuedByOptions()" style="margin: 8px; width: calc(100% - 16px);">
+    <ul id="issuedByList"></ul>
+  </div>
+</div>
+
+
+
+          <div>
+            <label>PO Base Value</label>
+            <input class="input-field" name="poAmount" id="poAmount" required
+              value="${formData.poAmount ? formatINR(formData.poAmount) : ''}"
+              oninput="handlePOAmountInput(this)">
+          </div>
+
+          <div>
+            <label>PO Issued Date</label>
+            <input type="date" class="input-field" name="poDate" id="poDate" required value="${formData.poDate || ''}">
+          </div>
+          
+<!-- ✅ THIS IS THE NEW GST% DROPDOWN -->
+<div>
+  <label for="gstPercent">GST (%)</label>
+  <select class="input-field" name="gstPercent" id="gstPercent" onchange="calculateGSTSplit()" required>
+    <option value="" disabled ${!formData.gstPercent ? 'selected' : ''}>Select a GST rate...</option>
+    <option value="9" ${formData.gstPercent == '9' ? 'selected' : ''}>9%</option>
+    <option value="18" ${formData.gstPercent == '18' ? 'selected' : ''}>18%</option>
+    <option value="28" ${formData.gstPercent == '28' ? 'selected' : ''}>28%</option>
+  </select>
+</div>
+
+
+
+          <div>
+            <label>GST Amount</label>
+           <input class="input-field" name="gstAmount" id="gstAmount" readonly
+  value="${formData.gstAmount ? formatINR(formData.gstAmount) : ''}">
+          </div>
+
+
+          <div>
+            <label>CGST Amount</label>
+            <input class="input-field" name="cgst" id="cgstAmount" readonly
+              value="${formData.cgst ? formatINR(formData.cgst) : ''}">
+          </div>
+
+          <div>
+            <label>SGST Amount</label>
+            <input class="input-field" name="sgst" id="sgstAmount" readonly
+              value="${formData.sgst ? formatINR(formData.sgst) : ''}">
+          </div>
+
+          <div>
+            <label>IGST Amount</label>
+            <input class="input-field" name="igst" id="igstAmount" readonly
+              value="${formData.igst ? formatINR(formData.igst) : ''}">
+          </div>
+
+       <!-- ✅ THIS IS THE NEW TDS% DROPDOWN -->
+<div>
+  <label for="tdsPercent">TDS (%)</label>
+  <select class="input-field" name="tdsPercent" id="tdsPercent" onchange="calculateGSTSplit()">
+    <option value="" disabled ${!formData.tdsPercent ? 'selected' : ''}>Select a TDS rate...</option>
+    <option value="2" ${formData.tdsPercent == '2' ? 'selected' : ''}>2%</option>
+    <option value="10" ${formData.tdsPercent == '10' ? 'selected' : ''}>10%</option>
+  </select>
+</div>
+
+
+          <div>
+            <label>TDS Amount</label>
+            <input class="input-field" name="tdsAmount" id="tdsAmount" readonly
+  value="${formData.tdsAmount ? formatINR(formData.tdsAmount) : ''}">
+          </div>
+
+
+          <!-- Add after TDS fields, before PO Expiry Date -->
+<div>
+  <label>Cess (%)</label>
+  <input type="number" class="input-field" name="cessPercent" id="cessPercent"
+    min="0" max="100"
+    value="${formData.cessPercent || ''}"
+    oninput="calculateCessAmount()" />
+</div>
+
+<div>
+  <label>Cess Amount</label>
+  <input class="input-field" name="cessAmount" id="cessAmount" readonly
+    value="${formData.cessAmount ? formatINR(formData.cessAmount) : ''}">
+</div>
+          
+<div>
+  <label>P&F Amount</label>
+  <input class="input-field" name="pfAmount" id="pfAmount"
+    value="${formData.pfAmount ? formatINR(formData.pfAmount) : ''}"
+    oninput="handlePFAmountInput(this)" placeholder="Enter Packing & Forwarding cost">
+</div>
+
+          <div>
+            <label>PO Expiry Date</label>
+           <input type="date" class="input-field" name="poExpiryDate" id="poExpiryDate"
+  onchange="validatePOExpiryDate()"
+  min="${formData.startDate || ''}"
+  value="${formData.poExpiryDate || ''}" required>
+<div id="expiry-warning" style="color: red; font-size: 13px; display: none; margin-top: 4px;">
+  ⚠ Please select a valid expiry date.
+</div>
+           </div>
+        </div>
+
+      </div> <!-- closes the scrollable form area -->
+
+<div class="button-group" style="padding: 16px; justify-content: flex-end; border-top: 1px solid #ccc; background: #fff;">
+  <button type="button" class="btn-secondary" onclick="cachePOFormData(); renderClientDetailsForm()">Back</button>
+  <button class="btn-primary" type="submit" form="po-form">Next</button>
+</div>
+        </div>
+      </form>
+    </div>
+  `;
+
+
+  // Ensure calculation triggers after DOM renders
+  setTimeout(() => {
+    // Restore all PO/order fields from formData after rendering
+    const fields = [
+      'poNumber', 'issuedByInput', 'poAmount', 'poDate', 'gstPercent', 'gstAmount',
+      'cgstAmount', 'sgstAmount', 'igstAmount', 'tdsPercent', 'tdsAmount', 'poExpiryDate'
+    ];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && formData) {
+        // CORRECTED LOGIC: Handle 'poAmount' and other similar fields directly.
+        if (id === 'poAmount' || id === 'gstAmount' || id === 'tdsAmount') {
+          // These fields use the same name for the element ID and the formData key.
+          el.value = formData[id] ? formatINR(formData[id]) : '';
+        } else if (id === 'cgstAmount' || id === 'sgstAmount' || id === 'igstAmount') {
+          // These fields use a different key in formData (e.g., id 'cgstAmount' uses key 'cgst').
+          const key = id.replace('Amount', '');
+          el.value = formData[key] ? formatINR(formData[key]) : '';
+        } else if (id === 'issuedByInput') {
+          el.value = formData.issuedBy || '';
+        } else {
+          el.value = formData[id] || '';
+        }
+      }
+    });
+    calculateGSTSplit();
+  }, 0);
+
+  document.getElementById("po-form").onsubmit = function (e) {
+    e.preventDefault();
+    if (!validatePOExpiryDate()) return; // ⛔ Stop submission if invalid
+    // Save all PO form fields to formData and sessionStorage before moving forward
+    syncAllFormDataFromDOM();
+    sessionStorage.setItem('addOrderFormData', JSON.stringify(formData));
+    renderSummaryPreview();
+  };
+  // Patch the Back button to save data and set the flag
+}
+function updatePOExpiryMin() {
+  const poExpiry = document.getElementById("poExpiryDate");
+  if (poExpiry && formData.startDate) {
+    poExpiry.min = formData.startDate;
+  }
+}
+
+function calculateCessAmount() {
+  const poAmountField = document.getElementById("poAmount");
+  const cessPercentField = document.getElementById("cessPercent");
+  const cessAmountField = document.getElementById("cessAmount");
+
+  const poAmount = Math.round(parseFloat(poAmountField.value.replace(/[₹,]/g, '')) || 0);
+  const cessPercent = parseFloat(cessPercentField.value) || 0;
+
+  const cessAmount = Math.round((poAmount * cessPercent) / 100);
+
+  cessAmountField.value = cessAmount ? formatINR(cessAmount) : "";
+  formData.cessPercent = cessPercent.toString();
+  formData.cessAmount = cessAmount.toString();
+}
+
+function validatePOExpiryDate() {
+  const expiry = new Date(document.getElementById("poExpiryDate").value);
+  const start = new Date(formData.startDate);
+  const end = new Date(formData.endDate);
+  const warning = document.getElementById("expiry-warning");
+
+  if (
+    !document.getElementById("poExpiryDate").value ||
+    isNaN(expiry) || isNaN(start) || isNaN(end) ||
+    expiry < start // Only block if expiry is before start
+  ) {
+    warning.style.display = "block";
+    return false;
   }
 
-  function renderPOForm() {
-    document.getElementById("form-container").innerHTML = `
-      <div class="card">
-        <h2>Purchase Order Details</h2>
-        <form id="po-form">
-          <div class="form-grid">
-            <div><label>PO Number</label><input class="input-field" name="poNumber" required></div>
-            <div><label>PO Amount</label><input class="input-field" name="poAmount" required></div>
-            <div><label>Issued By</label><input class="input-field" name="issuedBy" required></div>
-            <div><label>PO Date</label><input type="date" class="input-field" name="poDate" required></div>
-          </div>
-          <div class="button-group">
-            <button type="button" class="btn-secondary" onclick="renderClientDetailsForm()">Back</button>
-            <button class="btn-primary" type="submit">Next</button>
-          </div>
-        </form>
-      </div>
-    `;
+  warning.style.display = "none";
+  return true;
+}
 
-    document.getElementById("po-form").onsubmit = function (e) {
-      e.preventDefault();
-      const data = new FormData(this);
-      for (const [k, v] of data.entries()) formData[k] = v;
-      showSummary();
-    };
+
+function getNextPONumber() {
+  let current = localStorage.getItem("lastPONumber") || "A00000";
+  let nextNumber = parseInt(current.substring(1)) + 1;
+  let next = "A" + nextNumber.toString().padStart(5, "0");
+  localStorage.setItem("lastPONumber", next);
+  return next; // return new one each time
+}
+
+function handlePFAmountInput(input) {
+  // Get the raw number by removing currency symbols and commas
+  const rawValue = input.value.replace(/[₹,]/g, '');
+  const num = parseInt(rawValue);
+
+  if (isNaN(num)) {
+    input.value = '';
+    formData.pfAmount = ''; // Clear the data if the input is empty or invalid
+    return;
   }
 
-  function showSummary() {
-    document.getElementById("form-container").innerHTML = `
-      <div class="card" style="max-width: 700px; padding: 20px;">
-        <h2 style="font-size: 20px;">Order Summary</h2>
-        <table style="width:100%; border-collapse: collapse; margin-top: 1rem; font-size: 14px;">
-          <thead>
-            <tr style="background-color: #f2f2f2;">
-              <th style="border: 1px solid #ccc; padding: 6px;">Field</th>
-              <th style="border: 1px solid #ccc; padding: 6px;">Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${Object.entries(formData).map(([k, v]) => `
-              <tr>
-                <td style="border: 1px solid #ccc; padding: 6px;">${k.replace(/([A-Z])/g, ' $1')}</td>
-                <td style="border: 1px solid #ccc; padding: 6px;">${v}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-        <div class="button-group" style="margin-top: 1.5rem;">
-          <button class="btn-secondary" onclick="renderPOForm()">Back</button>
-          <button class="btn-primary" onclick="submitToFlask()">Submit</button>
+  // Format the display value with the Rupee symbol and commas
+  input.value = '₹' + num.toLocaleString('en-IN');
+  
+  // Save the raw number value to our global formData object
+  formData.pfAmount = num.toString();
+}
+
+
+// ✅ ADD THIS ENTIRE FUNCTION TO YOUR SCRIPT
+function numberToWordsINR(num) {
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+  const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+  const convertLessThanOneThousand = (n) => {
+    let word = '';
+    if (n >= 100) {
+      word += ones[Math.floor(n / 100)] + ' Hundred ';
+      n %= 100;
+    }
+    if (n >= 10 && n < 20) {
+      word += teens[n - 10];
+    } else {
+      if (n >= 20) {
+        word += tens[Math.floor(n / 10)] + ' ';
+        n %= 10;
+      }
+      if (n > 0) {
+        word += ones[n];
+      }
+    }
+    return word.trim();
+  };
+
+  if (num === 0) {
+    return 'Zero';
+  }
+
+  let result = '';
+  if (num >= 10000000) {
+    result += convertLessThanOneThousand(Math.floor(num / 10000000)) + ' Crore ';
+    num %= 10000000;
+  }
+  if (num >= 100000) {
+    result += convertLessThanOneThousand(Math.floor(num / 100000)) + ' Lakh ';
+    num %= 100000;
+  }
+  if (num >= 1000) {
+    result += convertLessThanOneThousand(Math.floor(num / 1000)) + ' Thousand ';
+    num %= 1000;
+  }
+  if (num > 0) {
+    result += convertLessThanOneThousand(num);
+  }
+
+  return result.trim().replace(/\s+/g, ' '); // Clean up any extra spaces
+}
+
+function calculateGSTSplit() {
+  const poAmountField = document.getElementById("poAmount");
+  const gstPercentField = document.getElementById("gstPercent");
+  const tdsPercentField = document.getElementById("tdsPercent");
+  const gstAmountField = document.getElementById("gstAmount");
+  const cgstField = document.getElementById("cgstAmount");
+  const sgstField = document.getElementById("sgstAmount");
+  const igstField = document.getElementById("igstAmount");
+  const tdsAmountField = document.getElementById("tdsAmount");
+
+  const poAmount = Math.round(parseFloat(poAmountField.value.replace(/[₹,]/g, '')) || 0);
+  const gstPercent = parseFloat(gstPercentField.value) || 0;
+  const tdsPercent = parseFloat(tdsPercentField?.value) || 0;
+
+  const gstAmount = Math.round((poAmount * gstPercent) / 100);
+  let cgst = 0, sgst = 0, igst = 0;
+  // Get state from formData or from DOM
+  let state = formData.state;
+  if (!state) {
+    const stateInput = document.getElementById('state');
+    if (stateInput) state = stateInput.value;
+  }
+  if (state && state.trim().toLowerCase() === 'karnataka') {
+    cgst = Math.round(gstAmount / 2);
+    sgst = Math.round(gstAmount / 2);
+    igst = 0;
+  } else {
+    cgst = 0;
+    sgst = 0;
+    igst = gstAmount;
+  }
+  const tdsAmount = Math.round((poAmount * tdsPercent) / 100);
+
+  gstAmountField.value = gstAmount ? formatINR(gstAmount) : "";
+  cgstField.value = cgst ? formatINR(cgst) : "";
+  sgstField.value = sgst ? formatINR(sgst) : "";
+  igstField.value = igst ? formatINR(igst) : "";
+  tdsAmountField.value = tdsAmount ? formatINR(tdsAmount) : "";
+
+  formData.poAmount = poAmount.toString();
+  formData.gstPercent = gstPercent.toString();
+  formData.gstAmount = gstAmount.toString();
+  formData.cgst = cgst.toString();
+  formData.sgst = sgst.toString();
+  formData.igst = igst.toString();
+  formData.tdsPercent = tdsPercent.toString();
+  formData.tdsAmount = tdsAmount.toString();
+  calculateCessAmount();
+}
+
+
+
+// Replace the entire existing renderSummaryPreview function with this one
+// Replace the entire existing renderSummaryPreview function with this one
+function renderSummaryPreview() {
+  // Ensure all calculations are up-to-date
+  if (typeof calculateGSTSplit === 'function') calculateGSTSplit();
+
+  // --- 1. Get all the calculated values ---
+  const base = parseInt(formData.poAmount) || 0;
+  const gstAmount = parseInt(formData.gstAmount) || 0;
+  const cgst = parseInt(formData.cgst) || 0;
+  const sgst = parseInt(formData.sgst) || 0;
+  const igst = parseInt(formData.igst) || 0;
+  const tds = parseInt(formData.tdsAmount) || 0;
+  const cessAmount = parseInt(formData.cessAmount) || 0;
+  const pfAmount = parseInt(formData.pfAmount) || 0;
+  const total = base + gstAmount + tds + cessAmount + pfAmount;
+
+  // Convert the total to words
+  const totalInWords = numberToWordsINR(total);
+
+  // --- 2. Dynamically build the new HTML for the summary table ---
+  let gstRows = '';
+  // This logic decides whether to show all three GST types or just the relevant ones
+  if (igst > 0) {
+    gstRows = `<tr><td>IGST(${formData.gstPercent || 0}%)</td><td>${formatINR(igst)}</td></tr>`;
+  } else {
+    gstRows = `<tr><td>SGST(${(formData.gstPercent / 2) || 0}%)</td><td>${formatINR(sgst)}</td></tr>
+               <tr><td>CGST(${(formData.gstPercent / 2) || 0}%)</td><td>${formatINR(cgst)}</td></tr>`;
+  }
+  
+  const summaryTableHTML = `
+    <div class="amount-summary-card">
+      <table class="amount-summary-table">
+        <thead class="amount-summary-header">
+          <tr><th colspan="2">Total Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>PO Base Value</td><td>${formatINR(base)}</td></tr>
+          ${gstRows}
+          <tr><td>TDS(${formData.tdsPercent || 0}%)</td><td>${formatINR(tds)}</td></tr>
+          <tr><td>Cess(${formData.cessPercent || 0}%)</td><td>${formatINR(cessAmount)}</td></tr>
+          <tr><td>P&F Amount</td><td>${formatINR(pfAmount)}</td></tr>
+          <tr class="total-row"><td>Total Amount</td><td>${formatINR(total)}</td></tr>
+          <tr class="words-row">
+            <td colspan="2">
+              <strong>Total Amount (in Words)</strong> Rupees ${totalInWords} Only
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  const clientName = formData.clientName || "—";
+  const companyName = formData.companyName || "—";
+  let headingText = "Order Summary";
+  if (clientName && clientName !== "—") {
+    headingText += `: ${clientName}`;
+  } else if (companyName && companyName !== "—") {
+    headingText += `: ${companyName}`;
+  }
+
+  // --- 3. Render the full page with the other sections and the new summary table ---
+  document.getElementById("form-container").innerHTML = `
+    <div id="printable-summary">
+      <div class="order-summary-content">
+        <div class="form-wrapper form-summary-preview printable-summary">
+          <div class="card no-scroll" style="max-width: 850px; margin: auto; display: flex; flex-direction: column; height: 100%;">
+            <h1 class="summary-heading" style="font-size: 20px; font-weight: 600; margin: 16px 0 20px 0; text-align: center;">
+              ${headingText}
+            </h1>
+
+            <div class="summary-content" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+              ${renderSection("Client Details", { "Client Name": clientName, "Company Name": companyName, "GST Number": formData.gst || "—", "Pan Number": formData.pan || "—", "Email": formData.email || "—", "Phone Number": formData.phone || "—", "Address": formData.address || "—" }, 4)}
+              ${renderSection("Project Details", { "Project Name": formData.projectName || "—", "Division": formData.division || "—", "Start Date": formatDateDDMMYYYY(formData.startDate), "Site Location": formData.site || "—", "Sub Contractor Name": formData.subContractorName || "—", "End Date": formatDateDDMMYYYY(formData.endDate) })}
+              ${renderSection("PO Details", { "PO Number": formData.poNumber || "—", "PO Amount": formatINR(base), "PO Expiry Date": formatDateDDMMYYYY(formData.poExpiryDate), "Issued By": formData.issuedBy || "—", "PO Issued Date": formatDateDDMMYYYY(formData.poDate) }, 3)}
+              
+              <!-- This is where the new summary table will be injected -->
+              ${summaryTableHTML} 
+
+            </div>
+            <div id="order-summary-warning" style="color: #b85c00; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px; padding: 12px 18px; margin: 18px 0 0 0; font-size: 15px; text-align: center;">
+              <i class="fas fa-exclamation-circle" style="color: #faad14; margin-right: 8px;"></i>
+              <strong>Kindly check if all the values are correct before submitting.</strong>
+            </div>
+            <div class="button-group" style="padding: 16px; justify-content: flex-end; border-top: 1px solid #ccc; background: #fff;">
+              <button class="btn-secondary" onclick="renderPurchaseOrderForm()">Edit</button>
+              <button class="btn-primary" onclick="showFinalConfirmation()">Submit</button>
+            </div>
+          </div>
         </div>
       </div>
-    `;
+    </div>
+  `;
+
+  setTimeout(() => {
+    const warn = document.getElementById("order-summary-warning");
+    if (warn) warn.style.display = "none";
+  }, 7000);
+}
+
+
+
+
+
+
+function showFinalConfirmation() {
+  const existing = document.getElementById("confirmationModal");
+  if (existing) existing.remove();
+
+  const orderId = formData.poNumber || "—"; // fallback if ID not found
+
+  const modalHTML = `
+    <div id="confirmationModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <i class="fas fa-check-circle modal-icon" style="color: green;"></i>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 15px; margin-bottom: 6px;"><strong>Order ID:</strong> ${orderId}</p>
+          <p><strong>The order has been added successfully.</strong></p>
+          <p>You may now download the order details in your preferred format:</p>
+          <div style="margin-top: 10px;">
+            <label for="downloadFormat">Select Format:</label>
+            <select id="downloadFormat" class="input-field" style="margin-top: 5px;">
+              <option value="pdf">PDF </option>
+              <option value="csv">CSV </option>
+              <option value="both">PDF + CSV</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+  <button onclick="saveOrderToBackend(); handleCancel()" class="cancel-btn">Done</button>
+  <button onclick="handleSelectedDownload()" class="download-btn">Download</button>
+  <div id="email-share-section" style="margin-top: 20px;">
+  <label for="recipientEmail" style="font-size: 14px; font-weight: 500;">Recipient Email</label>
+  <input type="email" id="recipientEmail" placeholder="Enter recipient email"
+         class="input-field" style="max-width: 300px;" required />
+  <div id="share-status" style="margin-top: 8px; font-size: 14px;"></div>
+</div>
+  <button onclick="generateAndSharePDF()" class="download-btn">Share PDF</button>
+  <div id="share-status" style="margin-top: 10px; font-size: 14px;"></div>
+</div>
+</div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+
+
+async function shareViaEmail() {
+  const recipient = document.getElementById("emailRecipient").value.trim();
+  if (!recipient || !/^\S+@\S+\.\S+$/.test(recipient)) {
+    alert("Please enter a valid recipient email.");
+    return;
   }
 
-function submitToFlask() {
-  formData.profitPercentage = 50;  // always set it, since the field doesn't exist in the form
+  const pdfElement = document.getElementById("printable-summary");
 
+  const opt = {
+    margin: 0,
+    filename: 'order-summary.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Generate PDF Blob
+  const worker = html2pdf().set(opt).from(pdfElement);
+  const blob = await worker.outputPdf('blob');
+
+  // 📤 Send via backend
+  const formDataToSend = new FormData();
+  formDataToSend.append("recipient", recipient);
+  formDataToSend.append("pdf", blob, "order-summary.pdf");
+
+  const response = await fetch("/share-order-pdf", {
+    method: "POST",
+    body: formDataToSend
+  });
+
+  const result = await response.json();
+  if (result.success) {
+    alert("Email sent successfully!");
+  } else {
+    alert("Failed to send email. Please try again.");
+  }
+}
+
+
+function toggleDownloadDropdown() {
+  document.getElementById("downloadDropdown")?.classList.toggle("show");
+}
+
+function handleCancel() {
+  const modal = document.getElementById("confirmationModal");
+  if (modal) modal.remove();
+
+  // ✅ Reset the global form state object
+  resetFormState();
+
+  // ✅ Reload the form
+  setTimeout(() => {
+    const nav = document.querySelector('.nav-item:nth-child(2)');
+    console.log("Form reset. Ready to add another order.");
+    showAddOrderForm(nav);
+  }, 50);
+}
+
+function handleCancel() {
+  const modal = document.getElementById("confirmationModal");
+  if (modal) modal.remove();
+
+  resetFormState(); // ✅ clear memory
+
+  setTimeout(() => {
+    const nav = document.querySelector('.nav-item:nth-child(2)');
+    console.log("Form reset. Ready to add another order.");
+    showAddOrderForm(nav); // ✅ reload fresh
+  }, 50);
+}
+
+function handleSelectedDownload() {
+  const format = document.getElementById("downloadFormat").value;
+
+  if (format === "pdf" || format === "both") {
+    const element = document.getElementById("printable-summary");
+    const opt = {
+      margin: 0,
+      filename: 'order-summary.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  }
+
+  if (format === "csv" || format === "both") {
+    downloadCSV();
+  }
+}
+
+
+
+
+
+function handleSelectedDownload() {
+  cachePOFormData(); 
+  syncAllFormDataFromDOM();
+  saveOrderToBackend();
+  const format = document.getElementById("downloadFormat").value;
+
+  const afterDownload = () => {
+    const modal = document.getElementById("confirmationModal");
+    if (modal) modal.remove();
+    resetFormState();
+    setTimeout(() => {
+      const nav = document.querySelector('.nav-item:nth-child(2)');
+      showAddOrderForm(nav);
+    }, 50);
+  };
+
+  if (format === "pdf") {
+    downloadPDFStyled();
+    setTimeout(afterDownload, 1000); // allow time for PDF to download
+  } else if (format === "csv") {
+    downloadCSVFormatted();
+    setTimeout(afterDownload, 500);
+  } else if (format === "both") {
+    downloadPDFStyled();
+    setTimeout(() => {
+      downloadCSVFormatted();
+      setTimeout(afterDownload, 500);
+    }, 1000);
+  }
+}
+
+
+function resetFormState() {
+  localStorage.removeItem("lastPONumber"); // remove old PO number
+  selectedClient = null;
+  formData = {}; // wipe entire object so no old values persist
+}
+
+function downloadPDFStyled() {
+  const original = document.querySelector('.form-summary-preview');
+  if (!original) return alert("Summary content not found");
+
+  const clone = original.cloneNode(true);
+  clone.style.maxHeight = 'none';
+  clone.style.overflow = 'visible';
+  clone.style.height = 'auto';
+  clone.style.paddingTop = '40px';
+
+  const buttonGroup = clone.querySelector('.button-group');
+  if (buttonGroup) buttonGroup.remove();
+
+  const scrollContent = clone.querySelector('.summary-content');
+  if (scrollContent) {
+    scrollContent.style.overflow = 'visible';
+    scrollContent.style.maxHeight = 'none';
+    scrollContent.style.height = 'auto';
+  }
+
+  const card = clone.querySelector('.card.no-scroll');
+  if (card) {
+    card.style.height = 'auto';
+    card.style.maxHeight = 'none';
+    card.style.overflow = 'visible';
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'absolute';
+  wrapper.style.left = '-9999px';
+  wrapper.style.top = '0';
+  wrapper.style.width = '850px';
+  wrapper.style.background = 'white';
+  wrapper.style.padding = '24px';
+  wrapper.style.zIndex = '-1';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  // ✅ Use dynamic filename
+  const fileName = `order_summary_${formData.poNumber || "client"}.pdf`;
+
+  html2pdf().from(clone).set({
+    margin: 10,
+    filename: fileName,
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      scrollY: 0
+    },
+    jsPDF: {
+      unit: 'pt',
+      format: 'a4',
+      orientation: 'portrait'
+    }
+  }).save().then(() => wrapper.remove());
+}
+
+
+async function generateAndSharePDF() {
+  const emailInput = document.getElementById("recipientEmail");
+  const statusDiv = document.getElementById("share-status");
+  const to = emailInput.value.trim();
+
+  if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+    statusDiv.style.color = 'red';
+    statusDiv.innerText = "❌ Please enter a valid email address.";
+    return;
+  }
+
+  statusDiv.innerText = "⏳ Generating PDF and sending...";
+  statusDiv.style.color = '#333';
+
+  // Clone the preview content
+  const original = document.querySelector('.form-summary-preview');
+  if (!original) return (statusDiv.innerText = "❌ Summary not found");
+
+  const clone = original.cloneNode(true);
+  const buttonGroup = clone.querySelector('.button-group');
+  if (buttonGroup) buttonGroup.remove();
+
+  const scrollables = clone.querySelectorAll('[style*="overflow"]');
+  scrollables.forEach(el => {
+    el.style.overflow = 'visible';
+    el.style.height = 'auto';
+    el.style.maxHeight = 'none';
+  });
+
+  const card = clone.querySelector('.card');
+  if (card) {
+    card.style.height = 'auto';
+    card.style.maxHeight = 'none';
+    card.style.overflow = 'visible';
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'absolute';
+  wrapper.style.left = '-9999px';
+  wrapper.style.top = '0';
+  wrapper.style.width = '850px';
+  wrapper.style.background = 'white';
+  wrapper.style.padding = '24px';
+  wrapper.style.zIndex = '-1';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  const fileName = `order_summary_${formData.poNumber || "client"}.pdf`;
+
+  try {
+    const blob = await html2pdf().from(clone).set({
+      margin: 10,
+      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    }).outputPdf('blob');
+
+    wrapper.remove();
+
+    const form = new FormData();
+    form.append("to", to);
+    form.append("pdf", blob, fileName);
+
+    const res = await fetch("/send-pdf-email", {
+      method: "POST",
+      body: form
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      statusDiv.style.color = "green";
+      statusDiv.innerText = "✅ PDF sent successfully!";
+    } else {
+      throw new Error("Server error");
+    }
+  } catch (err) {
+    console.error(err);
+    statusDiv.style.color = "red";
+    statusDiv.innerText = "❌ Failed to send PDF.";
+  }
+}
+
+
+
+
+
+function downloadCSVFormatted() {
+  const base = parseInt(formData.poAmount) || 0;
+  const gstPercent = parseFloat(formData.gstPercent) || 0;
+  const tdsPercent = parseFloat(formData.tdsPercent) || 0;
+
+  const gstAmount = Math.round((base * gstPercent) / 100);
+  const cgst = Math.round(gstAmount / 2);
+  const sgst = Math.round(gstAmount / 2);
+  const tds = Math.round((base * tdsPercent) / 100);
+  const total = base + gstAmount;
+
+  const rows = [
+    // Section Headers with spacing between each
+    ["CLIENT DETAILS", "", "", "PO DETAILS", "", "", "PROJECT DETAILS", "", "", "FINANCIAL SUMMARY", ""],
+
+    // Row 1
+    ["Client Name", formData.clientName || "—", "", "PO Number", formData.poNumber || "—", "", "Project Name", formData.projectName || "—", "", "PO Base Value", `"${formatINR(base)}"`],
+
+    // Row 2
+    ["Company Name", formData.companyName || "—", "", "PO Amount", `"${formatINR(base)}"`, "", "Division", formData.division || "—", "", `GST (${gstPercent}%)`, `"${formatINR(gstAmount)}"`],
+
+    // Row 3
+    ["GST Number", formData.gst || "—", "", "PO Expiry Date", formData.poExpiryDate || "—", "", "Start Date", formData.startDate || "—", "", "CGST", `"${formatINR(cgst)}"`],
+
+    // Row 4
+    ["PAN Number", formData.pan || "—", "", "Issued By", formData.issuedBy || "—", "", "End Date", formData.endDate || "—", "", "SGST", `"${formatINR(sgst)}"`],
+
+    // Row 5
+    ["Email", formData.email || "—", "", "PO Issued Date", formData.poDate || "—", "", "Site Location", formData.site || "—", "", "TDS", `"${formatINR(tds)}"`],
+
+    // Row 6
+    ["Phone Number", formData.phone ? `="${formData.phone}"` : "—", "", "", "", "", "Sub Contractor Name", formData.subContractorName || "—", "", "TOTAL", `"${formatINR(total)}"`],
+
+    // Row 7
+    ["Address", `"${formData.address || "—"}"`]
+  ];
+
+  const csv = rows.map(row => row.join(",")).join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `order_summary_${formData.poNumber || "client"}.csv`;
+  link.click();
+}
+
+  
+function renderSection(title, dataObj, columns = 3, sectionId = "") {
+  return `
+    <div class="preview-card" ${sectionId ? `id="${sectionId}"` : ""}>
+      <div class="preview-header">${title}</div>
+      <div class="preview-grid" style="grid-template-columns: repeat(${columns}, 1fr);">
+        ${Object.entries(dataObj).map(([label, value]) => `
+          <div class="preview-field">
+            <div class="preview-label">${label}</div>
+            <div class="preview-value">${value}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function saveOrderToBackend() {
+  console.log("📤 Sending order to backend:", formData);
   fetch('/submit', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(formData)
   })
-  .then(res => res.ok ? showConfirmation() : alert("Submission failed."))
-  .catch(err => {
-    console.error("Error:", err);
-    alert("An error occurred.");
+  .then(response => response.json())
+  .then(data => {
+    console.log("✅ Response from backend:", data);
+    if (data.success) {
+    } else {
+      alert("Error: " + (data.error || "Unknown"));
+    }
+  })
+  .catch(error => {
+    console.error("❌ Failed to submit order:", error);
+    alert("Network error. Check console.");
   });
 }
 
-  function showConfirmation() {
-    document.getElementById("form-container").innerHTML = `
-      <div class="card" style="max-width: 700px; padding: 20px;">
-        <h2 style="font-size: 20px;">Order Confirmation</h2>
-        <table style="width:100%; border-collapse: collapse; margin-top: 1rem; font-size: 14px;">
-          <tbody>
-            ${Object.entries(formData).map(([k, v]) => `
-              <tr>
-                <td style="padding: 6px; font-weight: 500; width: 30%;">${k.replace(/([A-Z])/g, ' $1')}</td>
-                <td style="padding: 6px; width: 70%;">${v}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-        <div style="margin-top: 1.5rem; padding: 1rem; background-color: #e6f7e6; border: 1px solid #b2e2b2; border-radius: 6px; color: #2d702d; font-weight: 600; font-size: 15px;">
-          ✅ The order has been successfully added and confirmed.
-        </div>
-      </div>
-    `;
+function selectSearchClient(name) {
+  const client = clients[name];
+  if (!client) return;
+
+  // ✅ Make sure formData.clientName is explicitly set
+  formData["clientName"] = name;
+  document.getElementById("selected-client-name").innerText = name;
+  document.getElementById("clientName").value = name;
+
+  const mappings = {
+    companyName: "companyName",
+    email: "email",
+    phone: "phone",
+    gst: "gst",
+    pan: "pan",
+    address: "address"
+  };
+
+  for (const key in mappings) {
+    const domField = document.getElementById(key);
+    const val = client[mappings[key]] || "";
+    if (domField) domField.value = val;
+    formData[key] = val;
   }
 
-  // Initialize
-  renderClientTabs();
+  document.getElementById("search-client-dropdown").style.display = "none";
+}
+
+
+
+
+let clients = {};
+
+window.addEventListener("DOMContentLoaded", () => {
+  fetch("/get-clients")
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        console.error("❌ Failed to fetch clients:", data.error);
+        return;
+      }
+
+      clients = data;
+      console.log("✅ Clients fetched from server:", clients);
+      populateClientDropdown();
+    })
+    .catch(err => {
+      console.error("❌ Network error while fetching clients:", err);
+    });
+});
+
+
+function showIssuedByDropdown() {
+  document.getElementById("issuedByDropdown").style.display = "block";
+  populateIssuedByList(issuedByOptions);
+}
+
+function hideIssuedByDropdown() {
+  setTimeout(() => {
+    document.getElementById("issuedByDropdown").style.display = "none";
+  }, 150); // slight delay so click registers
+}
+
+
+  window.addEventListener("DOMContentLoaded", function () {
+    const target = window.location.hash;
+    if (target === "#add-client") {
+      document.getElementById("client-list").style.display = "none";
+      document.getElementById("add-client").style.display = "block";
+      document.getElementById("add-client").scrollIntoView({ behavior: "smooth" });
+    }
+  });
+const issuedByOptions = [
+  "Accounts Dept",
+  "Procurement",
+  "Project Manager",
+  "Director",
+  "Admin Office"
+];
+
+function toggleIssuedByDropdown() {
+  const dropdown = document.getElementById("issuedByDropdown");
+  if (dropdown.style.display === "block") {
+    dropdown.style.display = "none";
+  } else {
+    dropdown.style.display = "block";
+    document.getElementById("issuedBySearch").value = "";
+    populateIssuedByList(issuedByOptions);
+  }
+}
+
+function filterIssuedByOptions() {
+  const input = document.getElementById("issuedBySearch").value.toLowerCase();
+  const filtered = issuedByOptions.filter(item =>
+    item.toLowerCase().includes(input)
+  );
+  populateIssuedByList(filtered);
+}
+
+// Place this at the top of your script section
+let companyNames = [];
+
+// Replace your entire handleSubContractorToggle function with this:
+function handleSubContractorToggle() {
+  const checkbox = document.getElementById("addSubContractorCheckbox");
+  const wrapper = document.getElementById("subContractorInputWrapper");
+  const isChecked = checkbox.checked;
+
+  // Immediately save the true or false state to our central formData object.
+  formData.addSubContractor = isChecked;
+
+  if (isChecked) {
+    // This runs when the box is CHECKED.
+    wrapper.innerHTML = `
+      <div style="position:relative;">
+        <input class="input-field"
+               type="text"
+               id="subContractorInput"
+               name="subContractorName"
+               placeholder="Search or type company name..."
+               autocomplete="off"
+               required
+               value="${formData.subContractorName || ''}"
+               oninput="formData.subContractorName = this.value; showSubContractorDropdown(this.value);"
+               onfocus="showSubContractorDropdown(this.value);">
+        <ul id="subContractorDropdown" class="dropdown-list" style="display:none; position:absolute; z-index:10; width:100%; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto;"></ul>
+      </div>
+    `;
+
+    // Fetch company names for the dropdown suggestion list.
+    fetch('/api/company-names')
+      .then(res => res.json())
+      .then(data => {
+        companyNames = data; // Assuming companyNames is a global variable
+      });
+
+  } else {
+    // This runs when the box is UNCHECKED.
+    // We clear the data and show a disabled input field.
+    formData.subContractorName = ""; 
+    wrapper.innerHTML = `
+      <input class="input-field"
+             name="subContractorName"
+             id="subContractorName"
+             value=""
+             placeholder="Null"
+             disabled
+             style="background-color: #e0e0e0; color: #888; cursor: not-allowed;">
+    `;
+  }
+}
+
+// Add these helper functions anywhere in your script section:
+function showSubContractorDropdown(search) {
+  const dropdown = document.getElementById("subContractorDropdown");
+  if (!dropdown) return;
+  const input = document.getElementById("subContractorInput");
+  const filtered = companyNames.filter(name => name.toLowerCase().includes((search || "").toLowerCase()));
+  if (filtered.length === 0) {
+    dropdown.innerHTML = "<li style='padding:8px; color:#888;'>No matches</li>";
+  } else {
+    dropdown.innerHTML = filtered.map(name =>
+      `<li style="padding:8px; cursor:pointer;" onclick="selectSubContractor('${name.replace(/'/g, "\\'")}')">${name}</li>`
+    ).join('');
+  }
+  dropdown.style.display = "block";
+}
+
+function selectSubContractor(name) {
+  document.getElementById("subContractorInput").value = name;
+  document.getElementById("subContractorDropdown").style.display = "none";
+  formData.subContractorName = name;
+}
+
+function populateSubContractorDropdown(list) {
+  const dropdown = document.getElementById("subContractorNameDropdown");
+  dropdown.innerHTML = `<option value="">Select Company</option>`;
+  list.forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    dropdown.appendChild(option);
+  });
+}
+
+function filterSubContractorOptions() {
+  const search = document.getElementById("subContractorSearch").value.toLowerCase();
+  const filtered = companyNames.filter(name => name.toLowerCase().includes(search));
+  populateSubContractorDropdown(filtered);
+}
+
+
+  // Optional: Trigger population on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    handleSubContractorToggle();
+  });
+
+
+
+function populateIssuedByList(list) {
+  const ul = document.getElementById("issuedByList");
+  ul.innerHTML = "";
+  
+  if (list.length === 0) {
+    ul.innerHTML = "<li style='padding: 8px; color: #888;'>No matches</li>";
+    return;
+  }
+  
+  list.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    li.onclick = () => selectIssuedBy(item);
+    ul.appendChild(li);
+  });
+}
+
+function selectIssuedBy(value) {
+  document.getElementById("issuedByInput").value = value;
+  formData.issuedBy = value; // ✅ This line is the fix
+  document.getElementById("issuedByDropdown").style.display = "none";
+}
+
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("#issuedByDropdown") && !e.target.closest(".dropdown-wrapper")) {
+    document.getElementById("issuedByDropdown").style.display = "none";
+  }
+});
+
+
+
+function populateClientDropdown() {
+  const list = document.getElementById("search-client-list");
+  list.innerHTML = "";
+
+  Object.keys(clients).forEach(name => {
+    const li = document.createElement("li");
+    li.innerHTML = `<i class="fas fa-user"></i> ${name}`;
+    li.onclick = () => selectSearchClient(name);
+    list.appendChild(li);
+  });
+}
+
+
+
+// filepath: vsls:/templates/add.html
+// filepath: vsls:/templates/add.html
+function cachePOFormData() {
+  const form = document.getElementById("po-form");
+  if (!form) return;
+
+  const data = new FormData(form);
+  for (const [key, value] of data.entries()) {
+    const trimmed = value.trim();
+
+    if (["poAmount", "gstAmount", "cgst", "sgst", "tdsAmount", "pfAmount"].includes(key)) {
+      const cleaned = trimmed.replace(/[₹,]/g, '');
+      formData[key] = isNaN(cleaned) || cleaned === '' ? '' : parseInt(cleaned).toString();
+    } else {
+      formData[key] = trimmed;
+    }
+  }
+
+  // Ensure poDate is included here:
+  ["clientName", "companyName", "email", "phone", "gst", "pan", "address",
+   "projectName", "division", "startDate", "endDate", "site", "subContractorName", "projectDuration", "issuedBy", "poDate"].forEach(key => {
+    const existing = document.getElementById(key);
+    if (existing && existing.value) {
+      formData[key] = existing.value.trim();
+    }
+  });
+}
+
+
+
+ function logout() {
+  localStorage.removeItem("selectedClientName");
+  window.location.href = "login.html";
+}
+
+    // Automatically load Add New Order section on page load
+ window.onload = function () {
+  const retained = localStorage.getItem("selectedClientName");
+  if (retained) {
+    formData.clientName = retained;
+  }
+  showAddOrderForm(document.querySelector('.nav-item:nth-child(2)'));
+};
+
+
+
+
+setInterval(() => {
+  fetch("/api/ping", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ page: window.location.pathname })
+  });
+}, 1000); // every 30 seconds
+
+setInterval(() => {
+  fetch('/api/check-session')
+    .then(res => res.json().then(data => ({ status: res.status, data })))
+    .then(({ status, data }) => {
+      if (!data.valid) {
+        if (status === 403) {
+          const overlay = document.getElementById('kickedOverlay');
+          if (overlay) overlay.style.display = 'block';
+
+          // Redirect to /logout after 3 seconds
+          setTimeout(() => {
+            window.location.href = '/logout';
+          }, 3000);
+        } else if (status === 401) {
+          window.location.href = '/login';
+        }
+      }
+    })
+    .catch(err => {
+      console.error("Session check error:", err);
+    });
+}, 1000); // every 2 seconds
+
+
+
+function toggleProjectDurationInput() {
+    const radios = document.getElementsByName('includeWeekends');
+    let selectedValue = null;
+    for (let i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            selectedValue = radios[i].value;
+            break;
+        }
+    }
+    const durationInput = document.getElementById('projectDuration');
+    if (selectedValue === 'yes') { // Change 'yes' to the value you want to trigger the input
+        durationInput.style.display = '';
+        durationInput.disabled = true;
+        durationInput.style.background = '#eee';
+        durationInput.style.color = '#888';
+        durationInput.style.cursor = 'not-allowed';
+        setTimeout(() => {
+            durationInput.disabled = false;
+            durationInput.style.background = '';
+            durationInput.style.color = '';
+            durationInput.style.cursor = '';
+        }, 1000); // 1 second gray out
+    } else {
+        durationInput.style.display = 'none';
+        durationInput.disabled = true;
+    }
+}
+
+// On page load, hide unless a radio is selected
+window.addEventListener('DOMContentLoaded', function() {
+    toggleProjectDurationInput();
+});
 </script>
+
+<div id="kickedOverlay" style="
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.75);
+  z-index: 9999;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+">
+  <div style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    padding: 30px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    max-width: 90%;
+    width: 360px;
+  ">
+    <h2 style="margin-bottom: 12px; color: #ff4c4c;">
+      🚫 You've been kicked out
+    </h2>
+    <p style="font-size: 15px; color: #ddd;">
+      An admin has forcibly logged you out. You will be redirected shortly.
+    </p>
+  </div>
+</div>
 </body>
 </html>

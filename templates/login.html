@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />  
+<link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login</title>
@@ -12,7 +14,7 @@
       padding: 10px;
       margin-bottom: 20px;
       border-radius: 4px;
-      font-family: sans-serif;
+      font-family: "Inter", sans-serif;
       font-size: 14px;
     }
 
@@ -25,29 +27,24 @@
       background-color: #f8d7da;
       color: #721c24;
     }
+
+
   </style>
 
   <style>
-    @font-face {
-      font-family: 'MyFontBold';
-      src: url('/static/fonts/MyFontBold.otf') format('opentype');
-    }
-
-    @font-face {
-      font-family: 'MyFontRegular';
-      src: url('/static/fonts/MyFontRegular.otf') format('opentype');
-    }
+   
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: "Inter", sans-serif;
     }
 
     html, body {
       width: 100%;
       height: 100%;
-      font-family: 'MyFontRegular', sans-serif;
+       font-family: 'SF Pro Display', sans-serif;
       background: #ffffff;
     }
 
@@ -88,7 +85,7 @@
 
     .heading {
       font-size: 32px;
-      font-family: 'MyFontBold', sans-serif;
+       font-family: 'SF Pro Display', sans-serif;
       margin-bottom: 10px;
     }
 
@@ -122,8 +119,8 @@
     }
 
     .login-btn {
-      font-family: 'MyFontBold', sans-serif;
-      width: 100%;
+      font-family: 'SF Pro Display', sans-serif;    
+       width: 100%;
       background-color: #127285;
       color: white;
       border: none;
@@ -202,6 +199,36 @@
   background-color: #ccc !important;
   cursor: not-allowed;
 }
+.bottom-links {
+  text-align: left;
+  margin-top: 8px;
+  padding-left: 2px;
+}
+.support-text {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 14px;
+  color: #ffffff;
+  opacity: 0.85;
+  font-weight: 700;
+  text-align: right;
+}
+.login-right {
+  position: relative;
+  width: calc(50% - 16px);
+  margin: 8px;
+  background-color: #127285;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  overflow: hidden;
+}
+
+
+
   </style>
 </head>
 
@@ -255,10 +282,21 @@
               <span toggle="#password-field" class="toggle-password"><i class="fa fa-eye"></i></span>
               </div>
               <p id="login-email-message" class="message-error"></p>
-              <a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot password?</a>
+             <a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot password?</a>
+
+            <button type="submit" id="login-button" class="login-btn">Log in</button>
+
+  <div class="bottom-links">
+  <div class="bottom-links">
+  <a href="/adminlogin" style="display: inline-block; margin-top: 12px; color: #0a4c77; font-weight: 500; text-decoration: underline; font-size: 14px;">
+    Admin Login
+  </a>
+</div>
 
 
-              <button type="submit" id="login-button" class="login-btn">Log in</button>
+</div>
+
+
             </form>
             <script>
 
@@ -333,9 +371,12 @@ document.getElementById('login-email').addEventListener('input', function () {
         </div>
 
         <!-- Right Panel -->
-        <div class="login-right">
-          <img src="/static/assets/Group 2.png" alt="Login Graphic" class="right-image">
-        </div>
+<div class="login-right">
+  <img src="/static/assets/Group 2.png" alt="Login Graphic" class="right-image">
+  <div class="support-text">
+    <i class="fas fa-envelope"></i> Support - dt@activusdesignbuild.in
+  </div>
+</div>
 
       </div>
     </div>
